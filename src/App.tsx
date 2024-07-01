@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import Table from "./components/Table";
+
+const initTable = [
+  ["", ""],
+  ["", ""],
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [table, setTable] = useState(initTable);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  const addRow = (count: number) => {
+    setTable((prevTable) => {
+      const newTable = [...prevTable];
+      for (let i = 0; i < count; i++) {
+        newTable.push(Array(newTable[0].length).fill(""));
+      }
+      return newTable;
+    });
+  };
+
+  const addColumn = (count: number) => {
+    setTable((prevTable) => {
+      return prevTable.map((row) => {
+        const newRow = [...row];
+        for (let i = 0; i < count; i++) {
+          newRow.push("");
+        }
+        return newRow;
+      });
+    });
+  };
+
+  return <Table table={table} addRow={addRow} addColumn={addColumn} />;
 }
 
-export default App
+export default App;
