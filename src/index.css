@@ -1,5 +1,45 @@
+table {
+  border-collapse: collapse;
+}
+
 th,
 td {
-  padding: 0.5rem 1.5rem;
+  position: relative;
+  min-width: 120px;
+  min-height: 32px;
   border: 1px solid #ddd;
+  padding: 7px 9px;
+}
+
+.table {
+  position: relative;
+  display: inline-block;
+  margin-right: 24px;
+  margin-bottom: 22px;
+}
+
+button {
+  outline: none;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+}
+
+.add-col {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -24px;
+}
+
+.add-row {
+  position: absolute;
+  left: 0;
+  bottom: -21px;
+  right: 0;
+}
+
+.add-col-and-row {
+  position: absolute;
+  bottom: -21px;
+  right: -24px;
 }
