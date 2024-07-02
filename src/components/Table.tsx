@@ -1,22 +1,37 @@
 type TableProps = {
   table: string[][];
-  addRow: (count: number) => void;
-  addColumn: (count: number) => void;
+  addRowColumn: (rowCount: number, columnCount: number) => void;
 };
 
-function Table({ table, addRow, addColumn }: TableProps) {
+function Table({ table, addRowColumn }: TableProps) {
   return (
-    <table>
-      <tbody>
-        {table.map((row, rowIdx) => (
-          <tr key={`row-${rowIdx}`}>
-            {row.map((column, colIdx) => (
-              <td key={`${rowIdx}-${colIdx}`}>{column}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <div className="table">
+      <table>
+        <tbody>
+          {table.map((row, rowIdx) => (
+            <tr key={`row-${rowIdx}`}>
+              {row.map((column, colIdx) => (
+                <td key={`${rowIdx}-${colIdx}`}>{column}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button className="add-col" onClick={() => addRowColumn(0, 1)}>
+        +
+      </button>
+      <button className="add-row" onClick={() => addRowColumn(1, 0)}>
+        +
+      </button>
+      <button
+        className="add-col-and-row"
+        onClick={() => {
+          addRowColumn(1, 1);
+        }}
+      >
+        +
+      </button>
+    </div>
   );
 }
 
