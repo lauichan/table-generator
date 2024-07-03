@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
-import Table from "./components/Table";
+import { useEffect, useState } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import formatHtml from "./utils/formatHtml";
+import TableEditor from "./components/Table/TableEditor";
+import Table from "./components/Table/Table";
 
 const initTable = [
   ["", ""],
@@ -32,15 +33,13 @@ function App() {
   };
 
   useEffect(() => {
-    const html = renderToStaticMarkup(
-      <Table table={table} addRowColumn={addRowColumn} />
-    );
+    const html = renderToStaticMarkup(<Table table={table} />);
     setHtmlString(html);
   }, [table]);
 
   return (
     <>
-      <Table table={table} addRowColumn={addRowColumn} />
+      <TableEditor table={table} addRowColumn={addRowColumn} />
       <pre>{formatHtml(htmlString)}</pre>
     </>
   );
