@@ -1,0 +1,26 @@
+.table {
+  position: relative;
+  display: inline-block;
+  margin-right: 24px;
+  margin-bottom: 22px;
+}
+
+.add_col {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -24px;
+}
+
+.add_row {
+  position: absolute;
+  left: 0;
+  bottom: -21px;
+  right: 0;
+}
+
+.add_col_and_row {
+  position: absolute;
+  bottom: -21px;
+  right: -24px;
+}
