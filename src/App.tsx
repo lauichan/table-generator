@@ -32,15 +32,10 @@ function App() {
     });
   };
 
-  useEffect(() => {
-    const html = renderToStaticMarkup(<Table table={table} />);
-    setHtmlString(html);
-  }, [table]);
-
   return (
     <>
       <TableEditor table={table} addRowColumn={addRowColumn} />
-      <pre>{formatHtml(htmlString)}</pre>
+      <pre>html 표시할 부분</pre>
     </>
   );
 }
