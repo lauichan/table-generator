@@ -1,26 +1,21 @@
 .table {
-  position: relative;
-  display: inline-block;
-  margin-right: 24px;
-  margin-bottom: 22px;
+  display: grid;
+  grid-template-areas:
+    "table right"
+    "bottom bottom-right";
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr auto;
+  gap: 0.2rem;
 }
 
 .add_col {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: -24px;
+  grid-area: right;
 }
 
 .add_row {
-  position: absolute;
-  left: 0;
-  bottom: -21px;
-  right: 0;
+  grid-area: bottom;
 }
 
 .add_col_and_row {
-  position: absolute;
-  bottom: -21px;
-  right: -24px;
+  grid-area: bottom-right;
 }
