@@ -1,3 +1,5 @@
+import styles from "./ContextMenu.module.css";
+
 export type MousePosition = {
   x: number;
   y: number;
@@ -6,7 +8,7 @@ export type MousePosition = {
 function ContextMenu({ position }: { position: MousePosition }) {
   if (position === null) return null;
   return (
-    <ul style={{ top: position.y, left: position.x }}>
+    <ul className={styles.context_menu} style={{ top: position.y, left: position.x }}>
       <div>
         {position.x}, {position.y}
       </div>
