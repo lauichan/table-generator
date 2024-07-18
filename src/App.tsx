@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
+import { useState } from "react";
 import formatHtml from "./utils/formatHtml";
 import TableEditor from "./components/Table/TableEditor";
-import Table from "./components/Table/Table";
+import { createTableHtml } from "./utils/createHtml";
 
 const initTable = [
   ["", ""],
@@ -11,7 +10,6 @@ const initTable = [
 
 function App() {
   const [table, setTable] = useState(initTable);
-  const [htmlString, setHtmlString] = useState<string>("");
 
   const addRowColumn = (rowCount: number, columnCount: number) => {
     setTable((prevTable) => {
@@ -19,24 +17,28 @@ function App() {
       for (let i = 0; i < rowCount; i++) {
         newTable.push(Array(newTable[0].length).fill(""));
       }
+      for (let i = 0; i < newTable.length; i++) {
+        for (let j = 0; j < columnCount; j++) {
+          newTable[i].push("");
+        }
+      }
       return newTable;
     });
+  };
+
+  const setTableText = (rowIdx: number, colIdx: number, text: string) => {
     setTable((prevTable) => {
-      return prevTable.map((row) => {
-        const newRow = [...row];
-        for (let i = 0; i < columnCount; i++) {
-          newRow.push("");
-        }
-        return newRow;
-      });
+      const newTable = [...prevTable];
+      newTable[rowIdx][colIdx] = text;
+      return newTable;
     });
   };
 
   return (
-    <>
-      <TableEditor table={table} addRowColumn={addRowColumn} />
-      <pre>html 표시할 부분</pre>
-    </>
+    <main>
+      <TableEditor table={table} addRowColumn={addRowColumn} setTableText={setTableText} />
+      <pre>{formatHtml(createTableHtml(table))}</pre>
+    </main>
   );
 }
 
