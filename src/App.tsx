@@ -1,7 +1,7 @@
 import { useState } from "react";
 import formatHtml from "./utils/formatHtml";
+import createTableHtml from "./utils/createHtml";
 import TableEditor from "./components/Table/TableEditor";
-import { createTableHtml } from "./utils/createHtml";
 
 const initTable = [
   ["", ""],
@@ -13,15 +13,16 @@ function App() {
 
   const addRowColumn = (rowCount: number, columnCount: number) => {
     setTable((prevTable) => {
-      const newTable = [...prevTable];
+      const newTable: string[][] = structuredClone(prevTable);
+
       for (let i = 0; i < rowCount; i++) {
         newTable.push(Array(newTable[0].length).fill(""));
       }
-      for (let i = 0; i < newTable.length; i++) {
-        for (let j = 0; j < columnCount; j++) {
-          newTable[i].push("");
-        }
-      }
+
+      newTable.forEach((row) => {
+        for (let j = 0; j < columnCount; j++) row.push("");
+      });
+
       return newTable;
     });
   };
