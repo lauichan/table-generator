@@ -1,0 +1,8 @@
+.context_menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 1rem;
+  z-index: 9999;
+}
