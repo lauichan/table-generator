@@ -28,7 +28,8 @@ function Table({ table, setTableText }: TableProps) {
     rowIdx: number,
     colIdx: number
   ) => {
-    setTableText(rowIdx, colIdx, event.target.innerText);
+    const target = event.currentTarget;
+    setTableText(rowIdx, colIdx, target.innerText);
   };
 
   return (
@@ -41,6 +42,7 @@ function Table({ table, setTableText }: TableProps) {
                 <td
                   key={`${rowIdx}-${colIdx}`}
                   contentEditable={isEditable}
+                  suppressContentEditableWarning={true}
                   onContextMenu={handleContextMenu}
                   onClick={handleEditMode}
                   onInput={(event) => handleInput(event, rowIdx, colIdx)}
