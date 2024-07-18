@@ -3,6 +3,12 @@ ul {
   padding: 0;
 }
 
+button,
+input {
+  font-size: inherit;
+  font-family: inherit;
+}
+
 main {
   display: flex;
   flex-direction: column;
