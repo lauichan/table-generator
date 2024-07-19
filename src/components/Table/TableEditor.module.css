@@ -3,19 +3,19 @@
   grid-template-areas:
     "table right"
     "bottom bottom-right";
-  grid-template-columns: 1fr auto;
-  grid-template-rows: 1fr auto;
+  grid-template-columns: minmax(auto, max-content) minmax(auto, max-content);
+  grid-template-rows: minmax(auto, max-content) minmax(auto, max-content);
   gap: 0.2rem;
 }
 
-.add_col {
+.right {
   grid-area: right;
 }
 
-.add_row {
+.bottom {
   grid-area: bottom;
 }
 
-.add_col_and_row {
+.bottom-right {
   grid-area: bottom-right;
 }
