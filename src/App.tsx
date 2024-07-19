@@ -11,19 +11,26 @@ const initTable = [
 function App() {
   const [table, setTable] = useState(initTable);
 
-  const addRowColumn = (rowCount: number, columnCount: number) => {
+  const setRowColumn = (rowCount: number, columnCount: number) => {
     setTable((prevTable) => {
       const newTable: string[][] = structuredClone(prevTable);
-
-      for (let i = 0; i < rowCount; i++) {
-        newTable.push(Array(newTable[0].length).fill(""));
+      if (rowCount >= 0 && columnCount >= 0) {
+        for (let i = 0; i < rowCount; i++) {
+          newTable.push(Array(newTable[0].length).fill(""));
+        }
+        newTable.forEach((row) => {
+          for (let j = 0; j < columnCount; j++) row.push("");
+        });
+        return newTable;
+      } else {
+        for (let i = 0; i < -1 * rowCount; i++) {
+          newTable.pop();
+        }
+        newTable.forEach((row) => {
+          for (let j = 0; j < -1 * columnCount; j++) row.pop();
+        });
+        return newTable;
       }
-
-      newTable.forEach((row) => {
-        for (let j = 0; j < columnCount; j++) row.push("");
-      });
-
-      return newTable;
     });
   };
 
@@ -37,7 +44,7 @@ function App() {
 
   return (
     <main>
-      <TableEditor table={table} addRowColumn={addRowColumn} setTableText={setTableText} />
+      <TableEditor table={table} setRowColumn={setRowColumn} setTableText={setTableText} />
       <pre>{formatHtml(createTableHtml(table))}</pre>
     </main>
   );
