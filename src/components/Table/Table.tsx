@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import ContextMenu, { MousePosition } from "../ContextMenu/ContextMenu";
 
 type TableProps = {
@@ -7,6 +7,7 @@ type TableProps = {
 };
 
 function Table({ table, setTableText }: TableProps) {
+  const [isEditable, setEditable] = useState(false);
   const [contextMenu, setContextMenu] = useState<MousePosition>(null);
 
   const handleContextMenu = (e: React.MouseEvent<HTMLTableCellElement, MouseEvent>) => {
@@ -17,19 +18,19 @@ function Table({ table, setTableText }: TableProps) {
     });
   };
 
-  const [isEditable, setEditable] = useState(false);
-
   const handleEditMode = () => {
     setEditable(true);
   };
 
-  const handleInput = (
-    event: React.FormEvent<HTMLTableCellElement>,
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLTableCellElement>,
     rowIdx: number,
     colIdx: number
   ) => {
-    const target = event.currentTarget;
-    setTableText(rowIdx, colIdx, target.innerText);
+    if (e.key === "Enter") {
+      setTableText(rowIdx, colIdx, e.currentTarget.innerText);
+      setEditable(false);
+    }
   };
 
   return (
@@ -45,7 +46,7 @@ function Table({ table, setTableText }: TableProps) {
                   suppressContentEditableWarning={true}
                   onContextMenu={handleContextMenu}
                   onClick={handleEditMode}
-                  onInput={(event) => handleInput(event, rowIdx, colIdx)}
+                  onKeyDown={(e) => handleKeyDown(e, rowIdx, colIdx)}
                 >
                   {column}
                 </td>
