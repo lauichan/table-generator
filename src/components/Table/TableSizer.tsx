@@ -1,5 +1,6 @@
 import { ChangeEvent } from "react";
 import styles from "./TableSizer.module.css";
+import { useTableStore } from "../../store/useTableStore";
 
 type TableSizerProps = {
   tableRowCol: { row: number; col: number };
@@ -12,6 +13,8 @@ const checkSizeLimit = (size: number) => {
 };
 
 function TableSizer({ tableRowCol, setRowColumn }: TableSizerProps) {
+  const initTable = useTableStore((state) => state.initTable);
+
   const handleRow = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
@@ -30,7 +33,10 @@ function TableSizer({ tableRowCol, setRowColumn }: TableSizerProps) {
     <form className={styles.controller}>
       <input placeholder="열" value={tableRowCol.row} onChange={handleRow} required></input>
       <input placeholder="행" value={tableRowCol.col} onChange={handleCol} required></input>
-      <button>생성</button>
+      <button type="button">생성</button>
+      <button type="button" onClick={initTable}>
+        초기화
+      </button>
     </form>
   );
 }

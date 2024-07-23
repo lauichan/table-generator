@@ -6,6 +6,7 @@ type State = {
 }
 
 type Actions =  {
+  initTable: () => void;
   setRowColumn: (rowCount: number, columnCount: number) => void;
   setTableText: (rowIdx: number, colIdx: number, text: string) => void;
 }
@@ -19,6 +20,9 @@ export const useTableStore = create<State & Actions>()(
   persist(
     (set) => ({
       table: initTable,
+      initTable: () => {
+        set({table: initTable})
+      },
       setRowColumn: (rowCount: number, columnCount: number) => {
         set(({table}) => {
           const newTable: string[][] = structuredClone(table);
