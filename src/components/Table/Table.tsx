@@ -1,12 +1,13 @@
-import { KeyboardEvent, useRef, useState } from "react";
+import { FocusEvent, KeyboardEvent, useRef, useState } from "react";
 import ContextMenu, { MousePosition } from "../ContextMenu/ContextMenu";
+import { useTableStore } from "../../store/useTableStore";
 
 type TableProps = {
   table: string[][];
-  setTableText: (rowIdx: number, colIdx: number, text: string) => void;
 };
 
-function Table({ table, setTableText }: TableProps) {
+function Table({ table }: TableProps) {
+  const setTableText = useTableStore((state) => state.setTableText);
   const cellRefs = useRef<HTMLTableCellElement[][]>([]);
   const [contextMenu, setContextMenu] = useState<MousePosition>(null);
 
@@ -16,6 +17,14 @@ function Table({ table, setTableText }: TableProps) {
       x: e.pageX,
       y: e.pageY,
     });
+  };
+
+  const handleFocusOut = (
+    e: FocusEvent<HTMLTableCellElement, Element>,
+    rowIdx: number,
+    colIdx: number
+  ) => {
+    setTableText(rowIdx, colIdx, e.currentTarget.innerText);
   };
 
   const handleKeyDown = (
@@ -40,11 +49,6 @@ function Table({ table, setTableText }: TableProps) {
         cellRefs.current[rowIdx - 1][colIdx].focus();
       }
     }
-
-    if (e.key === "Enter") {
-      e.preventDefault();
-      setTableText(rowIdx, colIdx, e.currentTarget.innerText);
-    }
   };
 
   return (
@@ -64,8 +68,9 @@ function Table({ table, setTableText }: TableProps) {
                   key={`${rowIdx}-${colIdx}`}
                   contentEditable
                   suppressContentEditableWarning
-                  onContextMenu={handleContextMenu}
+                  onBlur={(e) => handleFocusOut(e, rowIdx, colIdx)}
                   onKeyDown={(e) => handleKeyDown(e, rowIdx, colIdx)}
+                  onContextMenu={handleContextMenu}
                 >
                   {column}
                 </td>
