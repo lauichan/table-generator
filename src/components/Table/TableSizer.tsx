@@ -7,7 +7,6 @@ type TableSizerProps = {
 };
 
 const checkSizeLimit = (size: number) => {
-  console.log(size);
   if (size > 0 && size < 100) return true;
   return false;
 };
