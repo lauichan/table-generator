@@ -1,3 +1,7 @@
+body {
+  font-size: 16px;
+}
+
 ul {
   margin: 0;
   padding: 0;
@@ -27,13 +31,6 @@ td {
   height: 21px;
   border: 1px solid #ddd;
   padding: 7px 9px;
-}
-
-.table {
-  position: relative;
-  display: inline-block;
-  margin-right: 24px;
-  margin-bottom: 22px;
 }
 
 button {
