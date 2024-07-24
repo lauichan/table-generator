@@ -1,0 +1,19 @@
+.tab > button {
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.tab > label {
+  user-select: none;
+}
+
+.html {
+  padding: 1rem;
+  background-color: #f6f8fa;
+  margin: 1rem 0;
+  overflow-y: auto;
+}
+
+.preview {
+  margin: 1rem 0;
+}
