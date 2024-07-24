@@ -1,6 +1,8 @@
 import { FocusEvent, KeyboardEvent, useRef, useState } from "react";
 import ContextMenu, { MousePosition } from "../ContextMenu/ContextMenu";
 import { useTableStore } from "../../store/useTableStore";
+import htmlEscape from "../../utils/htmlEscape";
+import sanitizeHtml from "../../utils/sanitizeHtml";
 
 type TableProps = {
   table: string[][];
@@ -24,7 +26,8 @@ function Table({ table }: TableProps) {
     rowIdx: number,
     colIdx: number
   ) => {
-    setTableText(rowIdx, colIdx, e.currentTarget.innerText);
+    const text = htmlEscape(e.currentTarget.innerText);
+    setTableText(rowIdx, colIdx, text);
   };
 
   const handleKeyDown = (
@@ -71,9 +74,8 @@ function Table({ table }: TableProps) {
                   onBlur={(e) => handleFocusOut(e, rowIdx, colIdx)}
                   onKeyDown={(e) => handleKeyDown(e, rowIdx, colIdx)}
                   onContextMenu={handleContextMenu}
-                >
-                  {column}
-                </td>
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(column) }}
+                />
               ))}
             </tr>
           ))}
