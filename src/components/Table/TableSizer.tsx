@@ -7,9 +7,10 @@ type TableSizerProps = {
   setRowColumn: (rowCount: number, columnCount: number) => void;
 };
 
-const checkSizeLimit = (size: number) => {
-  if (size > 0 && size < 100) return true;
-  return false;
+const sizeLimit = (size: number) => {
+  if (size < 2) return 2;
+  if (size > 50) return 50;
+  return size;
 };
 
 function TableSizer({ tableRowCol, setRowColumn }: TableSizerProps) {
@@ -18,21 +19,19 @@ function TableSizer({ tableRowCol, setRowColumn }: TableSizerProps) {
   const handleRow = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    if (!checkSizeLimit(value)) return;
-    setRowColumn(value - tableRowCol.row, 0);
+    setRowColumn(sizeLimit(value) - tableRowCol.row, 0);
   };
 
   const handleCol = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    if (!checkSizeLimit(value)) return;
-    setRowColumn(0, value - tableRowCol.col);
+    setRowColumn(0, sizeLimit(value) - tableRowCol.col);
   };
 
   return (
     <form className={styles.controller}>
-      <input placeholder="열" value={tableRowCol.row} onChange={handleRow} required></input>
-      <input placeholder="행" value={tableRowCol.col} onChange={handleCol} required></input>
+      <input placeholder="열" value={tableRowCol.row} onChange={handleRow} />
+      <input placeholder="행" value={tableRowCol.col} onChange={handleCol} />
       <button type="button">생성</button>
       <button type="button" onClick={initTable}>
         초기화
