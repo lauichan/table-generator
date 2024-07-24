@@ -4,14 +4,10 @@ import { useTableStore } from "../../store/useTableStore";
 import htmlEscape from "../../utils/htmlEscape";
 import sanitizeHtml from "../../utils/sanitizeHtml";
 
-type TableProps = {
-  table: string[][];
-};
-
-function Table({ table }: TableProps) {
-  const setTableText = useTableStore((state) => state.setTableText);
-  const cellRefs = useRef<HTMLTableCellElement[][]>([]);
+function Table({ table }: { table: string[][] }) {
   const [contextMenu, setContextMenu] = useState<MousePosition>(null);
+  const cellRefs = useRef<HTMLTableCellElement[][]>([]);
+  const setTableText = useTableStore((state) => state.setTableText);
 
   const handleContextMenu = (e: React.MouseEvent<HTMLTableCellElement, MouseEvent>) => {
     e.preventDefault();
