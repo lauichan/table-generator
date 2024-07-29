@@ -35,20 +35,34 @@ function TableCodeBlock() {
   };
 
   return (
-    <div className={styles["tab"]}>
-      <button onClick={handleCopyCode}>코드복사</button>
-      <input id="minify" type="checkbox" checked={isMinified} onChange={handleMinify} />
-      <label htmlFor="minify">코드 최소화</label>
-      <input id="thead" type="checkbox" checked={thead} onChange={toggleThead} />
-      <label htmlFor="thead">머리글 사용</label>
-      <input id="tfoot" type="checkbox" checked={tfoot} onChange={toggleTfoot} />
-      <label htmlFor="tfoot">바닥글 사용</label>
-      <pre className={styles["html"]}>
-        <code ref={codeRef}>{code}</code>
-      </pre>
-      <strong>미리보기</strong>
-      <div className={styles["preview"]} dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }} />
-    </div>
+    <>
+      <ul className={styles["option"]}>
+        <li>
+          <input id="minify" type="checkbox" checked={isMinified} onChange={handleMinify} />
+          <label htmlFor="minify">코드 최소화</label>
+        </li>
+        <li>
+          <input id="thead" type="checkbox" checked={thead} onChange={toggleThead} />
+          <label htmlFor="thead">머리글 사용</label>
+        </li>
+        <li>
+          <input id="tfoot" type="checkbox" checked={tfoot} onChange={toggleTfoot} />
+          <label htmlFor="tfoot">바닥글 사용</label>
+        </li>
+      </ul>
+      <div className={styles["tab"]}>
+        <button onClick={handleCopyCode}>코드복사</button>
+
+        <pre className={styles["html"]}>
+          <code ref={codeRef}>{code}</code>
+        </pre>
+        <strong>미리보기</strong>
+        <div
+          className={styles["preview"]}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }}
+        />
+      </div>
+    </>
   );
 }
 

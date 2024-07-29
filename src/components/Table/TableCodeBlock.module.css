@@ -17,3 +17,9 @@
 .preview {
   margin: 1rem 0;
 }
+
+.option {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+}
