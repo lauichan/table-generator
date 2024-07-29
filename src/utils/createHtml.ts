@@ -4,7 +4,7 @@ const createTableHtml = (table: string[][], thead: boolean, tfoot: boolean) => {
   let tbodyHtml = '';
 
   if (thead) {
-    theadHtml = `<thead>${createRowHtml(table[0])}</thead>`;
+    theadHtml = `<thead>${createRowHtml(table[0], thead)}</thead>`;
   }
 
   if (tfoot) {
@@ -28,13 +28,17 @@ const createTableHtml = (table: string[][], thead: boolean, tfoot: boolean) => {
   return `<table>${theadHtml}${tbodyHtml}${tfootHtml}</table>`;
 };
 
-const createRowHtml = (row: string[]) => {
-  const html = row.map((define) => createDefineHtml(define)).join("")
+const createRowHtml = (row: string[], thead: boolean = false) => {
+  const html = row.map((text) => thead ? createHeadHtml(text) : createDefineHtml(text)).join("")
   return `<tr>${html}</tr>`
 };
 
-const createDefineHtml = (define: string) => {
-  return `<td>${define}</td>`
+const createDefineHtml = (text: string) => {
+  return `<td>${text}</td>`
+}
+
+const createHeadHtml = (head: string) => {
+  return `<th>${head}</th>`
 }
 
 export default createTableHtml
