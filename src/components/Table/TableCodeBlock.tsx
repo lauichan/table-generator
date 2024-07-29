@@ -8,9 +8,16 @@ import styles from "./TableCodeBlock.module.css";
 function TableCodeBlock() {
   const [isMinified, setIsMinified] = useState(false);
   const codeRef = useRef<HTMLElement>(null);
-  const table = useTableStore((state) => state.table);
-  const tableHtml = createTableHtml(table);
-  const code = sanitizeHtml(isMinified ? tableHtml : formatHtml(tableHtml));
+  const { table, thead, tfoot, toggleThead, toggleTfoot } = useTableStore((state) => ({
+    table: state.table,
+    thead: state.thead,
+    tfoot: state.tfoot,
+    toggleThead: state.toggleThead,
+    toggleTfoot: state.toggleTfoot,
+  }));
+
+  const tableHtml = createTableHtml(table, thead, tfoot);
+  const code = isMinified ? tableHtml : formatHtml(tableHtml);
 
   const handleMinify = () => {
     setIsMinified((prev) => !prev);
@@ -32,11 +39,15 @@ function TableCodeBlock() {
       <button onClick={handleCopyCode}>코드복사</button>
       <input id="minify" type="checkbox" checked={isMinified} onChange={handleMinify} />
       <label htmlFor="minify">코드 최소화</label>
+      <input id="thead" type="checkbox" checked={thead} onChange={toggleThead} />
+      <label htmlFor="thead">머리글 사용</label>
+      <input id="tfoot" type="checkbox" checked={tfoot} onChange={toggleTfoot} />
+      <label htmlFor="tfoot">바닥글 사용</label>
       <pre className={styles["html"]}>
         <code ref={codeRef}>{code}</code>
       </pre>
       <strong>미리보기</strong>
-      <div className={styles["preview"]} dangerouslySetInnerHTML={{ __html: code }} />
+      <div className={styles["preview"]} dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }} />
     </div>
   );
 }
