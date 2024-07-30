@@ -1,16 +1,11 @@
 import { ChangeEvent } from "react";
-import styles from "./TableSizer.module.css";
 import { useTableStore } from "../../store/useTableStore";
+import sizeLimit from "../../utils/sizeLimit";
+import styles from "./TableSizer.module.css";
 
 type TableSizerProps = {
   tableRowCol: { row: number; col: number };
   setRowColumn: (rowCount: number, columnCount: number) => void;
-};
-
-const sizeLimit = (size: number) => {
-  if (size < 2) return 2;
-  if (size > 50) return 50;
-  return size;
 };
 
 function TableSizer({ tableRowCol, setRowColumn }: TableSizerProps) {
@@ -19,13 +14,13 @@ function TableSizer({ tableRowCol, setRowColumn }: TableSizerProps) {
   const handleRow = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    setRowColumn(sizeLimit(value) - tableRowCol.row, 0);
+    setRowColumn(sizeLimit(value, 2, 50) - tableRowCol.row, 0);
   };
 
   const handleCol = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    setRowColumn(0, sizeLimit(value) - tableRowCol.col);
+    setRowColumn(0, sizeLimit(value, 2, 50) - tableRowCol.col);
   };
 
   return (
