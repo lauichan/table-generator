@@ -3,16 +3,12 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 type State = {
   table: string[][];
-  thead: boolean;
-  tfoot: boolean;
 }
 
 type Actions =  {
   initTable: () => void;
   setRowColumn: (rowCount: number, columnCount: number) => void;
   setTableText: (rowIdx: number, colIdx: number, text: string) => void;
-  toggleThead: () => void;
-  toggleTfoot: () => void;
 }
 
 const initTable = [
@@ -57,13 +53,7 @@ export const useTableStore = create<State & Actions>()(
           );
           return { table: newTable };
         })
-      },
-      toggleThead: () => {
-        set((state) => ({ thead: !state.thead }));
-      },
-      toggleTfoot: () => {
-        set((state) => ({ tfoot: !state.tfoot }));
-      },
+      }
     }),
     {
       name: 'table',
