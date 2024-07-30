@@ -3,15 +3,12 @@
   margin-right: 0.5rem;
 }
 
-.tab > label {
-  user-select: none;
-}
-
 .html {
   padding: 1rem;
   background-color: #f6f8fa;
   margin: 1rem 0;
   overflow-y: auto;
+  font-size: 0.8rem;
 }
 
 .preview {
@@ -22,4 +19,8 @@
   display: flex;
   gap: 0.5rem;
   list-style: none;
+}
+
+.option label {
+  user-select: none;
 }
