@@ -1,27 +1,27 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useTableStore } from "../../store/useTableStore";
+import { useOptionStore } from "../../store/useOptionStore";
 import createTableHtml from "../../utils/createHtml";
 import formatHtml from "../../utils/formatHtml";
 import sanitizeHtml from "../../utils/sanitizeHtml";
 import styles from "./TableCodeBlock.module.css";
 
 function TableCodeBlock() {
-  const [isMinified, setIsMinified] = useState(false);
   const codeRef = useRef<HTMLElement>(null);
-  const { table, thead, tfoot, toggleThead, toggleTfoot } = useTableStore((state) => ({
-    table: state.table,
-    thead: state.thead,
-    tfoot: state.tfoot,
-    toggleThead: state.toggleThead,
-    toggleTfoot: state.toggleTfoot,
-  }));
+  const table = useTableStore((state) => state.table);
+  const { minified, thead, tfoot, toggleMinified, toggleThead, toggleTfoot } = useOptionStore(
+    (state) => ({
+      minified: state.minified,
+      thead: state.thead,
+      tfoot: state.tfoot,
+      toggleMinified: state.toggleMinified,
+      toggleThead: state.toggleThead,
+      toggleTfoot: state.toggleTfoot,
+    })
+  );
 
   const tableHtml = createTableHtml(table, thead, tfoot);
-  const code = isMinified ? tableHtml : formatHtml(tableHtml);
-
-  const handleMinify = () => {
-    setIsMinified((prev) => !prev);
-  };
+  const code = minified ? tableHtml : formatHtml(tableHtml);
 
   const handleCopyCode = () => {
     const text = codeRef.current;
@@ -38,7 +38,7 @@ function TableCodeBlock() {
     <>
       <ul className={styles["option"]}>
         <li>
-          <input id="minify" type="checkbox" checked={isMinified} onChange={handleMinify} />
+          <input id="minify" type="checkbox" checked={minified} onChange={toggleMinified} />
           <label htmlFor="minify">코드 최소화</label>
         </li>
         <li>
