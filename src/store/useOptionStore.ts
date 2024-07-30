@@ -5,13 +5,13 @@ type State = {
   minified: boolean;
   thead: boolean;
   tfoot: boolean;
-}
+};
 
-type Actions =  {
+type Actions = {
   toggleMinified: () => void;
   toggleThead: () => void;
   toggleTfoot: () => void;
-}
+};
 
 export const useOptionStore = create<State & Actions>()(
   persist(
@@ -30,8 +30,8 @@ export const useOptionStore = create<State & Actions>()(
       },
     }),
     {
-      name: 'option',
+      name: "option",
       storage: createJSONStorage(() => sessionStorage),
-    },
+    }
   )
-)
+);
