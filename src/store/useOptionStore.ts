@@ -20,7 +20,7 @@ export const useOptionStore = create<State & Actions>()(
       thead: false,
       tfoot: false,
       toggleMinified: () => {
-        set((state) => ({ thead: !state.minified }));
+        set((state) => ({ minified: !state.minified }));
       },
       toggleThead: () => {
         set((state) => ({ thead: !state.thead }));
