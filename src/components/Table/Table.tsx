@@ -1,44 +1,18 @@
-import { FocusEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import ContextMenu, { MousePosition } from "../ContextMenu/ContextMenu";
+import { FocusEvent, KeyboardEvent, useRef } from "react";
+import ContextMenu from "../ContextMenu/ContextMenu";
 import { type CellType, useTableStore } from "../../store/useTableStore";
 import { useOptionStore } from "../../store/useOptionStore";
 import htmlEscape from "../../utils/htmlEscape";
 import Cell from "./Cell/Cell";
+import useContextMenu from "../../hooks/useContextMenu";
+import { useShallow } from "zustand/react/shallow";
 
 function Table({ table }: { table: CellType[][] }) {
-  const cellRefs = useRef<HTMLTableCellElement[][]>([]);
+  const { contextMenuRef, handleContextMenu, contextMenu } = useContextMenu();
+  const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
-  const thead = useOptionStore((state) => state.thead);
-  const tfoot = useOptionStore((state) => state.tfoot);
-  const tbody = thead
-    ? tfoot
-      ? table.slice(1, table.length - 1)
-      : table.slice(1)
-    : tfoot
-    ? table.slice(0, table.length - 1)
-    : table;
 
-  const contextMenuRef = useRef<HTMLElement>(null);
-  const [contextMenu, setContextMenu] = useState<MousePosition>(null);
-
-  const handleContextMenu = (e: React.MouseEvent<HTMLTableCellElement, MouseEvent>) => {
-    e.preventDefault();
-    setContextMenu({
-      x: e.pageX,
-      y: e.pageY,
-    });
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (contextMenuRef.current && !contextMenuRef.current.contains(event.target as Node)) {
-        setContextMenu(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [contextMenu]);
+  const tbody = table.slice(thead ? 1 : 0, tfoot ? -1 : table.length);
 
   const handleFocusOut = (
     e: FocusEvent<HTMLTableCellElement, Element>,
@@ -48,6 +22,8 @@ function Table({ table }: { table: CellType[][] }) {
     const text = htmlEscape(e.currentTarget.innerText);
     setTableText(rowIdx, colIdx, text);
   };
+
+  const cellRefs = useRef<HTMLTableCellElement[][]>([]);
 
   const handleKeyDown = (
     e: KeyboardEvent<HTMLTableCellElement>,
