@@ -1,15 +1,15 @@
-import { FocusEvent, KeyboardEvent, useRef, useState } from "react";
+import { FocusEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import ContextMenu, { MousePosition } from "../ContextMenu/ContextMenu";
-import { useTableStore } from "../../store/useTableStore";
+import { type CellType, useTableStore } from "../../store/useTableStore";
+import { useOptionStore } from "../../store/useOptionStore";
 import htmlEscape from "../../utils/htmlEscape";
-import sanitizeHtml from "../../utils/sanitizeHtml";
+import Cell from "./Cell/Cell";
 
-function Table({ table }: { table: string[][] }) {
-  const [contextMenu, setContextMenu] = useState<MousePosition>(null);
+function Table({ table }: { table: CellType[][] }) {
   const cellRefs = useRef<HTMLTableCellElement[][]>([]);
   const setTableText = useTableStore((state) => state.setTableText);
-  const thead = useTableStore((state) => state.thead);
-  const tfoot = useTableStore((state) => state.tfoot);
+  const thead = useOptionStore((state) => state.thead);
+  const tfoot = useOptionStore((state) => state.tfoot);
   const tbody = thead
     ? tfoot
       ? table.slice(1, table.length - 1)
@@ -18,13 +18,27 @@ function Table({ table }: { table: string[][] }) {
     ? table.slice(0, table.length - 1)
     : table;
 
-  // const handleContextMenu = (e: React.MouseEvent<HTMLTableCellElement, MouseEvent>) => {
-  //   e.preventDefault();
-  //   setContextMenu({
-  //     x: e.pageX,
-  //     y: e.pageY,
-  //   });
-  // };
+  const contextMenuRef = useRef<HTMLElement>(null);
+  const [contextMenu, setContextMenu] = useState<MousePosition>(null);
+
+  const handleContextMenu = (e: React.MouseEvent<HTMLTableCellElement, MouseEvent>) => {
+    e.preventDefault();
+    setContextMenu({
+      x: e.pageX,
+      y: e.pageY,
+    });
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (contextMenuRef.current && !contextMenuRef.current.contains(event.target as Node)) {
+        setContextMenu(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [contextMenu]);
 
   const handleFocusOut = (
     e: FocusEvent<HTMLTableCellElement, Element>,
@@ -61,25 +75,19 @@ function Table({ table }: { table: string[][] }) {
 
   return (
     <>
-      <table>
+      <table ref={contextMenuRef}>
         {thead ? (
           <thead>
             <tr>
-              {table[0].map((col, colIdx) => (
-                <th
-                  ref={(el: HTMLTableCellElement) => {
-                    if (!cellRefs.current[0]) {
-                      cellRefs.current[0] = [];
-                    }
-                    cellRefs.current[0][colIdx] = el;
-                  }}
-                  key={`header-${colIdx}`}
-                  contentEditable
-                  suppressContentEditableWarning
-                  onBlur={(e) => handleFocusOut(e, 0, colIdx)}
-                  onKeyDown={(e) => handleKeyDown(e, 0, colIdx)}
-                  // onContextMenu={handleContextMenu}
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(col) }}
+              {table[0].map((cell, colIdx) => (
+                <Cell
+                  {...cell}
+                  cellRefs={cellRefs}
+                  rowIdx={0}
+                  colIdx={colIdx}
+                  handleFocusOut={handleFocusOut}
+                  handleKeyDown={handleKeyDown}
+                  handleContextMenu={handleContextMenu}
                 />
               ))}
             </tr>
@@ -90,21 +98,15 @@ function Table({ table }: { table: string[][] }) {
         <tbody>
           {tbody.map((row, rowIdx) => (
             <tr key={`row-${rowIdx}`}>
-              {row.map((column, colIdx) => (
-                <td
-                  ref={(el: HTMLTableCellElement) => {
-                    if (!cellRefs.current[rowIdx + (thead ? 1 : 0)]) {
-                      cellRefs.current[rowIdx + (thead ? 1 : 0)] = [];
-                    }
-                    cellRefs.current[rowIdx + (thead ? 1 : 0)][colIdx] = el;
-                  }}
-                  key={`${rowIdx}-${colIdx}`}
-                  contentEditable
-                  suppressContentEditableWarning
-                  onBlur={(e) => handleFocusOut(e, rowIdx + (thead ? 1 : 0), colIdx)}
-                  onKeyDown={(e) => handleKeyDown(e, rowIdx + (thead ? 1 : 0), colIdx)}
-                  // onContextMenu={handleContextMenu}
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(column) }}
+              {row.map((cell, colIdx) => (
+                <Cell
+                  {...cell}
+                  cellRefs={cellRefs}
+                  rowIdx={rowIdx}
+                  colIdx={colIdx}
+                  handleFocusOut={handleFocusOut}
+                  handleKeyDown={handleKeyDown}
+                  handleContextMenu={handleContextMenu}
                 />
               ))}
             </tr>
@@ -113,21 +115,15 @@ function Table({ table }: { table: string[][] }) {
         {tfoot ? (
           <tfoot>
             <tr>
-              {table.slice(-1)[0].map((col, colIdx) => (
-                <td
-                  ref={(el: HTMLTableCellElement) => {
-                    if (!cellRefs.current[table.length - 1]) {
-                      cellRefs.current[table.length - 1] = [];
-                    }
-                    cellRefs.current[table.length - 1][colIdx] = el;
-                  }}
-                  key={`footer-${colIdx}`}
-                  contentEditable
-                  suppressContentEditableWarning
-                  onBlur={(e) => handleFocusOut(e, table.length - 1, colIdx)}
-                  onKeyDown={(e) => handleKeyDown(e, table.length - 1, colIdx)}
-                  // onContextMenu={handleContextMenu}
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(col) }}
+              {table.slice(-1)[0].map((cell, colIdx) => (
+                <Cell
+                  {...cell}
+                  cellRefs={cellRefs}
+                  rowIdx={table.length - 1}
+                  colIdx={colIdx}
+                  handleFocusOut={handleFocusOut}
+                  handleKeyDown={handleKeyDown}
+                  handleContextMenu={handleContextMenu}
                 />
               ))}
             </tr>
