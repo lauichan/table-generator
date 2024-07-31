@@ -17,6 +17,9 @@ main {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 table {
@@ -27,7 +30,7 @@ table {
 th,
 td {
   position: relative;
-  width: 120px;
+  width: 100px;
   height: 21px;
   border: 1px solid #ddd;
   padding: 7px 9px;
