@@ -9,6 +9,7 @@
   margin: 1rem 0;
   overflow-y: auto;
   font-size: 0.8rem;
+  max-height: 400px;
 }
 
 .preview {
@@ -17,10 +18,17 @@
 
 .option {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.7rem;
   list-style: none;
 }
 
 .option label {
   user-select: none;
+  margin-left: 0.3rem;
+}
+
+.disabled {
+  color: #777;
+  cursor: pointer;
 }
