@@ -81,6 +81,7 @@ function Table({ table }: { table: CellType[][] }) {
             <tr>
               {table[0].map((cell, colIdx) => (
                 <Cell
+                  key={`header-${colIdx}`}
                   {...cell}
                   cellRefs={cellRefs}
                   rowIdx={0}
@@ -97,9 +98,10 @@ function Table({ table }: { table: CellType[][] }) {
         )}
         <tbody>
           {tbody.map((row, rowIdx) => (
-            <tr key={`row-${rowIdx}`}>
+            <tr key={`tbody-${rowIdx}`}>
               {row.map((cell, colIdx) => (
                 <Cell
+                  key={`tbody-${rowIdx}-${colIdx}`}
                   {...cell}
                   cellRefs={cellRefs}
                   rowIdx={rowIdx}
@@ -117,6 +119,7 @@ function Table({ table }: { table: CellType[][] }) {
             <tr>
               {table.slice(-1)[0].map((cell, colIdx) => (
                 <Cell
+                  key={`tfoot-${colIdx}`}
                   {...cell}
                   cellRefs={cellRefs}
                   rowIdx={table.length - 1}
