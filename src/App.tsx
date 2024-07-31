@@ -1,11 +1,11 @@
 import TableEditor from "./components/Table/TableEditor";
-import TableCodeBlock from "./components/Table/TableCodeBlock";
+import TableOption from "./components/Table/TableOption";
 
 function App() {
   return (
     <main>
       <TableEditor />
-      <TableCodeBlock />
+      <TableOption />
     </main>
   );
 }
