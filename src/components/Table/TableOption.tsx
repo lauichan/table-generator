@@ -5,26 +5,34 @@ import createTableHtml from "../../utils/createHtml";
 import formatHtml from "../../utils/formatHtml";
 import sanitizeHtml from "../../utils/sanitizeHtml";
 import sizeLimit from "../../utils/sizeLimit";
-import styles from "./TableCodeBlock.module.css";
+import styles from "./TableOption.module.css";
+import { useShallow } from "zustand/react/shallow";
 
-function TableCodeBlock() {
-  const [tabSize, setTabSize] = useState(4);
+function TableOption() {
   const codeRef = useRef<HTMLElement>(null);
-  const table = useTableStore((state) => state.table);
-  const toggleHeadType = useTableStore((state) => state.toggleHeadType);
-  const { minified, thead, tfoot, toggleMinified, toggleThead, toggleTfoot } = useOptionStore(
-    (state) => ({
-      minified: state.minified,
-      thead: state.thead,
-      tfoot: state.tfoot,
-      toggleMinified: state.toggleMinified,
-      toggleThead: state.toggleThead,
-      toggleTfoot: state.toggleTfoot,
-    })
+  const [tabSize, setTabSize] = useState(4);
+  const [table, toggleHeadType] = useTableStore(
+    useShallow((state) => [state.table, state.toggleHeadType])
+  );
+
+  const [minified, thead, tfoot, toggleMinified, toggleThead, toggleTfoot] = useOptionStore(
+    useShallow((state) => [
+      state.minified,
+      state.thead,
+      state.tfoot,
+      state.toggleMinified,
+      state.toggleThead,
+      state.toggleTfoot,
+    ])
   );
 
   const tableHtml = createTableHtml(table, thead, tfoot);
   const code = minified ? tableHtml : formatHtml(tableHtml, tabSize);
+
+  const handleTabSize = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setTabSize(sizeLimit(value, 2, 4));
+  };
 
   const handleCopyCode = () => {
     const text = codeRef.current;
@@ -35,11 +43,6 @@ function TableCodeBlock() {
     } catch (error) {
       alert("클립보드 복사에 실패하였습니다.");
     }
-  };
-
-  const handleTabSize = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    setTabSize(sizeLimit(value, 2, 4));
   };
 
   const handleToggleThead = () => {
@@ -73,22 +76,22 @@ function TableCodeBlock() {
           <label htmlFor="tabsize">탭 크기</label>
         </li>
       </ul>
-      <div className={styles["tab"]}>
+      <section className={styles["tab"]}>
+        <h2>코드</h2>
         <button onClick={handleCopyCode}>코드복사</button>
-
         <pre className={styles["html"]}>
           <code ref={codeRef}>{code}</code>
         </pre>
-
-        <strong>미리보기</strong>
-
+      </section>
+      <section>
+        <h2>미리보기</h2>
         <div
           className={styles["preview"]}
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }}
         />
-      </div>
+      </section>
     </>
   );
 }
 
-export default TableCodeBlock;
+export default TableOption;
