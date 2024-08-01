@@ -13,13 +13,7 @@ const createTableHtml = (table: CellType[][], thead: boolean, tfoot: boolean) =>
     tfootHtml = `<tfoot>${createRowHtml(table[table.length - 1])}</tfoot>`;
   }
 
-  const tbody = thead
-    ? tfoot
-      ? table.slice(1, table.length - 1)
-      : table.slice(1)
-    : tfoot
-    ? table.slice(0, table.length - 1)
-    : table;
+  const tbody = table.slice(thead ? 1 : 0, tfoot ? -1 : table.length);
 
   if (thead || tfoot) {
     tbodyHtml = `<tbody>${tbody.map((row) => createRowHtml(row)).join("")}</tbody>`;
