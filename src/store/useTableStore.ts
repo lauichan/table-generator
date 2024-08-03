@@ -4,8 +4,14 @@ import { persist, createJSONStorage } from "zustand/middleware";
 export type CellType = {
   type: "define" | "head" | "merged";
   content: string;
-  rowSpan?: number;
-  colSpan?: number;
+  merged?: {
+    originalCell: {
+      rowIdx: number;
+      colIdx: number;
+    };
+    rowSpan: number;
+    colSpan: number;
+  };
 };
 
 type State = {
@@ -18,8 +24,7 @@ type Actions = {
   setTableText: (rowIdx: number, colIdx: number, text: string) => void;
   toggleHeadType: (type: CellType["type"]) => void;
   toggleCellType: (rowIdx: number, colIdx: number, type: CellType["type"]) => void;
-  setRowSpan: (rowIdx: number, colIdx: number, rowSpan: number) => void;
-  setColSpan: (rowIdx: number, colIdx: number, colSpan: number) => void;
+  setSpan: (rowIdx: number, colIdx: number, rowSpan: number, colSpan: number) => void;
 };
 
 const initTable: CellType[][] = [
@@ -37,10 +42,11 @@ export const useTableStore = create<State & Actions>()(
   persist(
     (set) => ({
       table: initTable,
+      selectedCells: null,
       initTable: () => {
         set({ table: initTable });
       },
-      setRowColumn: (rowCount: number, columnCount: number) => {
+      setRowColumn: (rowCount, columnCount) => {
         set(({ table }) => {
           const newTable: CellType[][] = structuredClone(table);
           if (rowCount >= 0 && columnCount >= 0) {
@@ -61,7 +67,7 @@ export const useTableStore = create<State & Actions>()(
           return { table: newTable };
         });
       },
-      setTableText: (rowIdx: number, colIdx: number, text: string) => {
+      setTableText: (rowIdx, colIdx, text) => {
         set(({ table }) => {
           const newTable = table.map((row, rIdx) =>
             row.map((cell, cIdx) =>
@@ -89,8 +95,32 @@ export const useTableStore = create<State & Actions>()(
           return { table: newTable };
         });
       },
-      setRowSpan: (rowIdx, colIdx, rowSpan) => {},
-      setColSpan: (rowIdx, colIdx, colSpan) => {},
+      setSpan: (rowIdx, colIdx, rowSpan, colSpan) => {
+        set(({ table }) => {
+          const newTable = structuredClone(table);
+          newTable[rowIdx][colIdx] = {
+            ...newTable[rowIdx][colIdx],
+            merged: {
+              originalCell: { rowIdx, colIdx },
+              rowSpan,
+              colSpan,
+            },
+          };
+          for (let i = 1; i <= rowSpan; i++) {
+            newTable[rowIdx + i][colIdx] = {
+              ...newTable[rowIdx + i][colIdx],
+              type: "merged",
+            };
+          }
+          for (let i = 1; i <= colSpan; i++) {
+            newTable[rowIdx][colIdx + 1] = {
+              ...newTable[rowIdx][colIdx + 1],
+              type: "merged",
+            };
+          }
+          return { table: newTable };
+        });
+      },
     }),
     {
       name: "table",
