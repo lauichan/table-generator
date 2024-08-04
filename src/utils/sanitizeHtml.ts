@@ -1,7 +1,7 @@
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 
-const sanitizeHtml = (html: string) => {
-  return DOMPurify.sanitize(html)
-}
+const sanitizeHtml = (html: string): string => {
+  return DOMPurify.sanitize(html);
+};
 
-export default sanitizeHtml
+export default sanitizeHtml;

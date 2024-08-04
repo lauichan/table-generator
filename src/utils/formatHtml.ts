@@ -1,4 +1,4 @@
-function formatHtml(htmlString: string, tabSize: number = 4) {
+function formatHtml(htmlString: string, tabSize: number = 4): string {
   let formatted = "";
   const tab = " ".repeat(tabSize);
   let indentLevel = 0;
