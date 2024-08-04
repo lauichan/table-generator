@@ -1,4 +1,4 @@
-const htmlEscape = (str: string) => {
+const htmlEscape = (str: string): string => {
   return str.replace(/[&<>"']/g, (match) => {
     switch (match) {
       case "&":
@@ -17,4 +17,4 @@ const htmlEscape = (str: string) => {
   });
 };
 
-export default htmlEscape
+export default htmlEscape;
