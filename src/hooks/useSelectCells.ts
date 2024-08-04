@@ -1,5 +1,12 @@
 import { MouseEvent, useState } from "react";
 
+export type SelectedRange = {
+  endRow?: number | undefined;
+  endCol?: number | undefined;
+  startRow?: number | undefined;
+  startCol?: number | undefined;
+};
+
 const useSelectCells = () => {
   const [startIdx, setStartIdx] = useState<{ startRow: number; startCol: number } | null>(null);
   const [endIdx, setEndIdx] = useState<{ endRow: number; endCol: number } | null>(null);
