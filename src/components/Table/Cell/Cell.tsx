@@ -23,6 +23,7 @@ type CellProps = CellType & {
 function Cell({
   type,
   content,
+  merged,
   selected,
   cellRefs,
   colIdx,
@@ -48,7 +49,8 @@ function Cell({
           }
           cellRefs.current[rowIdx][colIdx] = el;
         }}
-        key={`header-${colIdx}`}
+        rowSpan={merged?.rowSpan}
+        colSpan={merged?.colSpan}
         contentEditable
         suppressContentEditableWarning
         onBlur={(e) => handleFocusOut(e, rowIdx, colIdx)}
@@ -69,7 +71,8 @@ function Cell({
         }
         cellRefs.current[cellRefIdx][colIdx] = el;
       }}
-      key={`${rowIdx}-${colIdx}`}
+      rowSpan={merged?.rowSpan}
+      colSpan={merged?.colSpan}
       contentEditable
       suppressContentEditableWarning
       onBlur={(e) => handleFocusOut(e, cellRefIdx, colIdx)}
