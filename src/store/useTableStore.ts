@@ -24,7 +24,7 @@ type Actions = {
   setTableText: (rowIdx: number, colIdx: number, text: string) => void;
   toggleHeadType: (type: CellType["type"]) => void;
   toggleCellType: (rowIdx: number, colIdx: number, type: CellType["type"]) => void;
-  setSpan: (rowIdx: number, colIdx: number, rowSpan: number, colSpan: number) => void;
+  mergeCells: (rowIdx: number, colIdx: number, rowSpan: number, colSpan: number) => void;
 };
 
 const initTable: CellType[][] = [
@@ -95,7 +95,7 @@ export const useTableStore = create<State & Actions>()(
           return { table: newTable };
         });
       },
-      setSpan: (rowIdx, colIdx, rowSpan, colSpan) => {
+      mergeCells: (rowIdx, colIdx, rowSpan, colSpan) => {
         set(({ table }) => {
           const newTable = structuredClone(table);
           newTable[rowIdx][colIdx] = {
@@ -106,17 +106,14 @@ export const useTableStore = create<State & Actions>()(
               colSpan: colSpan + 1,
             },
           };
-          for (let i = 1; i <= rowSpan; i++) {
-            newTable[rowIdx + i][colIdx] = {
-              ...newTable[rowIdx + i][colIdx],
-              type: "merged",
-            };
-          }
-          for (let i = 1; i <= colSpan; i++) {
-            newTable[rowIdx][colIdx + 1] = {
-              ...newTable[rowIdx][colIdx + 1],
-              type: "merged",
-            };
+          for (let i = 0; i <= rowSpan; i++) {
+            for (let j = 0; j <= colSpan; j++) {
+              if (i === 0 && j === 0) continue;
+              newTable[rowIdx + i][colIdx + j] = {
+                ...newTable[rowIdx + i][colIdx + j],
+                type: "merged",
+              };
+            }
           }
           return { table: newTable };
         });

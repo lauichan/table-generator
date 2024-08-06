@@ -11,6 +11,7 @@ import htmlEscape from "../../utils/htmlEscape";
 import isSelectedCell from "../../utils/isSelectedCell";
 
 function Table({ table }: { table: CellType[][] }) {
+  console.log(table);
   const { contextMenuRef, handleContextMenu, contextMenu } = useContextMenu();
   const { range, handleMouseDown, handleMouseUp } = useSelectCells();
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);

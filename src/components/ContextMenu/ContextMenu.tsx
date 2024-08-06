@@ -17,13 +17,13 @@ function ContextMenu({ position }: ContextMenuProps) {
     useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx])
   );
 
-  const setSpan = useTableStore((state) => state.setSpan);
+  const mergeCells = useTableStore((state) => state.mergeCells);
 
   const handleMergeCell = () => {
     if (!startIdx || !endIdx) return;
     const rowSpan = endIdx.endRow - startIdx.startRow;
     const colSpan = endIdx.endCol - startIdx.startCol;
-    setSpan(startIdx.startRow, startIdx.startCol, rowSpan, colSpan);
+    mergeCells(startIdx.startRow, startIdx.startCol, rowSpan, colSpan);
     setStartIdx(null);
     setEndIdx(null);
   };
