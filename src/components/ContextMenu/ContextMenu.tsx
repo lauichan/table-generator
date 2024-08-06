@@ -1,3 +1,6 @@
+import { useShallow } from "zustand/react/shallow";
+import { useSelectCellsStore } from "../../store/useSelectCellsStore";
+import { useTableStore } from "../../store/useTableStore";
 import styles from "./ContextMenu.module.css";
 
 export type MousePosition = {
@@ -5,13 +8,38 @@ export type MousePosition = {
   y: number;
 } | null;
 
-function ContextMenu({ position }: { position: MousePosition }) {
+type ContextMenuProps = {
+  position: MousePosition;
+};
+
+function ContextMenu({ position }: ContextMenuProps) {
+  const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
+    useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx])
+  );
+
+  const setSpan = useTableStore((state) => state.setSpan);
+
+  const handleMergeCell = () => {
+    if (!startIdx || !endIdx) return;
+    const rowSpan = endIdx.endRow - startIdx.startRow;
+    const colSpan = endIdx.endCol - startIdx.startCol;
+    setSpan(startIdx.startRow, startIdx.startCol, rowSpan, colSpan);
+    setStartIdx(null);
+    setEndIdx(null);
+  };
+
+  const handleDivideCell = () => {
+    console.log("나누기");
+  };
+
   if (position === null) return null;
   return (
     <ul className={styles.context_menu} style={{ top: position.y, left: position.x }}>
-      <div>
+      <li>
         {position.x}, {position.y}
-      </div>
+      </li>
+      <li onMouseDown={handleMergeCell}>합치기</li>
+      <li onMouseDown={handleDivideCell}>나누기</li>
     </ul>
   );
 }
