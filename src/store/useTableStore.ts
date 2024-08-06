@@ -102,8 +102,8 @@ export const useTableStore = create<State & Actions>()(
             ...newTable[rowIdx][colIdx],
             merged: {
               originalCell: { rowIdx, colIdx },
-              rowSpan,
-              colSpan,
+              rowSpan: rowSpan + 1,
+              colSpan: colSpan + 1,
             },
           };
           for (let i = 1; i <= rowSpan; i++) {
