@@ -4,5 +4,10 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 1rem;
-  z-index: 9999;
+  z-index: 999;
+  list-style: none;
+}
+
+.context_menu > li:hover {
+  background-color: yellow;
 }
