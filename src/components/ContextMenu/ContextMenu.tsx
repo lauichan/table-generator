@@ -17,7 +17,9 @@ function ContextMenu({ position }: ContextMenuProps) {
     useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx])
   );
 
-  const mergeCells = useTableStore((state) => state.mergeCells);
+  const [mergeCells, divideCell] = useTableStore(
+    useShallow((state) => [state.mergeCells, state.divideCell])
+  );
 
   const handleMergeCell = () => {
     if (!startIdx || !endIdx) return;
@@ -29,17 +31,27 @@ function ContextMenu({ position }: ContextMenuProps) {
   };
 
   const handleDivideCell = () => {
-    console.log("나누기");
+    if (!startIdx || !endIdx) return;
+    divideCell(startIdx.startRow, startIdx.startCol);
+    setStartIdx(null);
+    setEndIdx(null);
   };
 
-  if (position === null) return null;
+  const isSingleSelected =
+    startIdx &&
+    endIdx &&
+    startIdx.startRow === endIdx.endRow &&
+    startIdx.startCol === endIdx.endCol;
+
+  if (position === null || !startIdx) return null;
+
   return (
     <ul className={styles.context_menu} style={{ top: position.y, left: position.x }}>
-      <li>
-        {position.x}, {position.y}
-      </li>
-      <li onMouseDown={handleMergeCell}>합치기</li>
-      <li onMouseDown={handleDivideCell}>나누기</li>
+      {isSingleSelected ? (
+        <li onMouseDown={handleDivideCell}>나누기</li>
+      ) : (
+        <li onMouseDown={handleMergeCell}>합치기</li>
+      )}
     </ul>
   );
 }
