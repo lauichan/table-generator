@@ -2,16 +2,12 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 export type CellType = {
-  type: "define" | "head" | "merged";
+  type: "define" | "head";
   content: string;
-  merged?: {
-    originalCell: {
-      rowIdx: number;
-      colIdx: number;
-    };
+  merged: {
     rowSpan: number;
     colSpan: number;
-  };
+  } | null;
 };
 
 type State = {
@@ -25,16 +21,17 @@ type Actions = {
   toggleHeadType: (type: CellType["type"]) => void;
   toggleCellType: (rowIdx: number, colIdx: number, type: CellType["type"]) => void;
   mergeCells: (rowIdx: number, colIdx: number, rowSpan: number, colSpan: number) => void;
+  divideCell: (rowIdx: number, colIdx: number) => void;
 };
 
 const initTable: CellType[][] = [
   [
-    { type: "define", content: "" },
-    { type: "define", content: "" },
+    { type: "define", content: "", merged: null },
+    { type: "define", content: "", merged: null },
   ],
   [
-    { type: "define", content: "" },
-    { type: "define", content: "" },
+    { type: "define", content: "", merged: null },
+    { type: "define", content: "", merged: null },
   ],
 ];
 
@@ -51,10 +48,13 @@ export const useTableStore = create<State & Actions>()(
           const newTable: CellType[][] = structuredClone(table);
           if (rowCount >= 0 && columnCount >= 0) {
             for (let i = 0; i < rowCount; i++) {
-              newTable.push(Array(newTable[0].length).fill({ type: "define", content: "" }));
+              newTable.push(
+                Array(newTable[0].length).fill({ type: "define", content: "", merged: null })
+              );
             }
             newTable.forEach((row) => {
-              for (let j = 0; j < columnCount; j++) row.push({ type: "define", content: "" });
+              for (let j = 0; j < columnCount; j++)
+                row.push({ type: "define", content: "", merged: null });
             });
           } else {
             for (let i = 0; i < -1 * rowCount; i++) {
@@ -101,7 +101,6 @@ export const useTableStore = create<State & Actions>()(
           newTable[rowIdx][colIdx] = {
             ...newTable[rowIdx][colIdx],
             merged: {
-              originalCell: { rowIdx, colIdx },
               rowSpan: rowSpan + 1,
               colSpan: colSpan + 1,
             },
@@ -111,10 +110,30 @@ export const useTableStore = create<State & Actions>()(
               if (i === 0 && j === 0) continue;
               newTable[rowIdx + i][colIdx + j] = {
                 ...newTable[rowIdx + i][colIdx + j],
-                type: "merged",
+                merged: { colSpan: 0, rowSpan: 0 },
               };
             }
           }
+          return { table: newTable };
+        });
+      },
+      divideCell: (rowIdx, colIdx) => {
+        set(({ table }) => {
+          const newTable = structuredClone(table);
+          const { rowSpan, colSpan } = newTable[rowIdx][colIdx].merged!;
+          for (let i = 0; i < rowSpan; i++) {
+            for (let j = 0; j < colSpan; j++) {
+              if (i === 0 && j === 0) continue;
+              newTable[rowIdx + i][colIdx + j] = {
+                ...newTable[rowIdx + i][colIdx + j],
+                merged: null,
+              };
+            }
+          }
+          newTable[rowIdx][colIdx] = {
+            ...newTable[rowIdx][colIdx],
+            merged: null,
+          };
           return { table: newTable };
         });
       },
