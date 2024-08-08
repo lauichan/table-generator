@@ -1,9 +1,11 @@
-import { FocusEvent } from "react";
-import { useShallow } from "zustand/react/shallow";
+import type { CellType } from "../../store/useTableStore";
+import type { FocusEvent } from "react";
+
 import Cell from "./Cell/Cell";
 import ContextMenu from "../ContextMenu/ContextMenu";
+import { useShallow } from "zustand/react/shallow";
 import { useOptionStore } from "../../store/useOptionStore";
-import { type CellType, useTableStore } from "../../store/useTableStore";
+import { useTableStore } from "../../store/useTableStore";
 import useContextMenu from "../../hooks/useContextMenu";
 import useSelectCells from "../../hooks/useSelectCells";
 import useArrowNavigate from "../../hooks/useArrowNavigate";

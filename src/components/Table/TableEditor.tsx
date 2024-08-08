@@ -1,7 +1,7 @@
 import Table from "./Table";
 import TableSizer from "./TableSizer";
-import styles from "./TableEditor.module.css";
 import { useTableStore } from "../../store/useTableStore";
+import styles from "./TableEditor.module.css";
 
 function TableEditor() {
   const table = useTableStore((state) => state.table);

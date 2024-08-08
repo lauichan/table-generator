@@ -1,5 +1,7 @@
-import { useRef, KeyboardEvent } from "react";
 import type { CellType } from "../store/useTableStore";
+import type { KeyboardEvent } from "react";
+
+import { useRef } from "react";
 
 const useArrowNavigate = (table: CellType[][]) => {
   const cellRefs = useRef<HTMLTableCellElement[][]>([]);

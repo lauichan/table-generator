@@ -1,4 +1,7 @@
-import { ChangeEvent, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
+
+import { useRef, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { useTableStore } from "../../store/useTableStore";
 import { useOptionStore } from "../../store/useOptionStore";
 import createTableHtml from "../../utils/createHtml";
@@ -6,7 +9,6 @@ import formatHtml from "../../utils/formatHtml";
 import sanitizeHtml from "../../utils/sanitizeHtml";
 import sizeLimit from "../../utils/sizeLimit";
 import styles from "./TableOption.module.css";
-import { useShallow } from "zustand/react/shallow";
 
 function TableOption() {
   const codeRef = useRef<HTMLElement>(null);

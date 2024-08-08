@@ -1,5 +1,6 @@
+import type { MousePosition } from "../components/ContextMenu/ContextMenu";
+
 import { useEffect, useRef, useState } from "react";
-import { MousePosition } from "../components/ContextMenu/ContextMenu";
 
 const useContextMenu = () => {
   const contextMenuRef = useRef<HTMLTableElement>(null);
