@@ -1,4 +1,5 @@
-import { ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
+
 import { useTableStore } from "../../store/useTableStore";
 import sizeLimit from "../../utils/sizeLimit";
 import styles from "./TableSizer.module.css";

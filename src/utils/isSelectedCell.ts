@@ -1,4 +1,4 @@
-import { SelectedRange } from "../hooks/useSelectCells";
+import type { SelectedRange } from "../hooks/useSelectCells";
 
 const isSelectedCell = (range: SelectedRange, rowIdx: number, colIdx: number): boolean => {
   return (
