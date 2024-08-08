@@ -11,9 +11,8 @@ import htmlEscape from "../../utils/htmlEscape";
 import isSelectedCell from "../../utils/isSelectedCell";
 
 function Table({ table }: { table: CellType[][] }) {
-  console.log(table);
   const { contextMenuRef, handleContextMenu, contextMenu } = useContextMenu();
-  const { range, handleMouseDown, handleMouseUp } = useSelectCells();
+  const { range, handleMouseDown, handleMouseUp } = useSelectCells(table);
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
@@ -29,6 +28,15 @@ function Table({ table }: { table: CellType[][] }) {
     setTableText(rowIdx, colIdx, text);
   };
 
+  const commonProps = {
+    cellRefs: cellRefs,
+    handleFocusOut: handleFocusOut,
+    handleKeyDown: handleKeyDown,
+    handleContextMenu: handleContextMenu,
+    handleMouseDown: handleMouseDown,
+    handleMouseUp: handleMouseUp,
+  };
+
   return (
     <>
       <table ref={contextMenuRef}>
@@ -40,14 +48,9 @@ function Table({ table }: { table: CellType[][] }) {
                   key={`header-${colIdx}`}
                   {...cell}
                   selected={isSelectedCell(range, 0, colIdx)}
-                  cellRefs={cellRefs}
                   rowIdx={0}
                   colIdx={colIdx}
-                  handleFocusOut={handleFocusOut}
-                  handleKeyDown={handleKeyDown}
-                  handleContextMenu={handleContextMenu}
-                  handleMouseDown={handleMouseDown}
-                  handleMouseUp={handleMouseUp}
+                  {...commonProps}
                 />
               ))}
             </tr>
@@ -63,14 +66,9 @@ function Table({ table }: { table: CellType[][] }) {
                   key={`tbody-${rowIdx}-${colIdx}`}
                   {...cell}
                   selected={isSelectedCell(range, rowIdx, colIdx)}
-                  cellRefs={cellRefs}
-                  rowIdx={rowIdx}
+                  rowIdx={rowIdx + (thead ? 1 : 0)}
                   colIdx={colIdx}
-                  handleFocusOut={handleFocusOut}
-                  handleKeyDown={handleKeyDown}
-                  handleContextMenu={handleContextMenu}
-                  handleMouseDown={handleMouseDown}
-                  handleMouseUp={handleMouseUp}
+                  {...commonProps}
                 />
               ))}
             </tr>
@@ -84,14 +82,9 @@ function Table({ table }: { table: CellType[][] }) {
                   key={`tfoot-${colIdx}`}
                   {...cell}
                   selected={isSelectedCell(range, table.length - 1, colIdx)}
-                  cellRefs={cellRefs}
                   rowIdx={table.length - 1}
                   colIdx={colIdx}
-                  handleFocusOut={handleFocusOut}
-                  handleKeyDown={handleKeyDown}
-                  handleContextMenu={handleContextMenu}
-                  handleMouseDown={handleMouseDown}
-                  handleMouseUp={handleMouseUp}
+                  {...commonProps}
                 />
               ))}
             </tr>
