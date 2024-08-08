@@ -1,7 +1,7 @@
-import { FocusEvent, KeyboardEvent, MouseEvent, MutableRefObject } from "react";
-import sanitizeHtml from "../../../utils/sanitizeHtml";
-import { useOptionStore } from "../../../store/useOptionStore";
+import type { FocusEvent, KeyboardEvent, MouseEvent, MutableRefObject } from "react";
 import type { CellType } from "../../../store/useTableStore";
+
+import sanitizeHtml from "../../../utils/sanitizeHtml";
 import styles from "./Cell.module.css";
 
 type CellProps = CellType & {
@@ -34,55 +34,31 @@ function Cell({
   handleMouseDown,
   handleMouseUp,
 }: CellProps) {
-  const thead = useOptionStore((state) => state.thead);
-  const cellRefIdx = rowIdx + (thead ? 1 : 0);
+  const commonProps = {
+    className: selected ? styles["selected"] : styles["unselected"],
+    ref: (el: HTMLTableCellElement) => {
+      if (!cellRefs.current[rowIdx]) {
+        cellRefs.current[rowIdx] = [];
+      }
+      cellRefs.current[rowIdx][colIdx] = el;
+    },
+    rowSpan: merged?.rowSpan,
+    colSpan: merged?.colSpan,
+    contentEditable: true,
+    suppressContentEditableWarning: true,
+    onBlur: (e: FocusEvent<HTMLTableCellElement>) => handleFocusOut(e, rowIdx, colIdx),
+    onKeyDown: (e: KeyboardEvent<HTMLTableCellElement>) => handleKeyDown(e, rowIdx, colIdx),
+    dangerouslySetInnerHTML: { __html: sanitizeHtml(content) },
+    onMouseDown: (e: MouseEvent<HTMLTableCellElement>) => handleMouseDown(e, rowIdx, colIdx),
+    onMouseUp: (e: MouseEvent<HTMLTableCellElement>) => handleMouseUp(e, rowIdx, colIdx),
+    ...(selected ? { onContextMenu: handleContextMenu } : {}),
+  };
 
-  if (type === "merged") return null;
+  if (merged && merged.colSpan === 0) return null;
 
-  if (type === "head")
-    return (
-      <th
-        className={selected ? styles["selected"] : styles["unselected"]}
-        ref={(el: HTMLTableCellElement) => {
-          if (!cellRefs.current[rowIdx]) {
-            cellRefs.current[rowIdx] = [];
-          }
-          cellRefs.current[rowIdx][colIdx] = el;
-        }}
-        rowSpan={merged?.rowSpan}
-        colSpan={merged?.colSpan}
-        contentEditable
-        suppressContentEditableWarning
-        onBlur={(e) => handleFocusOut(e, rowIdx, colIdx)}
-        onKeyDown={(e) => handleKeyDown(e, rowIdx, colIdx)}
-        dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
-        onContextMenu={handleContextMenu}
-        onMouseDown={(e) => handleMouseDown(e, rowIdx, colIdx)}
-        onMouseUp={(e) => handleMouseUp(e, rowIdx, colIdx)}
-      />
-    );
+  if (type === "head") return <th {...commonProps} />;
 
-  return (
-    <td
-      className={selected ? styles["selected"] : styles["unselected"]}
-      ref={(el: HTMLTableCellElement) => {
-        if (!cellRefs.current[cellRefIdx]) {
-          cellRefs.current[cellRefIdx] = [];
-        }
-        cellRefs.current[cellRefIdx][colIdx] = el;
-      }}
-      rowSpan={merged?.rowSpan}
-      colSpan={merged?.colSpan}
-      contentEditable
-      suppressContentEditableWarning
-      onBlur={(e) => handleFocusOut(e, cellRefIdx, colIdx)}
-      onKeyDown={(e) => handleKeyDown(e, cellRefIdx, colIdx)}
-      dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
-      onContextMenu={handleContextMenu}
-      onMouseDown={(e) => handleMouseDown(e, rowIdx, colIdx)}
-      onMouseUp={(e) => handleMouseUp(e, rowIdx, colIdx)}
-    />
-  );
+  return <td {...commonProps} />;
 }
 
 export default Cell;
