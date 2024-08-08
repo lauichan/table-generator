@@ -1,5 +1,5 @@
 import type { CellType } from "../../store/useTableStore";
-import type { FocusEvent } from "react";
+import { useEffect, type FocusEvent } from "react";
 
 import Cell from "./Cell/Cell";
 import ContextMenu from "../ContextMenu/ContextMenu";
@@ -13,13 +13,18 @@ import htmlEscape from "../../utils/htmlEscape";
 import isSelectedCell from "../../utils/isSelectedCell";
 
 function Table({ table }: { table: CellType[][] }) {
+  console.log(table);
   const { contextMenuRef, handleContextMenu, contextMenu } = useContextMenu();
-  const { range, handleMouseDown, handleMouseUp } = useSelectCells(table);
+  const { range, handleMouseDown, handleMouseUp, setSelectRange } = useSelectCells(table);
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
 
   const tbody = table.slice(thead ? 1 : 0, tfoot ? -1 : table.length);
+
+  useEffect(() => {
+    setSelectRange(null, null);
+  }, [thead, tfoot]);
 
   const handleFocusOut = (
     e: FocusEvent<HTMLTableCellElement, Element>,
