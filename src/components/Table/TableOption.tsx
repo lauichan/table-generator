@@ -37,10 +37,10 @@ function TableOption() {
   };
 
   const handleCopyCode = () => {
-    const text = codeRef.current;
     try {
-      if (!text) throw "실패";
-      navigator.clipboard.writeText(text.textContent || "");
+      const text = codeRef.current;
+      if (!text || !text.textContent) throw new Error("복사할 텍스트가 없습니다.");
+      navigator.clipboard.writeText(text.textContent);
       alert("클립보드에 복사되었습니다.");
     } catch (error) {
       alert("클립보드 복사에 실패하였습니다.");
@@ -67,7 +67,7 @@ function TableOption() {
           <input id="tfoot" type="checkbox" checked={tfoot} onChange={toggleTfoot} />
           <label htmlFor="tfoot">바닥글 사용</label>
         </li>
-        <li className={minified ? styles["disabled"] : ""}>
+        <li>
           <input
             id="tabsize"
             type="number"
