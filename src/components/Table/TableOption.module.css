@@ -28,7 +28,7 @@
   margin-left: 0.3rem;
 }
 
-.disabled {
+.option > li > input:disabled {
   color: #777;
   cursor: pointer;
 }
