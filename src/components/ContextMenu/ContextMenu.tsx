@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
 import { useSelectCellsStore } from "../../store/useSelectCellsStore";
-import { useTableStore } from "../../store/useTableStore";
+import { CellType, useTableStore } from "../../store/useTableStore";
 import styles from "./ContextMenu.module.css";
 
 export type MousePosition = {
@@ -23,9 +23,13 @@ function ContextMenu({ position }: ContextMenuProps) {
 
   const handleMergeCell = () => {
     if (!startIdx || !endIdx) return;
-    const rowSpan = endIdx.endRow - startIdx.startRow;
-    const colSpan = endIdx.endCol - startIdx.startCol;
-    mergeCells(startIdx.startRow, startIdx.startCol, rowSpan, colSpan);
+
+    const originRow = Math.min(startIdx.startRow, endIdx.endRow);
+    const originCol = Math.min(startIdx.startCol, endIdx.endCol);
+    const rowSpan = Math.abs(endIdx.endRow - startIdx.startRow);
+    const colSpan = Math.abs(endIdx.endCol - startIdx.startCol);
+
+    mergeCells(originRow, originCol, rowSpan, colSpan);
     setStartIdx(null);
     setEndIdx(null);
   };
