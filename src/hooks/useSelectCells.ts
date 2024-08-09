@@ -3,6 +3,7 @@ import type { MouseEvent } from "react";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useSelectCellsStore } from "../store/useSelectCellsStore";
+import { CellType } from "../store/useTableStore";
 
 export type SelectedRange = {
   endRow?: number | undefined;
@@ -11,7 +12,7 @@ export type SelectedRange = {
   startCol?: number | undefined;
 };
 
-const useSelectCells = () => {
+const useSelectCells = (table: CellType[][]) => {
   const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
     useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx])
   );
@@ -38,15 +39,54 @@ const useSelectCells = () => {
 
   useEffect(() => {
     if (
-      startIdx !== null &&
-      endIdx !== null &&
-      startIdx.startRow + startIdx.startCol > endIdx.endRow + endIdx.endCol
+      startIdx &&
+      endIdx &&
+      startIdx.startRow + startIdx.startCol > endIdx.endRow + endIdx.endCol &&
+      startIdx.startRow > endIdx.endRow
     ) {
       const temp = { startRow: endIdx.endRow, startCol: endIdx.endCol };
       setEndIdx({ endRow: startIdx.startRow, endCol: startIdx.startCol });
       setStartIdx(temp);
     }
   }, [startIdx, endIdx, setStartIdx, setEndIdx]);
+
+  useEffect(() => {
+    if (startIdx && endIdx) {
+      let { startRow, startCol, endRow, endCol } = { ...startIdx, ...endIdx };
+      let changed = false;
+
+      for (let row = startIdx.startRow; row <= endIdx.endRow; row++) {
+        for (let col = startIdx.startCol; col <= endIdx.endCol; col++) {
+          const mergedCell = table[row][col].merged;
+          if (mergedCell) {
+            const { rowIdx, colIdx, rowSpan, colSpan } = mergedCell;
+            const newStartRow = Math.min(startRow, rowIdx);
+            const newStartCol = Math.min(startCol, colIdx);
+            const newEndRow = Math.max(endRow, rowIdx + rowSpan - 1);
+            const newEndCol = Math.max(endCol, colIdx + colSpan - 1);
+
+            if (
+              newStartRow !== startRow ||
+              newStartCol !== startCol ||
+              newEndRow !== endRow ||
+              newEndCol !== endCol
+            ) {
+              startRow = newStartRow;
+              startCol = newStartCol;
+              endRow = newEndRow;
+              endCol = newEndCol;
+              changed = true;
+            }
+          }
+        }
+      }
+
+      if (changed) {
+        setStartIdx({ startRow, startCol });
+        setEndIdx({ endRow, endCol });
+      }
+    }
+  }, [startIdx, endIdx, table]);
 
   const range: SelectedRange = { ...startIdx, ...endIdx };
   return { range, handleMouseDown, handleMouseUp, setSelectRange };
