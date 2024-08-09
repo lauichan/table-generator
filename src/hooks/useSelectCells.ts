@@ -1,5 +1,4 @@
 import type { MouseEvent } from "react";
-import type { CellType } from "../store/useTableStore";
 
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -12,7 +11,7 @@ export type SelectedRange = {
   startCol?: number | undefined;
 };
 
-const useSelectCells = (table: CellType[][]) => {
+const useSelectCells = () => {
   const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
     useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx])
   );
@@ -23,10 +22,6 @@ const useSelectCells = (table: CellType[][]) => {
   ) => {
     setStartIdx(startIdx);
     setEndIdx(endIdx);
-  };
-
-  const isMergedCell = (rowIdx: number, colIdx: number) => {
-    return !!table[rowIdx][colIdx].merged;
   };
 
   const handleMouseDown = (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {

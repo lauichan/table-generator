@@ -15,7 +15,7 @@ import isSelectedCell from "../../utils/isSelectedCell";
 function Table({ table }: { table: CellType[][] }) {
   console.log(table);
   const { contextMenuRef, handleContextMenu, contextMenu } = useContextMenu();
-  const { range, handleMouseDown, handleMouseUp, setSelectRange } = useSelectCells(table);
+  const { range, handleMouseDown, handleMouseUp, setSelectRange } = useSelectCells();
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
