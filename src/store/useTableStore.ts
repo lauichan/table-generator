@@ -7,6 +7,7 @@ export type CellType = {
   merged: {
     rowSpan: number;
     colSpan: number;
+    origin?: { rowIdx: number; colIdx: number };
   } | null;
 };
 
@@ -88,7 +89,7 @@ export const useTableStore = create<State & Actions>()(
       toggleCellType: (rowIdx, colIdx, type) => {
         set(({ table }) => {
           const newTable = table.map((row, rIdx) =>
-            rIdx === rowIdx
+            ++rIdx === rowIdx
               ? row.map((cell, cIdx) => (cIdx === colIdx ? { ...cell, type } : cell))
               : row
           );
@@ -98,6 +99,17 @@ export const useTableStore = create<State & Actions>()(
       mergeCells: (rowIdx, colIdx, rowSpan, colSpan) => {
         set(({ table }) => {
           const newTable = structuredClone(table);
+
+          for (let i = 0; i <= rowSpan; i++) {
+            for (let j = 0; j <= colSpan; j++) {
+              if (i === 0 && j === 0) continue;
+              newTable[rowIdx + i][colIdx + j] = {
+                ...newTable[rowIdx + i][colIdx + j],
+                merged: { colSpan: 0, rowSpan: 0, origin: { rowIdx, colIdx } },
+              };
+            }
+          }
+
           newTable[rowIdx][colIdx] = {
             ...newTable[rowIdx][colIdx],
             merged: {
@@ -105,35 +117,24 @@ export const useTableStore = create<State & Actions>()(
               colSpan: colSpan + 1,
             },
           };
-          for (let i = 0; i <= rowSpan; i++) {
-            for (let j = 0; j <= colSpan; j++) {
-              if (i === 0 && j === 0) continue;
-              newTable[rowIdx + i][colIdx + j] = {
-                ...newTable[rowIdx + i][colIdx + j],
-                merged: { colSpan: 0, rowSpan: 0 },
-              };
-            }
-          }
+
           return { table: newTable };
         });
       },
       divideCell: (rowIdx, colIdx) => {
         set(({ table }) => {
           const newTable = structuredClone(table);
+
           const { rowSpan, colSpan } = newTable[rowIdx][colIdx].merged!;
           for (let i = 0; i < rowSpan; i++) {
             for (let j = 0; j < colSpan; j++) {
-              if (i === 0 && j === 0) continue;
               newTable[rowIdx + i][colIdx + j] = {
                 ...newTable[rowIdx + i][colIdx + j],
                 merged: null,
               };
             }
           }
-          newTable[rowIdx][colIdx] = {
-            ...newTable[rowIdx][colIdx],
-            merged: null,
-          };
+
           return { table: newTable };
         });
       },
