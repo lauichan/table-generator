@@ -38,15 +38,10 @@ const useSelectCells = (table: CellType[][]) => {
   };
 
   useEffect(() => {
-    if (
-      startIdx &&
-      endIdx &&
-      startIdx.startRow + startIdx.startCol > endIdx.endRow + endIdx.endCol &&
-      startIdx.startRow > endIdx.endRow
-    ) {
-      const temp = { startRow: endIdx.endRow, startCol: endIdx.endCol };
-      setEndIdx({ endRow: startIdx.startRow, endCol: startIdx.startCol });
-      setStartIdx(temp);
+    if (startIdx && endIdx) {
+      const { startRow, startCol, endRow, endCol } = { ...startIdx, ...endIdx };
+      setStartIdx({ startRow: Math.min(startRow, endRow), startCol: Math.min(startCol, endCol) });
+      setEndIdx({ endRow: Math.max(startRow, endRow), endCol: Math.max(startCol, endCol) });
     }
   }, [startIdx, endIdx, setStartIdx, setEndIdx]);
 
