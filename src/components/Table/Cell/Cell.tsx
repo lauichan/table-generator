@@ -35,7 +35,7 @@ function Cell({
   handleMouseUp,
 }: CellProps) {
   const commonProps = {
-    className: selected ? styles["selected"] : styles["unselected"],
+    ...(selected ? { className: styles["selected"] } : {}),
     ref: (el: HTMLTableCellElement) => {
       if (!cellRefs.current[rowIdx]) {
         cellRefs.current[rowIdx] = [];
