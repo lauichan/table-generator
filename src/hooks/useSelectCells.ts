@@ -1,6 +1,7 @@
 import type { MouseEvent } from "react";
 import type { CellType } from "../store/useTableStore";
 
+import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useSelectCellsStore } from "../store/useSelectCellsStore";
 
@@ -36,19 +37,21 @@ const useSelectCells = (table: CellType[][]) => {
   };
 
   const handleMouseUp = (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
-    if (e.button === 2) return;
+    if (e.button === 2 || !startIdx) return;
     setEndIdx({ endRow: rowIdx, endCol: colIdx });
   };
 
-  if (
-    startIdx !== null &&
-    endIdx !== null &&
-    startIdx.startRow + startIdx.startCol > endIdx.endRow + endIdx.endCol
-  ) {
-    const temp = { startRow: endIdx.endRow, startCol: endIdx.endCol };
-    setEndIdx({ endRow: startIdx.startRow, endCol: startIdx.startCol });
-    setStartIdx(temp);
-  }
+  useEffect(() => {
+    if (
+      startIdx !== null &&
+      endIdx !== null &&
+      startIdx.startRow + startIdx.startCol > endIdx.endRow + endIdx.endCol
+    ) {
+      const temp = { startRow: endIdx.endRow, startCol: endIdx.endCol };
+      setEndIdx({ endRow: startIdx.startRow, endCol: startIdx.startCol });
+      setStartIdx(temp);
+    }
+  }, [startIdx, endIdx, setStartIdx, setEndIdx]);
 
   const range: SelectedRange = { ...startIdx, ...endIdx };
   return { range, handleMouseDown, handleMouseUp, setSelectRange };
