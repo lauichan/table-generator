@@ -54,7 +54,7 @@ function Cell({
     ...(selected ? { onContextMenu: handleContextMenu } : {}),
   };
 
-  if (merged && merged.colSpan === 0) return null;
+  if (merged && merged.origin === false) return null;
 
   if (type === "head") return <th {...commonProps} />;
 

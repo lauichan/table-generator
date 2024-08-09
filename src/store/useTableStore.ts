@@ -5,9 +5,11 @@ export type CellType = {
   type: "define" | "head";
   content: string;
   merged: {
+    origin: boolean;
+    rowIdx: number;
+    colIdx: number;
     rowSpan: number;
     colSpan: number;
-    origin?: { rowIdx: number; colIdx: number };
   } | null;
 };
 
@@ -105,7 +107,13 @@ export const useTableStore = create<State & Actions>()(
               if (i === 0 && j === 0) continue;
               newTable[rowIdx + i][colIdx + j] = {
                 ...newTable[rowIdx + i][colIdx + j],
-                merged: { colSpan: 0, rowSpan: 0, origin: { rowIdx, colIdx } },
+                merged: {
+                  origin: false,
+                  rowIdx,
+                  colIdx,
+                  rowSpan: rowSpan + 1,
+                  colSpan: colSpan + 1,
+                },
               };
             }
           }
@@ -113,6 +121,9 @@ export const useTableStore = create<State & Actions>()(
           newTable[rowIdx][colIdx] = {
             ...newTable[rowIdx][colIdx],
             merged: {
+              origin: true,
+              rowIdx,
+              colIdx,
               rowSpan: rowSpan + 1,
               colSpan: colSpan + 1,
             },
