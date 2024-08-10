@@ -39,49 +39,35 @@ const useSelectCells = (table: CellType[][]) => {
 
   useEffect(() => {
     if (startIdx && endIdx) {
-      const { startRow, startCol, endRow, endCol } = { ...startIdx, ...endIdx };
-      setStartIdx({ startRow: Math.min(startRow, endRow), startCol: Math.min(startCol, endCol) });
-      setEndIdx({ endRow: Math.max(startRow, endRow), endCol: Math.max(startCol, endCol) });
-    }
-  }, [startIdx, endIdx, setStartIdx, setEndIdx]);
-
-  useEffect(() => {
-    if (startIdx && endIdx) {
       let { startRow, startCol, endRow, endCol } = { ...startIdx, ...endIdx };
-      let changed = false;
 
-      for (let row = startIdx.startRow; row <= endIdx.endRow; row++) {
-        for (let col = startIdx.startCol; col <= endIdx.endCol; col++) {
+      if (startRow > endRow) [startRow, endRow] = [endRow, startRow];
+      if (startCol > endCol) [startCol, endCol] = [endCol, startCol];
+
+      for (let row = startRow; row <= endRow; row++) {
+        for (let col = startCol; col <= endCol; col++) {
           const mergedCell = table[row][col].merged;
           if (mergedCell) {
             const { rowIdx, colIdx, rowSpan, colSpan } = mergedCell;
-            const newStartRow = Math.min(startRow, rowIdx);
-            const newStartCol = Math.min(startCol, colIdx);
-            const newEndRow = Math.max(endRow, rowIdx + rowSpan - 1);
-            const newEndCol = Math.max(endCol, colIdx + colSpan - 1);
-
-            if (
-              newStartRow !== startRow ||
-              newStartCol !== startCol ||
-              newEndRow !== endRow ||
-              newEndCol !== endCol
-            ) {
-              startRow = newStartRow;
-              startCol = newStartCol;
-              endRow = newEndRow;
-              endCol = newEndCol;
-              changed = true;
-            }
+            startRow = Math.min(startRow, rowIdx);
+            startCol = Math.min(startCol, colIdx);
+            endRow = Math.max(endRow, rowIdx + rowSpan - 1);
+            endCol = Math.max(endCol, colIdx + colSpan - 1);
           }
         }
       }
 
-      if (changed) {
+      if (
+        startRow !== startIdx.startRow ||
+        startCol !== startIdx.startCol ||
+        endRow !== endIdx.endRow ||
+        endCol !== endIdx.endCol
+      ) {
         setStartIdx({ startRow, startCol });
         setEndIdx({ endRow, endCol });
       }
     }
-  }, [startIdx, endIdx, table]);
+  }, [startIdx, endIdx, setStartIdx, setEndIdx]);
 
   const range: SelectedRange = { ...startIdx, ...endIdx };
   return { range, handleMouseDown, handleMouseUp, setSelectRange };
