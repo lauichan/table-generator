@@ -10,10 +10,9 @@ export type MousePosition = {
 
 type ContextMenuProps = {
   position: MousePosition;
-  table: CellType[][];
 };
 
-function ContextMenu({ position, table }: ContextMenuProps) {
+function ContextMenu({ position }: ContextMenuProps) {
   const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
     useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx])
   );
@@ -26,22 +25,7 @@ function ContextMenu({ position, table }: ContextMenuProps) {
     if (!startIdx || !endIdx) return;
     const { startRow, startCol, endRow, endCol } = { ...startIdx, ...endIdx };
 
-    const rowIdx = Math.min(startRow, endRow);
-    const colIdx = Math.min(startCol, endCol);
-    const rowSpan = Math.abs(endRow - startRow);
-    const colSpan = Math.abs(endCol - startCol);
-
-    for (let i = 0; i <= rowSpan; i++) {
-      for (let j = 0; j <= colSpan; j++) {
-        const cell = table[rowIdx + i][colIdx + j];
-        if (cell.merged && cell.merged.origin) {
-          const { rowIdx: originRow, colIdx: originCol } = cell.merged;
-          divideCell(originRow, originCol);
-        }
-      }
-    }
-
-    mergeCells(rowIdx, colIdx, rowSpan, colSpan);
+    mergeCells(startRow, startCol, endRow - startRow, endCol - startCol);
     setStartIdx(null);
     setEndIdx(null);
   };

@@ -12,12 +12,7 @@ const isSelectedCell = (range: SelectedRange, rowIdx: number, colIdx: number): b
     return false;
   }
 
-  const minRow = Math.min(startRow, endRow);
-  const maxRow = Math.max(startRow, endRow);
-  const minCol = Math.min(startCol, endCol);
-  const maxCol = Math.max(startCol, endCol);
-
-  return rowIdx >= minRow && rowIdx <= maxRow && colIdx >= minCol && colIdx <= maxCol;
+  return rowIdx >= startRow && rowIdx <= endRow && colIdx >= startCol && colIdx <= endCol;
 };
 
 export default isSelectedCell;
