@@ -31,6 +31,14 @@ function TableOption() {
   const tableHtml = createTableHtml(table, thead, tfoot);
   const code = minified ? tableHtml : formatHtml(tableHtml, tabSize);
 
+  const hasTheadRowSpan = (): boolean => {
+    for (let i = 0; i < table[0].length; i++) {
+      const mergedCell = table[0][i].merged;
+      if (mergedCell && mergedCell.rowSpan) return true;
+    }
+    return false;
+  };
+
   const handleTabSize = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     setTabSize(sizeLimit(value, 2, 4));
@@ -48,6 +56,10 @@ function TableOption() {
   };
 
   const handleToggleThead = () => {
+    if (hasTheadRowSpan()) {
+      alert(`머리글 셀들은 수직으로 확장할 수 없습니다.\n수직으로 확장된 셀을 나눠주세요`);
+      return;
+    }
     toggleThead();
     toggleHeadType(thead ? "define" : "head");
   };
