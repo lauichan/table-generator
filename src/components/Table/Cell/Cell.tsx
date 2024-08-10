@@ -17,7 +17,8 @@ type CellProps = CellType & {
   handleKeyDown: (e: KeyboardEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
   handleContextMenu: (e: MouseEvent<HTMLTableCellElement>) => void;
   handleMouseDown: (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
-  handleMouseUp: (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
+  handleMouseOver: (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
+  handleMouseUp: () => void;
 };
 
 function Cell({
@@ -32,6 +33,7 @@ function Cell({
   handleKeyDown,
   handleContextMenu,
   handleMouseDown,
+  handleMouseOver,
   handleMouseUp,
 }: CellProps) {
   const commonProps = {
@@ -50,7 +52,8 @@ function Cell({
     onKeyDown: (e: KeyboardEvent<HTMLTableCellElement>) => handleKeyDown(e, rowIdx, colIdx),
     dangerouslySetInnerHTML: { __html: sanitizeHtml(content) },
     onMouseDown: (e: MouseEvent<HTMLTableCellElement>) => handleMouseDown(e, rowIdx, colIdx),
-    onMouseUp: (e: MouseEvent<HTMLTableCellElement>) => handleMouseUp(e, rowIdx, colIdx),
+    onMouseOver: (e: MouseEvent<HTMLTableCellElement>) => handleMouseOver(e, rowIdx, colIdx),
+    onMouseUp: handleMouseUp,
     ...(selected ? { onContextMenu: handleContextMenu } : {}),
   };
 
