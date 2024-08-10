@@ -79,7 +79,7 @@ function Table({ table }: { table: CellType[][] }) {
                 <Cell
                   key={`tbody-${rowIdx}-${colIdx}`}
                   {...cell}
-                  selected={isSelectedCell(rowIdx, colIdx)}
+                  selected={isSelectedCell(rowIdx + (thead ? 1 : 0), colIdx)}
                   rowIdx={rowIdx + (thead ? 1 : 0)}
                   colIdx={colIdx}
                   {...commonProps}
