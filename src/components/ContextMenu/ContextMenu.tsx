@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
 import { useSelectCellsStore } from "../../store/useSelectCellsStore";
-import { CellType, useTableStore } from "../../store/useTableStore";
+import { useTableStore } from "../../store/useTableStore";
 import styles from "./ContextMenu.module.css";
 
 export type MousePosition = {
@@ -10,9 +10,10 @@ export type MousePosition = {
 
 type ContextMenuProps = {
   position: MousePosition;
+  isMergedCell: (rowIdx: number, colIdx: number) => boolean;
 };
 
-function ContextMenu({ position }: ContextMenuProps) {
+function ContextMenu({ position, isMergedCell }: ContextMenuProps) {
   const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
     useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx])
   );
@@ -23,7 +24,8 @@ function ContextMenu({ position }: ContextMenuProps) {
 
   const handleMergeCell = () => {
     if (!startIdx || !endIdx) return;
-    const { startRow, startCol, endRow, endCol } = { ...startIdx, ...endIdx };
+    const { row: startRow, col: startCol } = { ...startIdx };
+    const { row: endRow, col: endCol } = { ...endIdx };
 
     mergeCells(startRow, startCol, endRow - startRow, endCol - startCol);
     setStartIdx(null);
@@ -32,24 +34,18 @@ function ContextMenu({ position }: ContextMenuProps) {
 
   const handleDivideCell = () => {
     if (!startIdx || !endIdx) return;
-    const { startRow, startCol } = { ...startIdx, ...endIdx };
+    const { row: startRow, col: startCol } = { ...startIdx };
 
     divideCell(startRow, startCol);
     setStartIdx(null);
     setEndIdx(null);
   };
 
-  const isSingleSelected =
-    startIdx &&
-    endIdx &&
-    startIdx.startRow === endIdx.endRow &&
-    startIdx.startCol === endIdx.endCol;
-
   if (position === null || !startIdx) return null;
 
   return (
     <ul className={styles.context_menu} style={{ top: position.y, left: position.x }}>
-      {isSingleSelected ? (
+      {isMergedCell(startIdx.row, startIdx.col) ? (
         <li onMouseDown={handleDivideCell}>나누기</li>
       ) : (
         <li onMouseDown={handleMergeCell}>합치기</li>
