@@ -10,13 +10,19 @@ import useContextMenu from "../../hooks/useContextMenu";
 import useSelectCells from "../../hooks/useSelectCells";
 import useArrowNavigate from "../../hooks/useArrowNavigate";
 import htmlEscape from "../../utils/htmlEscape";
-import isSelectedCell from "../../utils/isSelectedCell";
 
 function Table({ table }: { table: CellType[][] }) {
-  console.log(table);
-  const { contextMenuRef, handleContextMenu, contextMenu } = useContextMenu();
-  const { range, handleMouseDown, handleMouseUp, setSelectRange } = useSelectCells(table);
+  const {
+    range,
+    handleMouseDown,
+    handleMouseOver,
+    handleMouseUp,
+    isMergedCell,
+    isSelectedCell,
+    setSelectRange,
+  } = useSelectCells(table);
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
+  const { contextMenuRef, handleContextMenu, contextMenu } = useContextMenu();
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
 
@@ -41,6 +47,7 @@ function Table({ table }: { table: CellType[][] }) {
     handleKeyDown: handleKeyDown,
     handleContextMenu: handleContextMenu,
     handleMouseDown: handleMouseDown,
+    handleMouseOver: handleMouseOver,
     handleMouseUp: handleMouseUp,
   };
 
@@ -54,7 +61,7 @@ function Table({ table }: { table: CellType[][] }) {
                 <Cell
                   key={`header-${colIdx}`}
                   {...cell}
-                  selected={isSelectedCell(range, 0, colIdx)}
+                  selected={isSelectedCell(0, colIdx)}
                   rowIdx={0}
                   colIdx={colIdx}
                   {...commonProps}
@@ -72,7 +79,7 @@ function Table({ table }: { table: CellType[][] }) {
                 <Cell
                   key={`tbody-${rowIdx}-${colIdx}`}
                   {...cell}
-                  selected={isSelectedCell(range, rowIdx, colIdx)}
+                  selected={isSelectedCell(rowIdx, colIdx)}
                   rowIdx={rowIdx + (thead ? 1 : 0)}
                   colIdx={colIdx}
                   {...commonProps}
@@ -88,7 +95,7 @@ function Table({ table }: { table: CellType[][] }) {
                 <Cell
                   key={`tfoot-${colIdx}`}
                   {...cell}
-                  selected={isSelectedCell(range, table.length - 1, colIdx)}
+                  selected={isSelectedCell(table.length - 1, colIdx)}
                   rowIdx={table.length - 1}
                   colIdx={colIdx}
                   {...commonProps}
@@ -100,7 +107,7 @@ function Table({ table }: { table: CellType[][] }) {
           <></>
         )}
       </table>
-      {contextMenu && <ContextMenu position={contextMenu} table={table} />}
+      {contextMenu && <ContextMenu position={contextMenu} isMergedCell={isMergedCell} />}
       {JSON.stringify(range)}
     </>
   );
