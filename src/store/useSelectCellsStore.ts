@@ -1,8 +1,10 @@
 import { create } from "zustand";
 
+export type SelectedRange = { row: number; col: number } | null;
+
 type State = {
-  startIdx: { startRow: number; startCol: number } | null;
-  endIdx: { endRow: number; endCol: number } | null;
+  startIdx: SelectedRange;
+  endIdx: SelectedRange;
 };
 
 type Actions = {
