@@ -6,7 +6,7 @@ const createTableHtml = (table: CellType[][], thead: boolean, tfoot: boolean): s
   let tbodyHtml = "";
 
   if (thead) {
-    theadHtml = `<thead>${createRowHtml(table[0], thead)}</thead>`;
+    theadHtml = `<thead>${createRowHtml(table[0])}</thead>`;
   }
 
   if (tfoot) {
@@ -24,21 +24,27 @@ const createTableHtml = (table: CellType[][], thead: boolean, tfoot: boolean): s
   return `<table>${theadHtml}${tbodyHtml}${tfootHtml}</table>`;
 };
 
-const createRowHtml = (row: CellType[], thead: boolean = false) => {
+const createRowHtml = (row: CellType[]): string => {
   const html = row
-    .map(({ type, content }) =>
-      thead || type === "head" ? createHeadHtml(content) : createDefineHtml(content)
-    )
+    .map((cell) => (cell.type === "head" ? createHeadHtml(cell) : createDefineHtml(cell)))
     .join("");
   return `<tr>${html}</tr>`;
 };
 
-const createDefineHtml = (text: string) => {
-  return `<td>${text}</td>`;
+const createDefineHtml = (cell: CellType): string => {
+  const { content, merged } = cell;
+  if (merged && !merged.origin) return "";
+  const rowSpan = merged ? ` rowSpan="${merged.rowSpan}"` : "";
+  const colSpan = merged ? ` colSpan="${merged.colSpan}"` : "";
+  return `<td${rowSpan}${colSpan}>${content}</td>`;
 };
 
-const createHeadHtml = (head: string) => {
-  return `<th>${head}</th>`;
+const createHeadHtml = (cell: CellType): string => {
+  const { content, merged } = cell;
+  if (merged && !merged.origin) return "";
+  const rowSpan = merged ? ` rowSpan="${merged.rowSpan}"` : "";
+  const colSpan = merged ? ` colSpan="${merged.colSpan}"` : "";
+  return `<th${rowSpan}${colSpan}>${content}</th>`;
 };
 
 export default createTableHtml;
