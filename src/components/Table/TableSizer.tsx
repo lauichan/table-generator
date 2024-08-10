@@ -28,7 +28,6 @@ function TableSizer({ tableRowCol, setRowColumn }: TableSizerProps) {
     <form className={styles.controller}>
       <input placeholder="열" value={tableRowCol.row} onChange={handleRow} />
       <input placeholder="행" value={tableRowCol.col} onChange={handleCol} />
-      <button type="button">생성</button>
       <button type="button" onClick={initTable}>
         초기화
       </button>
