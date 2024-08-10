@@ -102,6 +102,8 @@ export const useTableStore = create<State & Actions>()(
         set(({ table }) => {
           const newTable = structuredClone(table);
 
+          let content = "";
+
           for (let i = 0; i <= rowSpan; i++) {
             for (let j = 0; j <= colSpan; j++) {
               if (i === 0 && j === 0) continue;
@@ -115,11 +117,13 @@ export const useTableStore = create<State & Actions>()(
                   colSpan: colSpan + 1,
                 },
               };
+              content += newTable[rowIdx + i][colIdx + j].content;
             }
           }
 
           newTable[rowIdx][colIdx] = {
             ...newTable[rowIdx][colIdx],
+            content: newTable[rowIdx][colIdx].content + content,
             merged: {
               origin: true,
               rowIdx,
