@@ -15,3 +15,20 @@
   padding: 0.5rem;
   border: 1px solid #ddd;
 }
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  list-style: none;
+}
+
+.option label {
+  user-select: none;
+  margin-left: 0.3rem;
+}
+
+.option > li > input:disabled {
+  color: #777;
+  cursor: pointer;
+}

@@ -1,0 +1,11 @@
+.right {
+  grid-area: right;
+}
+
+.bottom {
+  grid-area: bottom;
+}
+
+.bottom-right {
+  grid-area: bottom-right;
+}

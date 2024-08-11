@@ -1,8 +1,14 @@
 import { useEffect } from "react";
-import TableEditor from "./components/Table/TableEditor";
-import TableOption from "./components/Table/TableOption";
+import { useTableStore } from "@store/useTableStore";
+import TableOption from "@components/TableOption/TableOption";
+import Table from "@components/Table/Table";
+import TableSizer from "@components/TableSizer/TableSizer";
+import PreviewCode from "@components/PreviewCode/PreviewCode";
 
 function App() {
+  const table = useTableStore((state) => state.table);
+  const tableRowCol = { row: table.length, col: table[0].length };
+
   useEffect(() => {
     document.oncontextmenu = function () {
       return false;
@@ -11,8 +17,12 @@ function App() {
 
   return (
     <main>
-      <TableEditor />
-      <TableOption />
+      <TableOption tableRowCol={tableRowCol} />
+      <section className="table">
+        <Table table={table} />
+        <TableSizer />
+      </section>
+      <PreviewCode table={table} />
     </main>
   );
 }

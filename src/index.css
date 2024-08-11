@@ -41,3 +41,13 @@ button {
   border: 1px solid #ddd;
   border-radius: 3px;
 }
+
+.table {
+  display: grid;
+  grid-template-areas:
+    "table right"
+    "bottom bottom-right";
+  grid-template-columns: minmax(auto, max-content) minmax(auto, max-content);
+  grid-template-rows: minmax(auto, max-content) minmax(auto, max-content);
+  gap: 0.2rem;
+}

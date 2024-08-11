@@ -1,0 +1,17 @@
+.code > button {
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.html {
+  padding: 1rem;
+  background-color: #f6f8fa;
+  margin: 1rem 0;
+  overflow-y: auto;
+  font-size: 0.8rem;
+  max-height: 400px;
+}
+
+.preview {
+  margin: 1rem 0;
+}
