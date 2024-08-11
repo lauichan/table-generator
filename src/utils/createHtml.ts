@@ -26,12 +26,12 @@ const createTableHtml = (table: CellType[][], thead: boolean, tfoot: boolean): s
 
 const createRowHtml = (row: CellType[]): string => {
   const html = row
-    .map((cell) => (cell.type === "head" ? createHeadHtml(cell) : createDefineHtml(cell)))
+    .map((cell) => (cell.type === "head" ? createHeaderCellHtml(cell) : createDataCellHtml(cell)))
     .join("");
   return `<tr>${html}</tr>`;
 };
 
-const createDefineHtml = (cell: CellType): string => {
+const createDataCellHtml = (cell: CellType): string => {
   const { content, merged } = cell;
   if (merged && !merged.origin) return "";
   const rowSpan = merged ? ` rowSpan="${merged.rowSpan}"` : "";
@@ -39,7 +39,7 @@ const createDefineHtml = (cell: CellType): string => {
   return `<td${rowSpan}${colSpan}>${content}</td>`;
 };
 
-const createHeadHtml = (cell: CellType): string => {
+const createHeaderCellHtml = (cell: CellType): string => {
   const { content, merged } = cell;
   if (merged && !merged.origin) return "";
   const rowSpan = merged ? ` rowSpan="${merged.rowSpan}"` : "";
