@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useTableStore } from "@store/useTableStore";
-import TableOption from "@components/TableOption/TableOption";
 import Table from "@components/Table/Table";
 import TableSizer from "@components/TableSizer/TableSizer";
 import PreviewCode from "@components/PreviewCode/PreviewCode";
+import TableOptions from "@components/TableOptions/TableOptions";
 
 function App() {
   const table = useTableStore((state) => state.table);
@@ -17,7 +17,7 @@ function App() {
 
   return (
     <main>
-      <TableOption tableRowCol={tableRowCol} />
+      <TableOptions tableRowCol={tableRowCol} />
       <section className="table">
         <Table table={table} />
         <TableSizer />

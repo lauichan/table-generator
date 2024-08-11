@@ -1,16 +1,11 @@
 import type { ChangeEvent } from "react";
 
 import { useShallow } from "zustand/react/shallow";
-import { useTableStore } from "@store/useTableStore";
 import { useOptionStore } from "@store/useOptionStore";
+import { useTableStore } from "@store/useTableStore";
 import sizeLimit from "@utils/sizeLimit";
-import styles from "./TableOption.module.css";
 
-type TableOptionProps = {
-  tableRowCol: { row: number; col: number };
-};
-
-function TableOption({ tableRowCol }: TableOptionProps) {
+const useTableOptions = (tableRowCol: { row: number; col: number }) => {
   const [table, toggleHeadType, initTable, setRowColumn] = useTableStore(
     useShallow((state) => [state.table, state.toggleHeadType, state.initTable, state.setRowColumn])
   );
@@ -48,27 +43,15 @@ function TableOption({ tableRowCol }: TableOptionProps) {
     setRowColumn(0, sizeLimit(value, 2, 50) - tableRowCol.col);
   };
 
-  return (
-    <section>
-      <form className={styles.controller}>
-        <input placeholder="열" value={tableRowCol.row} onChange={handleRow} />
-        <input placeholder="행" value={tableRowCol.col} onChange={handleCol} />
-        <button type="button" onClick={initTable}>
-          초기화
-        </button>
-      </form>
-      <ul className={styles["option"]}>
-        <li>
-          <input id="thead" type="checkbox" checked={thead} onChange={handleToggleThead} />
-          <label htmlFor="thead">머리글 사용</label>
-        </li>
-        <li>
-          <input id="tfoot" type="checkbox" checked={tfoot} onChange={toggleTfoot} />
-          <label htmlFor="tfoot">바닥글 사용</label>
-        </li>
-      </ul>
-    </section>
-  );
-}
+  return {
+    thead,
+    tfoot,
+    initTable,
+    handleRow,
+    handleCol,
+    toggleTfoot,
+    handleToggleThead,
+  };
+};
 
-export default TableOption;
+export default useTableOptions;

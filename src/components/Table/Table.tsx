@@ -1,8 +1,9 @@
 import type { CellType } from "../../store/useTableStore";
-import { useEffect, type FocusEvent } from "react";
+import type { FocusEvent } from "react";
 
 import Cell from "./Cell/Cell";
 import ContextMenu from "../ContextMenu/ContextMenu";
+import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useOptionStore } from "../../store/useOptionStore";
 import { useTableStore } from "../../store/useTableStore";
@@ -112,7 +113,6 @@ function Table({ table }: { table: CellType[][] }) {
         )}
       </table>
       {contextMenu && <ContextMenu position={contextMenu} isMergedCell={isMergedCell} />}
-      {/* {JSON.stringify(range)} */}
     </>
   );
 }
