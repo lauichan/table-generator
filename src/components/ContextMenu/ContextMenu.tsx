@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
-import { useSelectCellsStore } from "../../store/useSelectCellsStore";
-import { useTableStore } from "../../store/useTableStore";
+import { useTableStore } from "@store/useTableStore";
+import { useSelectCellsStore } from "@store/useSelectCellsStore";
 import styles from "./ContextMenu.module.css";
 
 export type MousePosition = {

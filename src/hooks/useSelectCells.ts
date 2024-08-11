@@ -1,10 +1,10 @@
 import type { MouseEvent } from "react";
-import type { CellType } from "../store/useTableStore";
-import type { SelectedRange } from "../store/useSelectCellsStore";
+import type { CellType } from "@store/useTableStore";
+import type { SelectedRange } from "@/store/useSelectCellsStore";
 
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useSelectCellsStore } from "../store/useSelectCellsStore";
+import { useSelectCellsStore } from "@/store/useSelectCellsStore";
 
 const useSelectCells = (table: CellType[][]) => {
   const [isSelecting, setIsSelecting] = useState(false);

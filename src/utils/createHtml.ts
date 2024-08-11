@@ -1,4 +1,4 @@
-import type { CellType } from "../store/useTableStore";
+import type { CellType } from "@/store/useTableStore";
 
 const createTableHtml = (table: CellType[][], thead: boolean, tfoot: boolean): string => {
   let theadHtml = "";

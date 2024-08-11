@@ -1,4 +1,4 @@
-import type { MousePosition } from "../components/ContextMenu/ContextMenu";
+import type { MousePosition } from "@/components/ContextMenu/ContextMenu";
 
 import { useEffect, useRef, useState } from "react";
 

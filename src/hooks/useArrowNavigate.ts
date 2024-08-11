@@ -1,4 +1,4 @@
-import type { CellType } from "../store/useTableStore";
+import type { CellType } from "@/store/useTableStore";
 import type { KeyboardEvent } from "react";
 
 import { useRef } from "react";

@@ -1,7 +1,7 @@
 import type { FocusEvent, KeyboardEvent, MouseEvent, MutableRefObject } from "react";
-import type { CellType } from "../../../store/useTableStore";
+import type { CellType } from "@store/useTableStore";
 
-import sanitizeHtml from "../../../utils/sanitizeHtml";
+import sanitizeHtml from "@utils/sanitizeHtml";
 import styles from "./Cell.module.css";
 
 type CellProps = CellType & {
