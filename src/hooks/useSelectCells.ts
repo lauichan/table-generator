@@ -82,10 +82,8 @@ const useSelectCells = (table: CellType[][]) => {
     );
   };
 
-  const range = startIdx && endIdx ? { startIdx: { ...startIdx }, endIdx: { ...endIdx } } : null;
-
   return {
-    range,
+    isSelecting,
     handleMouseDown,
     handleMouseOver,
     handleMouseUp,

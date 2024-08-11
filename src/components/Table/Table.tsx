@@ -13,7 +13,7 @@ import htmlEscape from "../../utils/htmlEscape";
 
 function Table({ table }: { table: CellType[][] }) {
   const {
-    range,
+    isSelecting,
     handleMouseDown,
     handleMouseOver,
     handleMouseUp,
@@ -22,7 +22,7 @@ function Table({ table }: { table: CellType[][] }) {
     setSelectRange,
   } = useSelectCells(table);
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
-  const { contextMenuRef, handleContextMenu, contextMenu } = useContextMenu();
+  const { contextMenu, contextMenuRef, handleContextMenu, hideContextMenu } = useContextMenu();
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
 
@@ -31,6 +31,10 @@ function Table({ table }: { table: CellType[][] }) {
   useEffect(() => {
     setSelectRange(null, null);
   }, [thead, tfoot]);
+
+  useEffect(() => {
+    hideContextMenu();
+  }, [isSelecting]);
 
   const handleFocusOut = (
     e: FocusEvent<HTMLTableCellElement, Element>,
@@ -108,7 +112,7 @@ function Table({ table }: { table: CellType[][] }) {
         )}
       </table>
       {contextMenu && <ContextMenu position={contextMenu} isMergedCell={isMergedCell} />}
-      {JSON.stringify(range)}
+      {/* {JSON.stringify(range)} */}
     </>
   );
 }
