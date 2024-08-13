@@ -13,12 +13,12 @@ import useSelectCells from "@hooks/useSelectCells";
 import htmlEscape from "@utils/htmlEscape";
 
 function Table({ table }: { table: CellType[][] }) {
+  console.log(table);
   const {
     isSelecting,
     handleMouseDown,
     handleMouseOver,
     handleMouseUp,
-    isMergedCell,
     isSelectedCell,
     setSelectRange,
   } = useSelectCells(table);
@@ -112,7 +112,7 @@ function Table({ table }: { table: CellType[][] }) {
           <></>
         )}
       </table>
-      {contextMenu && <ContextMenu position={contextMenu} isMergedCell={isMergedCell} />}
+      {contextMenu && <ContextMenu position={contextMenu} />}
     </>
   );
 }

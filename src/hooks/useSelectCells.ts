@@ -61,17 +61,6 @@ const useSelectCells = (table: CellType[][]) => {
     setEndIdx({ row: endRow, col: endCol });
   }, [dragStart, dragEnd, setStartIdx, setEndIdx]);
 
-  const isMergedCell = (rowIdx: number, colIdx: number) => {
-    const cell = table[rowIdx][colIdx];
-    if (!cell.merged || !endIdx) return false;
-
-    const { rowSpan, colSpan } = cell.merged;
-    const singleEndRow = rowIdx + rowSpan - 1;
-    const singleEndCol = colIdx + colSpan - 1;
-
-    return endIdx.row === singleEndRow && endIdx.col === singleEndCol;
-  };
-
   const isSelectedCell = (rowIdx: number, colIdx: number) => {
     if (!startIdx || !endIdx) return false;
     return (
@@ -87,7 +76,6 @@ const useSelectCells = (table: CellType[][]) => {
     handleMouseDown,
     handleMouseOver,
     handleMouseUp,
-    isMergedCell,
     isSelectedCell,
     setSelectRange,
   };
