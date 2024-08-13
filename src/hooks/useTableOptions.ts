@@ -17,7 +17,7 @@ const useTableOptions = (tableRowCol: { row: number; col: number }) => {
   const hasTheadRowSpan = (): boolean => {
     for (let i = 0; i < table[0].length; i++) {
       const mergedCell = table[0][i].merged;
-      if (mergedCell && mergedCell.rowSpan) return true;
+      if (mergedCell && mergedCell.rowSpan > 1) return true;
     }
     return false;
   };
