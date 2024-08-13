@@ -15,3 +15,38 @@
 .preview {
   margin: 1rem 0;
 }
+
+.controller > input:disabled {
+  color: #777;
+  cursor: pointer;
+}
+
+.options {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.options > div {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.options > div > input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+}
+
+.options > div > .tabsize {
+  width: 30px;
+}
+
+.options > div > .tabsize:disabled {
+  cursor: no-drop;
+}
+
+.options > button {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+}

@@ -11,15 +11,21 @@ button,
 input {
   font-size: inherit;
   font-family: inherit;
+  border-radius: 5px;
+}
+
+label {
+  user-select: none;
+}
+
+pre {
+  border-radius: 5px;
 }
 
 main {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  max-width: 1000px;
-  width: 100%;
-  margin: 0 auto;
 }
 
 table {
@@ -39,7 +45,6 @@ td {
 button {
   outline: none;
   border: 1px solid #ddd;
-  border-radius: 3px;
 }
 
 .table {

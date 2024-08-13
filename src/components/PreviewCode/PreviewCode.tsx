@@ -41,17 +41,22 @@ function PreviewCode({ table }: { table: CellType[][] }) {
     <>
       <section className={styles["code"]}>
         <h2>코드</h2>
-        <button onClick={handleCopyCode}>코드복사</button>
-        <input
-          id="tabsize"
-          type="number"
-          value={tabSize}
-          onChange={handleTabSize}
-          disabled={minified}
-        />
-        <label htmlFor="tabsize">탭 크기</label>
-        <input id="minify" type="checkbox" checked={minified} onChange={toggleMinified} />
-        <label htmlFor="minify">코드 최소화</label>
+        <div className={styles["options"]}>
+          <button onClick={handleCopyCode}>코드복사</button>
+          <div>
+            <input
+              id="tabsize"
+              className={styles["tabsize"]}
+              type="number"
+              value={tabSize}
+              onChange={handleTabSize}
+              disabled={minified}
+            />
+            <label htmlFor="tabsize">탭 크기</label>
+            <input id="minify" type="checkbox" checked={minified} onChange={toggleMinified} />
+            <label htmlFor="minify">코드 최소화</label>
+          </div>
+        </div>
         <pre className={styles["html"]}>
           <code ref={codeRef}>{code}</code>
         </pre>
