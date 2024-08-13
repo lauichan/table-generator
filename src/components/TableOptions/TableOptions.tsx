@@ -1,4 +1,5 @@
 import useTableOptions from "@hooks/useTableOptions";
+import useManageTable from "@hooks/useManageTable";
 import styles from "./TableOptions.module.css";
 
 type TableOptionProps = {
@@ -8,6 +9,9 @@ type TableOptionProps = {
 function TableOptions({ tableRowCol }: TableOptionProps) {
   const { thead, tfoot, initTable, handleRow, handleCol, toggleTfoot, handleToggleThead } =
     useTableOptions(tableRowCol);
+
+  const { handleMergeCell, handleDivideCell, isSelectionMergeable, isSelectionDivisible } =
+    useManageTable();
 
   return (
     <section className={styles.controller}>
@@ -25,6 +29,12 @@ function TableOptions({ tableRowCol }: TableOptionProps) {
         <input id="tfoot" type="checkbox" checked={tfoot} onChange={toggleTfoot} />
         <label htmlFor="tfoot">바닥글 사용</label>
       </div>
+      <button type="button" onClick={handleMergeCell} disabled={!isSelectionMergeable()}>
+        합치기
+      </button>
+      <button type="button" onClick={handleDivideCell} disabled={!isSelectionDivisible()}>
+        나누기
+      </button>
     </section>
   );
 }
