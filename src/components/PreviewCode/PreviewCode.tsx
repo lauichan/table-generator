@@ -42,7 +42,9 @@ function PreviewCode({ table }: { table: CellType[][] }) {
       <section className={styles["code"]}>
         <h2>코드</h2>
         <div className={styles["options"]}>
-          <button onClick={handleCopyCode}>코드복사</button>
+          <button onClick={handleCopyCode} title="코드 내용을 복사합니다">
+            코드복사
+          </button>
           <div>
             <input
               id="tabsize"
@@ -52,9 +54,13 @@ function PreviewCode({ table }: { table: CellType[][] }) {
               onChange={handleTabSize}
               disabled={minified}
             />
-            <label htmlFor="tabsize">탭 크기</label>
+            <label htmlFor="tabsize" title="탭 크기 조절 (2 ~ 4)">
+              탭 크기
+            </label>
             <input id="minify" type="checkbox" checked={minified} onChange={toggleMinified} />
-            <label htmlFor="minify">코드 최소화</label>
+            <label htmlFor="minify" title="HTML 코드 공백을 제거합니다">
+              코드 최소화
+            </label>
           </div>
         </div>
         <pre className={styles["html"]}>
