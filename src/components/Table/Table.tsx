@@ -13,7 +13,6 @@ import useSelectCells from "@hooks/useSelectCells";
 import htmlEscape from "@utils/htmlEscape";
 
 function Table({ table }: { table: CellType[][] }) {
-  console.log(table);
   const {
     isSelecting,
     handleMouseDown,
@@ -58,7 +57,7 @@ function Table({ table }: { table: CellType[][] }) {
 
   return (
     <>
-      <table ref={contextMenuRef}>
+      <table>
         {thead ? (
           <thead>
             <tr>
@@ -112,7 +111,7 @@ function Table({ table }: { table: CellType[][] }) {
           <></>
         )}
       </table>
-      {contextMenu && <ContextMenu position={contextMenu} />}
+      {contextMenu && <ContextMenu contextMenuRef={contextMenuRef} position={contextMenu} />}
     </>
   );
 }

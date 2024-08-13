@@ -3,8 +3,9 @@ import type { MousePosition } from "@/components/ContextMenu/ContextMenu";
 import { useEffect, useRef, useState } from "react";
 
 const useContextMenu = () => {
-  const contextMenuRef = useRef<HTMLTableElement>(null);
+  const contextMenuRef = useRef<HTMLUListElement>(null);
   const [contextMenu, setContextMenu] = useState<MousePosition>(null);
+  console.log(contextMenu);
 
   const hideContextMenu = () => {
     setContextMenu(null);
@@ -12,6 +13,7 @@ const useContextMenu = () => {
 
   const handleContextMenu = (e: React.MouseEvent<HTMLTableCellElement, MouseEvent>) => {
     e.preventDefault();
+    e.stopPropagation();
     setContextMenu({
       x: e.pageX,
       y: e.pageY,
@@ -27,7 +29,7 @@ const useContextMenu = () => {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [contextMenu]);
+  }, []);
 
   return { contextMenu, contextMenuRef, handleContextMenu, hideContextMenu };
 };

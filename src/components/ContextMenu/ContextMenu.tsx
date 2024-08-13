@@ -7,19 +7,27 @@ export type MousePosition = {
 } | null;
 
 type ContextMenuProps = {
+  contextMenuRef: React.RefObject<HTMLUListElement>;
   position: MousePosition;
 };
 
-function ContextMenu({ position }: ContextMenuProps) {
+function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
   const { handleMergeCell, handleDivideCell, isSelectionMergeable, isSelectionDivisible } =
     useManageTable();
 
   if (position === null) return null;
 
+  const hasMenuItems = isSelectionMergeable() || isSelectionDivisible();
+  if (!hasMenuItems) return null;
+
   return (
-    <ul className={styles.context_menu} style={{ top: position.y, left: position.x }}>
-      {isSelectionMergeable() ? <li onMouseDown={handleMergeCell}>합치기</li> : null}
-      {isSelectionDivisible() ? <li onMouseDown={handleDivideCell}>나누기</li> : null}
+    <ul
+      ref={contextMenuRef}
+      className={styles.context_menu}
+      style={{ top: position.y, left: position.x }}
+    >
+      {isSelectionMergeable() ? <li onClick={handleMergeCell}>합치기</li> : null}
+      {isSelectionDivisible() ? <li onClick={handleDivideCell}>나누기</li> : null}
     </ul>
   );
 }
