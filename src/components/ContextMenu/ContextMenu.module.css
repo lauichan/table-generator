@@ -3,11 +3,24 @@
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 5px;
-  padding: 1rem;
   z-index: 999;
   list-style: none;
 }
 
-.context_menu > li:hover {
-  background-color: yellow;
+.context_menu > li {
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+}
+
+.context_menu > li:not(:last-child) {
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.context_menu > li.disabled {
+  color: #999;
+  cursor: not-allowed;
+}
+
+.context_menu > li:hover:not(.disabled) {
+  background-color: #f0f0f0;
 }

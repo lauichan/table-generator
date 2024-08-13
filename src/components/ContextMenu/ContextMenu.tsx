@@ -26,8 +26,20 @@ function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
       className={styles.context_menu}
       style={{ top: position.y, left: position.x }}
     >
-      {isSelectionMergeable() ? <li onClick={handleMergeCell}>합치기</li> : null}
-      {isSelectionDivisible() ? <li onClick={handleDivideCell}>나누기</li> : null}
+      <li
+        {...(isSelectionMergeable()
+          ? { onClick: handleMergeCell }
+          : { className: styles["disabled"] })}
+      >
+        합치기
+      </li>
+      <li
+        {...(isSelectionDivisible()
+          ? { onClick: handleDivideCell }
+          : { className: styles["disabled"] })}
+      >
+        나누기
+      </li>
     </ul>
   );
 }
