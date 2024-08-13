@@ -44,7 +44,7 @@
 }
 
 .options .tabsize:disabled {
-  cursor: no-drop;
+  cursor: not-allowed;
 }
 
 .options > button {
