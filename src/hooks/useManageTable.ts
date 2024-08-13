@@ -14,23 +14,33 @@ const useManageTable = () => {
 
   const thead = useOptionStore((state) => state.thead);
 
-  const handleMergeCell = () => {
-    if (!startIdx || !endIdx) return;
-    const { row: startRow, col: startCol } = { ...startIdx };
-    const { row: endRow, col: endCol } = { ...endIdx };
-
-    mergeCells(startRow, startCol, endRow - startRow, endCol - startCol);
+  const resetSelection = () => {
     setStartIdx(null);
     setEndIdx(null);
   };
 
+  const handleMergeCell = () => {
+    if (!startIdx || !endIdx) return;
+
+    if (thead && startIdx.row === 0 && endIdx.row > 0) {
+      alert("머리글 옵션이 활성화 되어있습니다.\n머리글(첫번째 행)은 다른 행과 합칠 수 없습니다.");
+      resetSelection();
+      return;
+    }
+
+    const { row: startRow, col: startCol } = startIdx;
+    const { row: endRow, col: endCol } = endIdx;
+
+    mergeCells(startRow, startCol, endRow - startRow, endCol - startCol);
+    resetSelection();
+  };
+
   const handleDivideCell = () => {
     if (!startIdx || !endIdx) return;
-    const { row: startRow, col: startCol } = { ...startIdx };
+    const { row: startRow, col: startCol } = startIdx;
 
     divideCell(startRow, startCol);
-    setStartIdx(null);
-    setEndIdx(null);
+    resetSelection();
   };
 
   const isSelectionMergeable = (): boolean => {
