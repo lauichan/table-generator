@@ -37,11 +37,14 @@ const useManageTable = () => {
     if (!startIdx || !endIdx) return false;
     if (startIdx.row === endIdx.row && startIdx.col === endIdx.col) return false;
 
-    for (let row = startIdx.row; row <= endIdx.row; row++) {
-      for (let col = startIdx.col; col <= endIdx.col; col++) {
-        if (table[row][col].merged) return false;
-      }
+    const cell = table[startIdx.row][startIdx.col];
+    if (cell.merged) {
+      const { rowSpan, colSpan } = cell.merged;
+      const isOnlyMergedCell =
+        startIdx.row + rowSpan - 1 === endIdx.row && startIdx.col + colSpan - 1 === endIdx.col;
+      if (isOnlyMergedCell) return false;
     }
+
     return true;
   };
 
