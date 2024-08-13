@@ -45,6 +45,7 @@ td {
 button {
   outline: none;
   border: 1px solid #ddd;
+  cursor: pointer;
 }
 
 .table {

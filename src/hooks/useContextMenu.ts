@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 const useContextMenu = () => {
   const contextMenuRef = useRef<HTMLUListElement>(null);
   const [contextMenu, setContextMenu] = useState<MousePosition>(null);
-  console.log(contextMenu);
 
   const hideContextMenu = () => {
     setContextMenu(null);
