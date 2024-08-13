@@ -33,16 +33,17 @@
   align-items: center;
 }
 
-.options > div > input {
+.options input {
   padding: 0.5rem;
   border: 1px solid #ddd;
+  text-align: center;
 }
 
-.options > div > .tabsize {
+.options .tabsize {
   width: 30px;
 }
 
-.options > div > .tabsize:disabled {
+.options .tabsize:disabled {
   cursor: no-drop;
 }
 
