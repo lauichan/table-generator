@@ -1,19 +1,48 @@
-.code > button {
-  padding: 0.5rem;
+.code {
+  margin: 1rem;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid #ddd;
+}
+
+.options > * {
+  height: 45px;
+  border-right: 1px solid #ddd;
+  padding: 0.5rem 0.8rem;
+}
+
+.options > div {
+  display: flex;
+  align-items: center;
+}
+
+.options input {
+  max-width: 40px;
+  text-align: right;
+  background: #f6f8fa;
+  border: 1px solid #ddd;
+}
+
+.tabsize label {
   margin-right: 0.5rem;
+}
+
+.minify label {
+  margin-left: 0.5rem;
 }
 
 .html {
   padding: 1rem;
   background-color: #f6f8fa;
-  margin: 1rem 0;
+  margin: 0;
+  border: 1px solid #ddd;
+  border-top: 0;
   overflow-y: auto;
   font-size: 0.8rem;
   max-height: 400px;
-}
-
-.preview {
-  margin: 1rem 0;
 }
 
 .controller > input:disabled {
@@ -21,29 +50,6 @@
   cursor: pointer;
 }
 
-.options {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.options > div {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.options input {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-
-.options .tabsize {
-  width: 30px;
-}
-
-.options > button {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
+.preview {
+  margin: 1rem;
 }

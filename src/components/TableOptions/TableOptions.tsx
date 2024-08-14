@@ -7,31 +7,37 @@ type TableOptionProps = {
 };
 
 function TableOptions({ tableRowCol }: TableOptionProps) {
-  const { thead, tfoot, initTable, handleRow, handleCol, toggleTfoot, handleToggleThead } =
+  const { thead, tfoot, handleRow, handleCol, handleSetThead, handleSetTfoot, handleInitTable } =
     useTableOptions(tableRowCol);
 
   const { handleMergeCell, handleDivideCell, isSelectionMergeable, isSelectionDivisible } =
     useManageTable();
 
   return (
-    <section className={styles.controller}>
-      <input placeholder="행" value={tableRowCol.row} onChange={handleRow} />행
-      <input placeholder="열" value={tableRowCol.col} onChange={handleCol} />열
-      <button type="button" onClick={initTable} title="2행 2열 빈값으로 초기화">
+    <section className={styles["controller"]}>
+      <div className={styles["row"]}>
+        <input
+          id="row"
+          type="number"
+          placeholder="행"
+          value={tableRowCol.row}
+          onChange={handleRow}
+        />
+        <label htmlFor="row">행</label>
+      </div>
+      <div className={styles["col"]}>
+        <input
+          id="col"
+          type="number"
+          placeholder="열"
+          value={tableRowCol.col}
+          onChange={handleCol}
+        />
+        <label htmlFor="col">열</label>
+      </div>
+      <button type="button" onClick={handleInitTable} title="2행 2열 빈값으로 초기화">
         초기화
       </button>
-      <div>
-        <input id="thead" type="checkbox" checked={thead} onChange={handleToggleThead} />
-        <label htmlFor="thead" title="<thead> 머리글 사용하기">
-          머리글 사용
-        </label>
-      </div>
-      <div>
-        <input id="tfoot" type="checkbox" checked={tfoot} onChange={toggleTfoot} />
-        <label htmlFor="tfoot" title="<tfoot> 바닥글 사용하기">
-          바닥글 사용
-        </label>
-      </div>
       <button
         type="button"
         onClick={handleMergeCell}
@@ -48,6 +54,18 @@ function TableOptions({ tableRowCol }: TableOptionProps) {
       >
         나누기
       </button>
+      <div className={styles["thead"]}>
+        <label htmlFor="thead" title="<thead> 머리글 사용하기">
+          머리글
+        </label>
+        <input id="thead" type="number" value={thead} onChange={handleSetThead} />
+      </div>
+      <div className={styles["tfoot"]}>
+        <label htmlFor="tfoot" title="<tfoot> 바닥글 사용하기">
+          바닥글
+        </label>
+        <input id="tfoot" type="number" value={tfoot} onChange={handleSetTfoot} />
+      </div>
     </section>
   );
 }

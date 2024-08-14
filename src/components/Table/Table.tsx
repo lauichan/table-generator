@@ -2,6 +2,7 @@ import type { FocusEvent } from "react";
 import type { CellType } from "@store/useTableStore";
 
 import Cell from "./Cell/Cell";
+import TableSizer from "@components/TableSizer/TableSizer";
 import ContextMenu from "@components/ContextMenu/ContextMenu";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -11,6 +12,7 @@ import useArrowNavigate from "@hooks/useArrowNavigate";
 import useContextMenu from "@hooks/useContextMenu";
 import useSelectCells from "@hooks/useSelectCells";
 import htmlEscape from "@utils/htmlEscape";
+import styles from "./Table.module.css";
 
 function Table({ table }: { table: CellType[][] }) {
   const {
@@ -26,7 +28,9 @@ function Table({ table }: { table: CellType[][] }) {
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
 
-  const tbody = table.slice(thead ? 1 : 0, tfoot ? -1 : table.length);
+  const headerRows = table.slice(0, thead);
+  const bodyRows = table.slice(thead > 0 ? thead : 0, tfoot > 0 ? -tfoot : table.length);
+  const footerRows = table.slice(-tfoot);
 
   useEffect(() => {
     setSelectRange(null, null);
@@ -56,35 +60,37 @@ function Table({ table }: { table: CellType[][] }) {
   };
 
   return (
-    <>
+    <section className={styles["table"]}>
       <table>
         {thead ? (
           <thead>
-            <tr>
-              {table[0].map((cell, colIdx) => (
-                <Cell
-                  key={`header-${colIdx}`}
-                  {...cell}
-                  selected={isSelectedCell(0, colIdx)}
-                  rowIdx={0}
-                  colIdx={colIdx}
-                  {...commonProps}
-                />
-              ))}
-            </tr>
+            {headerRows.map((row, rowIdx) => (
+              <tr key={`thead-${rowIdx}`}>
+                {row.map((cell, colIdx) => (
+                  <Cell
+                    key={`thead-${rowIdx}-${colIdx}`}
+                    {...cell}
+                    selected={isSelectedCell(rowIdx, colIdx)}
+                    rowIdx={rowIdx}
+                    colIdx={colIdx}
+                    {...commonProps}
+                  />
+                ))}
+              </tr>
+            ))}
           </thead>
         ) : (
           <></>
         )}
         <tbody>
-          {tbody.map((row, rowIdx) => (
+          {bodyRows.map((row, rowIdx) => (
             <tr key={`tbody-${rowIdx}`}>
               {row.map((cell, colIdx) => (
                 <Cell
                   key={`tbody-${rowIdx}-${colIdx}`}
                   {...cell}
-                  selected={isSelectedCell(rowIdx + (thead ? 1 : 0), colIdx)}
-                  rowIdx={rowIdx + (thead ? 1 : 0)}
+                  selected={isSelectedCell(rowIdx + thead, colIdx)}
+                  rowIdx={rowIdx + thead}
                   colIdx={colIdx}
                   {...commonProps}
                 />
@@ -94,25 +100,28 @@ function Table({ table }: { table: CellType[][] }) {
         </tbody>
         {tfoot ? (
           <tfoot>
-            <tr>
-              {table.slice(-1)[0].map((cell, colIdx) => (
-                <Cell
-                  key={`tfoot-${colIdx}`}
-                  {...cell}
-                  selected={isSelectedCell(table.length - 1, colIdx)}
-                  rowIdx={table.length - 1}
-                  colIdx={colIdx}
-                  {...commonProps}
-                />
-              ))}
-            </tr>
+            {footerRows.map((row, rowIdx) => (
+              <tr key={`tfoot-${rowIdx}`}>
+                {row.map((cell, colIdx) => (
+                  <Cell
+                    key={`tfoot-${rowIdx}-${colIdx}`}
+                    {...cell}
+                    selected={isSelectedCell(table.length - tfoot + rowIdx, colIdx)}
+                    rowIdx={table.length - tfoot + rowIdx}
+                    colIdx={colIdx}
+                    {...commonProps}
+                  />
+                ))}
+              </tr>
+            ))}
           </tfoot>
         ) : (
           <></>
         )}
       </table>
+      <TableSizer />
       {contextMenu && <ContextMenu contextMenuRef={contextMenuRef} position={contextMenu} />}
-    </>
+    </section>
   );
 }
 

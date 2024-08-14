@@ -40,23 +40,23 @@ function PreviewCode({ table }: { table: CellType[][] }) {
   return (
     <>
       <section className={styles["code"]}>
-        <h2>코드</h2>
         <div className={styles["options"]}>
           <button onClick={handleCopyCode} title="코드 내용을 복사합니다">
             코드복사
           </button>
-          <div>
+          <div className={styles["tabsize"]}>
+            <label htmlFor="tabsize" title="탭 크기 조절 (2 ~ 4)">
+              탭 크기
+            </label>
             <input
               id="tabsize"
-              className={styles["tabsize"]}
               type="number"
               value={tabSize}
               onChange={handleTabSize}
               disabled={minified}
             />
-            <label htmlFor="tabsize" title="탭 크기 조절 (2 ~ 4)">
-              탭 크기
-            </label>
+          </div>
+          <div className={styles["minify"]}>
             <input id="minify" type="checkbox" checked={minified} onChange={toggleMinified} />
             <label htmlFor="minify" title="HTML 코드 공백을 제거합니다">
               코드 최소화
@@ -67,12 +67,9 @@ function PreviewCode({ table }: { table: CellType[][] }) {
           <code ref={codeRef}>{code}</code>
         </pre>
       </section>
-      <section>
+      <section className={styles["preview"]}>
         <h2>미리보기</h2>
-        <div
-          className={styles["preview"]}
-          dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }}
-        />
+        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }} />
       </section>
     </>
   );
