@@ -1,7 +1,7 @@
 import { useShallow } from "zustand/react/shallow";
 import { useOptionStore } from "@store/useOptionStore";
 import { useSelectCellsStore } from "@store/useSelectCellsStore";
-import { CellType, useTableStore } from "@store/useTableStore";
+import { useTableStore } from "@store/useTableStore";
 
 const useManageTable = () => {
   const [table, mergeCells, divideCell, toggleCellsType] = useTableStore(
