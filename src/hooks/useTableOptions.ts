@@ -1,4 +1,4 @@
-import { useReducer, type ChangeEvent } from "react";
+import type { ChangeEvent } from "react";
 
 import { useShallow } from "zustand/react/shallow";
 import { useOptionStore } from "@store/useOptionStore";
