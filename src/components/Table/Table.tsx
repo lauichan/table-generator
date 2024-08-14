@@ -1,7 +1,7 @@
 import type { FocusEvent } from "react";
 import type { CellType } from "@store/useTableStore";
 
-import Cell from "./Cell/Cell";
+import Cell from "@components/Cell/Cell";
 import TableSizer from "@components/TableSizer/TableSizer";
 import ContextMenu from "@components/ContextMenu/ContextMenu";
 import { useEffect } from "react";
