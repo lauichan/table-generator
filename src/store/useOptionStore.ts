@@ -3,30 +3,30 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 type State = {
   minified: boolean;
-  thead: boolean;
-  tfoot: boolean;
+  thead: number;
+  tfoot: number;
 };
 
 type Actions = {
   toggleMinified: () => void;
-  toggleThead: () => void;
-  toggleTfoot: () => void;
+  setThead: (row: number) => void;
+  setTfoot: (row: number) => void;
 };
 
 export const useOptionStore = create<State & Actions>()(
   persist(
     (set) => ({
       minified: false,
-      thead: false,
-      tfoot: false,
+      thead: 0,
+      tfoot: 0,
       toggleMinified: () => {
         set((state) => ({ minified: !state.minified }));
       },
-      toggleThead: () => {
-        set((state) => ({ thead: !state.thead }));
+      setThead: (row: number) => {
+        set({ thead: row });
       },
-      toggleTfoot: () => {
-        set((state) => ({ tfoot: !state.tfoot }));
+      setTfoot: (row: number) => {
+        set({ tfoot: row });
       },
     }),
     {

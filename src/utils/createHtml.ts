@@ -1,24 +1,26 @@
 import type { CellType } from "@/store/useTableStore";
 
-const createTableHtml = (table: CellType[][], thead: boolean, tfoot: boolean): string => {
+const createTableHtml = (table: CellType[][], thead: number, tfoot: number): string => {
   let theadHtml = "";
   let tfootHtml = "";
   let tbodyHtml = "";
 
-  if (thead) {
-    theadHtml = `<thead>${createRowHtml(table[0])}</thead>`;
+  if (thead > 0) {
+    const headerRows = table.slice(0, thead);
+    theadHtml = `<thead>${headerRows.map((row) => createRowHtml(row)).join("")}</thead>`;
   }
 
-  if (tfoot) {
-    tfootHtml = `<tfoot>${createRowHtml(table[table.length - 1])}</tfoot>`;
+  if (tfoot > 0) {
+    const footerRows = table.slice(-tfoot);
+    tfootHtml = `<tfoot>${footerRows.map((row) => createRowHtml(row)).join("")}</tfoot>`;
   }
 
-  const tbody = table.slice(thead ? 1 : 0, tfoot ? -1 : table.length);
+  const bodyRows = table.slice(thead > 0 ? thead : 0, tfoot > 0 ? -tfoot : table.length);
 
   if (thead || tfoot) {
-    tbodyHtml = `<tbody>${tbody.map((row) => createRowHtml(row)).join("")}</tbody>`;
+    tbodyHtml = `<tbody>${bodyRows.map((row) => createRowHtml(row)).join("")}</tbody>`;
   } else {
-    tbodyHtml = tbody.map((row) => createRowHtml(row)).join("");
+    tbodyHtml = bodyRows.map((row) => createRowHtml(row)).join("");
   }
 
   return `<table>${theadHtml}${tbodyHtml}${tfootHtml}</table>`;

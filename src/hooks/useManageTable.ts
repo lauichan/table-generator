@@ -23,7 +23,7 @@ const useManageTable = () => {
     if (!startIdx || !endIdx) return;
 
     if (thead && startIdx.row === 0 && endIdx.row > 0) {
-      alert("머리글 옵션이 활성화 되어있습니다.\n머리글(첫번째 행)은 다른 행과 합칠 수 없습니다.");
+      alert("머리글 옵션이 활성화 되어있습니다.\n머리글은 머리글끼리만 합칠 수 있습니다.");
       resetSelection();
       return;
     }

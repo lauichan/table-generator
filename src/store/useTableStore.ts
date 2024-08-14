@@ -19,9 +19,9 @@ type State = {
 
 type Actions = {
   initTable: () => void;
-  setRowColumn: (rowCount: number, columnCount: number) => void;
+  setRowColumn: (rowCount: number, columnCount: number, thead?: number) => void;
   setTableText: (rowIdx: number, colIdx: number, text: string) => void;
-  toggleHeadType: (type: CellType["type"]) => void;
+  toggleHeadType: (thead: number) => void;
   toggleCellType: (rowIdx: number, colIdx: number, type: CellType["type"]) => void;
   mergeCells: (rowIdx: number, colIdx: number, rowSpan: number, colSpan: number) => void;
   divideCell: (rowIdx: number, colIdx: number) => void;
@@ -46,7 +46,7 @@ export const useTableStore = create<State & Actions>()(
       initTable: () => {
         set({ table: initTable });
       },
-      setRowColumn: (rowCount, columnCount) => {
+      setRowColumn: (rowCount, columnCount, thead = 0) => {
         set(({ table }) => {
           const newTable: CellType[][] = structuredClone(table);
           if (rowCount >= 0 && columnCount >= 0) {
@@ -55,9 +55,14 @@ export const useTableStore = create<State & Actions>()(
                 Array(newTable[0].length).fill({ type: "define", content: "", merged: null })
               );
             }
-            newTable.forEach((row) => {
-              for (let j = 0; j < columnCount; j++)
-                row.push({ type: "define", content: "", merged: null });
+            newTable.forEach((row, rowIdx) => {
+              for (let j = 0; j < columnCount; j++) {
+                if (thead > 0 && thead - 1 === rowIdx) {
+                  row.push({ type: "head", content: "", merged: null });
+                } else {
+                  row.push({ type: "define", content: "", merged: null });
+                }
+              }
             });
           } else {
             for (let i = 0; i < -1 * rowCount; i++) {
@@ -80,18 +85,22 @@ export const useTableStore = create<State & Actions>()(
           return { table: newTable };
         });
       },
-      toggleHeadType: (type) => {
+      toggleHeadType: (thead) => {
         set(({ table }) => {
-          const newTable = table.map((row, rIdx) =>
-            rIdx === 0 ? row.map((cell) => ({ ...cell, type })) : row
+          console.log(thead);
+          const newTable: CellType[][] = table.map((row, rowIdx) =>
+            row.map((cell) => ({
+              ...cell,
+              type: thead > 0 && rowIdx < thead ? "head" : "define",
+            }))
           );
           return { table: newTable };
         });
       },
       toggleCellType: (rowIdx, colIdx, type) => {
         set(({ table }) => {
-          const newTable = table.map((row, rIdx) =>
-            ++rIdx === rowIdx
+          const newTable: CellType[][] = table.map((row, rIdx) =>
+            rIdx === rowIdx
               ? row.map((cell, cIdx) => (cIdx === colIdx ? { ...cell, type } : cell))
               : row
           );
@@ -100,7 +109,7 @@ export const useTableStore = create<State & Actions>()(
       },
       mergeCells: (rowIdx, colIdx, rowSpan, colSpan) => {
         set(({ table }) => {
-          const newTable = structuredClone(table);
+          const newTable: CellType[][] = structuredClone(table);
 
           let content = "";
 
