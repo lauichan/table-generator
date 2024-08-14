@@ -1,3 +1,5 @@
+import type { SelectedRange } from "./useSelectCellsStore";
+
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -22,7 +24,7 @@ type Actions = {
   setRowColumn: (rowCount: number, columnCount: number, thead?: number) => void;
   setTableText: (rowIdx: number, colIdx: number, text: string) => void;
   toggleHeadType: (thead: number) => void;
-  toggleCellType: (rowIdx: number, colIdx: number, type: CellType["type"]) => void;
+  toggleCellsType: (startIdx: SelectedRange, colIdx: SelectedRange) => void;
   mergeCells: (rowIdx: number, colIdx: number, rowSpan: number, colSpan: number) => void;
   divideCell: (rowIdx: number, colIdx: number) => void;
 };
@@ -87,7 +89,6 @@ export const useTableStore = create<State & Actions>()(
       },
       toggleHeadType: (thead) => {
         set(({ table }) => {
-          console.log(thead);
           const newTable: CellType[][] = table.map((row, rowIdx) =>
             row.map((cell) => ({
               ...cell,
@@ -97,12 +98,17 @@ export const useTableStore = create<State & Actions>()(
           return { table: newTable };
         });
       },
-      toggleCellType: (rowIdx, colIdx, type) => {
+      toggleCellsType: (startIdx, endIdx) => {
         set(({ table }) => {
+          const { row: sRow, col: sCol } = startIdx!;
+          const { row: eRow, col: eCol } = endIdx!;
           const newTable: CellType[][] = table.map((row, rIdx) =>
-            rIdx === rowIdx
-              ? row.map((cell, cIdx) => (cIdx === colIdx ? { ...cell, type } : cell))
-              : row
+            row.map((cell, cIdx) => {
+              if (rIdx >= sRow && rIdx <= eRow && cIdx >= sCol && cIdx <= eCol) {
+                return { ...cell, type: cell.type === "define" ? "head" : "define" };
+              }
+              return cell;
+            })
           );
           return { table: newTable };
         });

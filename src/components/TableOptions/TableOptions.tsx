@@ -10,8 +10,13 @@ function TableOptions({ tableRowCol }: TableOptionProps) {
   const { thead, tfoot, handleRow, handleCol, handleSetThead, handleSetTfoot, handleInitTable } =
     useTableOptions(tableRowCol);
 
-  const { handleMergeCell, handleDivideCell, isSelectionMergeable, isSelectionDivisible } =
-    useManageTable();
+  const {
+    handleMergeCell,
+    handleDivideCell,
+    isSelectionMergeable,
+    isSelectionDivisible,
+    handleToggleCellType,
+  } = useManageTable();
 
   return (
     <section className={styles["controller"]}>
@@ -53,6 +58,9 @@ function TableOptions({ tableRowCol }: TableOptionProps) {
         title="나누고 싶은 셀을 선택해주세요"
       >
         나누기
+      </button>
+      <button type="button" onClick={handleToggleCellType}>
+        헤더/데이터셀 바꾸기
       </button>
       <div className={styles["thead"]}>
         <label htmlFor="thead" title="<thead> 머리글 사용하기">

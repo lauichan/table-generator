@@ -12,8 +12,13 @@ type ContextMenuProps = {
 };
 
 function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
-  const { handleMergeCell, handleDivideCell, isSelectionMergeable, isSelectionDivisible } =
-    useManageTable();
+  const {
+    handleMergeCell,
+    handleDivideCell,
+    isSelectionMergeable,
+    isSelectionDivisible,
+    handleToggleCellType,
+  } = useManageTable();
 
   if (position === null) return null;
 
@@ -40,6 +45,7 @@ function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
       >
         나누기
       </li>
+      <li onClick={handleToggleCellType}>헤더셀 &lt;-&gt; 데이터셀</li>
     </ul>
   );
 }

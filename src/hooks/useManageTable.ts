@@ -1,11 +1,11 @@
 import { useShallow } from "zustand/react/shallow";
 import { useOptionStore } from "@store/useOptionStore";
 import { useSelectCellsStore } from "@store/useSelectCellsStore";
-import { useTableStore } from "@store/useTableStore";
+import { CellType, useTableStore } from "@store/useTableStore";
 
 const useManageTable = () => {
-  const [table, mergeCells, divideCell] = useTableStore(
-    useShallow((state) => [state.table, state.mergeCells, state.divideCell])
+  const [table, mergeCells, divideCell, toggleCellsType] = useTableStore(
+    useShallow((state) => [state.table, state.mergeCells, state.divideCell, state.toggleCellsType])
   );
 
   const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
@@ -43,6 +43,13 @@ const useManageTable = () => {
     resetSelection();
   };
 
+  const handleToggleCellType = () => {
+    if (!startIdx || !endIdx) return;
+
+    toggleCellsType(startIdx, endIdx);
+    resetSelection();
+  };
+
   const isSelectionMergeable = (): boolean => {
     if (!startIdx || !endIdx) return false;
     if (startIdx.row === endIdx.row && startIdx.col === endIdx.col) return false;
@@ -66,7 +73,13 @@ const useManageTable = () => {
     return cell.merged.rowSpan > 1 || cell.merged.colSpan > 1;
   };
 
-  return { handleMergeCell, handleDivideCell, isSelectionMergeable, isSelectionDivisible };
+  return {
+    handleMergeCell,
+    handleDivideCell,
+    isSelectionMergeable,
+    isSelectionDivisible,
+    handleToggleCellType,
+  };
 };
 
 export default useManageTable;
