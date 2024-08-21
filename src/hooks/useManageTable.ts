@@ -22,7 +22,7 @@ const useManageTable = () => {
   const handleMergeCell = () => {
     if (!startIdx || !endIdx) return;
 
-    if (thead && startIdx.row === 0 && endIdx.row > 0) {
+    if (thead && endIdx.row >= thead) {
       alert("머리글 옵션이 활성화 되어있습니다.\n머리글은 머리글끼리만 합칠 수 있습니다.");
       resetSelection();
       return;

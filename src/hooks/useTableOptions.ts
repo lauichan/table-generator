@@ -14,28 +14,37 @@ const useTableOptions = (tableRowCol: { row: number; col: number }) => {
     useShallow((state) => [state.thead, state.tfoot, state.setThead, state.setTfoot])
   );
 
-  const hasTheadRowSpan = (): boolean => {
-    for (let i = 0; i < thead; i++) {
+  const hasMergedCell = (type: "head" | "foot", rowIndex: number): boolean => {
+    const rowIdx = type === "head" ? 0 : rowIndex;
+    for (let i = rowIdx; i < rowIndex; i++) {
       for (let j = 0; j < table[0].length; j++) {
         const mergedCell = table[i][j].merged;
-        if (mergedCell && mergedCell.rowIdx + mergedCell.rowSpan > thead) return true;
+        if (mergedCell && mergedCell.rowIdx + mergedCell.rowSpan > rowIndex) return true;
       }
     }
     return false;
   };
 
   const handleSetThead = (e: ChangeEvent<HTMLInputElement>) => {
-    if (hasTheadRowSpan()) {
+    const value = sizeLimit(Number(e.target.value), 0, table.length - tfoot);
+
+    if (hasMergedCell("head", value)) {
       alert(`머리글 셀들은 머리글 끼리 합칠 수 있습니다.\n수직으로 확장된 셀을 나눠주세요.`);
       return;
     }
-    const value = sizeLimit(Number(e.target.value), 0, table.length - tfoot);
+
     setThead(value);
     toggleHeadType(value);
   };
 
   const handleSetTfoot = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
+    const value = sizeLimit(Number(e.target.value), 0, table.length - thead);
+
+    if (hasMergedCell("foot", value)) {
+      alert(`바닥글 셀들은 바닥글 끼리 합칠 수 있습니다.\n수직으로 확장된 셀을 나눠주세요.`);
+      return;
+    }
+
     setTfoot(sizeLimit(value, 0, table.length - thead));
   };
 
