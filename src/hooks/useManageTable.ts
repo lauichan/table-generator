@@ -56,10 +56,8 @@ const useManageTable = () => {
 
     const cell = table[startIdx.row][startIdx.col];
     if (cell.merged) {
-      const { rowSpan, colSpan } = cell.merged;
-      const isOnlyMergedCell =
-        startIdx.row + rowSpan - 1 === endIdx.row && startIdx.col + colSpan - 1 === endIdx.col;
-      if (isOnlyMergedCell) return false;
+      const { rowSpan, colSpan } = cell.merged
+      return !(startIdx.row + rowSpan - 1 === endIdx.row && startIdx.col + colSpan - 1 === endIdx.col);
     }
 
     return true;
@@ -69,8 +67,12 @@ const useManageTable = () => {
     if (!startIdx || !endIdx) return false;
 
     const cell = table[startIdx.row][startIdx.col];
-    if (!cell.merged) return false;
-    return cell.merged.rowSpan > 1 || cell.merged.colSpan > 1;
+    if (cell.merged) {
+      const { origin, rowIdx, colIdx, rowSpan, colSpan } = cell.merged
+      return origin && (rowIdx + rowSpan - 1 === endIdx.row) && (colIdx + colSpan - 1 === endIdx.col);
+    } 
+    
+    return false;
   };
 
   return {
