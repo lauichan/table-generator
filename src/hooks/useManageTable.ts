@@ -46,7 +46,14 @@ const useManageTable = () => {
   const handleToggleCellType = () => {
     if (!startIdx || !endIdx) return;
 
-    toggleCellsType(startIdx, endIdx);
+    const startIdxWithThead = {
+      row: Math.max(startIdx.row, thead),
+      col: startIdx.col
+    };
+  
+    if (endIdx.row < thead) return;
+  
+    toggleCellsType(startIdxWithThead, endIdx);
     resetSelection();
   };
 
