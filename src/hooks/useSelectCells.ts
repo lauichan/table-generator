@@ -1,12 +1,12 @@
-import type { MouseEvent } from "react";
 import type { CellType } from "@store/useTableStore";
 import type { SelectedRange } from "@/store/useSelectCellsStore";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useSelectCellsStore } from "@/store/useSelectCellsStore";
 
 const useSelectCells = (table: CellType[][]) => {
+  const tableRef = useRef<HTMLTableElement>(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [dragStart, setDragStart] = useState<SelectedRange>(null);
   const [dragEnd, setDragEnd] = useState<SelectedRange>(null);
@@ -15,19 +15,23 @@ const useSelectCells = (table: CellType[][]) => {
   );
 
   const setSelectRange = (startIdx: SelectedRange, endIdx: SelectedRange) => {
-    if (!startIdx || !endIdx) return;
-    setStartIdx({ row: startIdx.row, col: startIdx.col });
-    setEndIdx({ row: endIdx.row, col: endIdx.col });
+    if (!startIdx || !endIdx) {
+      setStartIdx(null);
+      setEndIdx(null);
+    } else {
+      setStartIdx({ row: startIdx.row, col: startIdx.col });
+      setEndIdx({ row: endIdx.row, col: endIdx.col });
+    }
   };
 
-  const handleMouseDown = (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
     if (e.button === 2) return;
     setIsSelecting(true);
     setDragStart({ row: rowIdx, col: colIdx });
     setDragEnd({ row: rowIdx, col: colIdx });
   };
 
-  const handleMouseOver = (_: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
+  const handleMouseOver = (_: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
     if (!isSelecting) return;
     setDragEnd({ row: rowIdx, col: colIdx });
   };
@@ -71,7 +75,20 @@ const useSelectCells = (table: CellType[][]) => {
     );
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (tableRef.current && !tableRef.current.contains(event.target as Node)) {
+        console.log("테이블 밖 클릭")
+        setSelectRange(null, null);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return {
+    tableRef,
     isSelecting,
     handleMouseDown,
     handleMouseOver,

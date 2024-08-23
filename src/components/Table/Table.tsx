@@ -16,6 +16,7 @@ import styles from "./Table.module.css";
 
 function Table({ table }: { table: CellType[][] }) {
   const {
+    tableRef,
     isSelecting,
     handleMouseDown,
     handleMouseOver,
@@ -61,7 +62,7 @@ function Table({ table }: { table: CellType[][] }) {
 
   return (
     <section className={styles["table"]}>
-      <table>
+      <table ref={tableRef}>
         {thead ? (
           <thead>
             {headerRows.map((row, rowIdx) => (
