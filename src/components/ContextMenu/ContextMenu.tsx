@@ -17,9 +17,6 @@ function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
 
   if (position === null) return null;
 
-  const hasMenuItems = isSelectionMergeable() || isSelectionDivisible();
-  if (!hasMenuItems) return null;
-
   return (
     <ul ref={contextMenuRef} className={styles.context_menu} style={{ top: position.y, left: position.x }}>
       <li {...(isSelectionMergeable() ? { onClick: handleMergeCell } : { className: styles['disabled'] })}>합치기</li>
