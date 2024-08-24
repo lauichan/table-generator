@@ -4,7 +4,7 @@ import type { CellType } from '@store/useTableStore';
 import Cell from '@components/Cell/Cell';
 import TableSizer from '@components/TableSizer/TableSizer';
 import ContextMenu from '@components/ContextMenu/ContextMenu';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useOptionStore } from '@store/useOptionStore';
 import { useTableStore } from '@store/useTableStore';
@@ -22,9 +22,12 @@ function Table({ table }: { table: CellType[][] }) {
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
 
-  const headerRows = table.slice(0, thead);
-  const bodyRows = table.slice(thead > 0 ? thead : 0, tfoot > 0 ? -tfoot : table.length);
-  const footerRows = table.slice(-tfoot);
+  const headerRows = useMemo(() => table.slice(0, thead), [table, thead]);
+  const footerRows = useMemo(() => table.slice(-tfoot), [table, tfoot]);
+  const bodyRows = useMemo(
+    () => table.slice(thead > 0 ? thead : 0, tfoot > 0 ? -tfoot : table.length),
+    [table, thead, tfoot],
+  );
 
   useEffect(() => {
     setSelectRange(null, null);
