@@ -15,10 +15,10 @@ import htmlEscape from '@utils/htmlEscape';
 import styles from './Table.module.css';
 
 function Table({ table }: { table: CellType[][] }) {
-  const { tableRef, isSelecting, handleMouseDown, handleMouseOver, handleMouseUp, isSelectedCell, setSelectRange } =
+  const { tableRef, handleMouseDown, handleMouseOver, handleMouseUp, isSelectedCell, setSelectRange } =
     useSelectCells(table);
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
-  const { contextMenu, contextMenuRef, handleContextMenu, hideContextMenu } = useContextMenu();
+  const { contextMenu, contextMenuRef, handleContextMenu } = useContextMenu();
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
 
@@ -32,10 +32,6 @@ function Table({ table }: { table: CellType[][] }) {
   useEffect(() => {
     setSelectRange(null, null);
   }, [thead, tfoot, setSelectRange]);
-
-  useEffect(() => {
-    hideContextMenu();
-  }, [isSelecting, hideContextMenu]);
 
   const handleFocusOut = (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => {
     const text = htmlEscape(e.currentTarget.innerText);
