@@ -1,5 +1,5 @@
-import useManageTable from "@hooks/useManageTable";
-import styles from "./ContextMenu.module.css";
+import useManageTable from '@hooks/useManageTable';
+import styles from './ContextMenu.module.css';
 
 export type MousePosition = {
   x: number;
@@ -12,13 +12,8 @@ type ContextMenuProps = {
 };
 
 function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
-  const {
-    handleMergeCell,
-    handleDivideCell,
-    isSelectionMergeable,
-    isSelectionDivisible,
-    handleToggleCellType,
-  } = useManageTable();
+  const { handleMergeCell, handleDivideCell, isSelectionMergeable, isSelectionDivisible, handleToggleCellType } =
+    useManageTable();
 
   if (position === null) return null;
 
@@ -26,25 +21,9 @@ function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
   if (!hasMenuItems) return null;
 
   return (
-    <ul
-      ref={contextMenuRef}
-      className={styles.context_menu}
-      style={{ top: position.y, left: position.x }}
-    >
-      <li
-        {...(isSelectionMergeable()
-          ? { onClick: handleMergeCell }
-          : { className: styles["disabled"] })}
-      >
-        합치기
-      </li>
-      <li
-        {...(isSelectionDivisible()
-          ? { onClick: handleDivideCell }
-          : { className: styles["disabled"] })}
-      >
-        나누기
-      </li>
+    <ul ref={contextMenuRef} className={styles.context_menu} style={{ top: position.y, left: position.x }}>
+      <li {...(isSelectionMergeable() ? { onClick: handleMergeCell } : { className: styles['disabled'] })}>합치기</li>
+      <li {...(isSelectionDivisible() ? { onClick: handleDivideCell } : { className: styles['disabled'] })}>나누기</li>
       <li onClick={handleToggleCellType}>헤더셀 &lt;-&gt; 데이터셀</li>
     </ul>
   );

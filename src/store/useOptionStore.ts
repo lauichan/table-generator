@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 type State = {
   minified: boolean;
@@ -30,8 +30,8 @@ export const useOptionStore = create<State & Actions>()(
       },
     }),
     {
-      name: "option",
+      name: 'option',
       storage: createJSONStorage(() => sessionStorage),
-    }
-  )
+    },
+  ),
 );

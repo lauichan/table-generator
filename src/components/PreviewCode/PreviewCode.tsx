@@ -1,21 +1,21 @@
-import type { ChangeEvent } from "react";
-import type { CellType } from "@store/useTableStore";
+import type { ChangeEvent } from 'react';
+import type { CellType } from '@store/useTableStore';
 
-import { useRef, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
-import { useOptionStore } from "@store/useOptionStore";
-import createTableHtml from "@utils/createHtml";
-import formatHtml from "@utils/formatHtml";
-import sizeLimit from "@utils/sizeLimit";
-import sanitizeHtml from "@utils/sanitizeHtml";
-import styles from "./PreviewCode.module.css";
+import { useRef, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+import { useOptionStore } from '@store/useOptionStore';
+import createTableHtml from '@utils/createHtml';
+import formatHtml from '@utils/formatHtml';
+import sizeLimit from '@utils/sizeLimit';
+import sanitizeHtml from '@utils/sanitizeHtml';
+import styles from './PreviewCode.module.css';
 
 function PreviewCode({ table }: { table: CellType[][] }) {
   const codeRef = useRef<HTMLElement>(null);
   const [tabSize, setTabSize] = useState(4);
 
   const [minified, thead, tfoot, toggleMinified] = useOptionStore(
-    useShallow((state) => [state.minified, state.thead, state.tfoot, state.toggleMinified])
+    useShallow((state) => [state.minified, state.thead, state.tfoot, state.toggleMinified]),
   );
 
   const tableHtml = createTableHtml(table, thead, tfoot);
@@ -29,45 +29,39 @@ function PreviewCode({ table }: { table: CellType[][] }) {
   const handleCopyCode = () => {
     try {
       const text = codeRef.current;
-      if (!text || !text.textContent) throw new Error("복사할 텍스트가 없습니다.");
+      if (!text || !text.textContent) throw new Error('복사할 텍스트가 없습니다.');
       navigator.clipboard.writeText(text.textContent);
-      alert("클립보드에 복사되었습니다.");
+      alert('클립보드에 복사되었습니다.');
     } catch (error) {
-      alert("클립보드 복사에 실패하였습니다.");
+      alert('클립보드 복사에 실패하였습니다.');
     }
   };
 
   return (
     <>
-      <section className={styles["code"]}>
-        <div className={styles["options"]}>
+      <section className={styles['code']}>
+        <div className={styles['options']}>
           <button onClick={handleCopyCode} title="코드 내용을 복사합니다">
             코드복사
           </button>
-          <div className={styles["tabsize"]}>
+          <div className={styles['tabsize']}>
             <label htmlFor="tabsize" title="탭 크기 조절 (2 ~ 4)">
               탭 크기
             </label>
-            <input
-              id="tabsize"
-              type="number"
-              value={tabSize}
-              onChange={handleTabSize}
-              disabled={minified}
-            />
+            <input id="tabsize" type="number" value={tabSize} onChange={handleTabSize} disabled={minified} />
           </div>
-          <div className={styles["minify"]}>
+          <div className={styles['minify']}>
             <input id="minify" type="checkbox" checked={minified} onChange={toggleMinified} />
             <label htmlFor="minify" title="HTML 코드 공백을 제거합니다">
               코드 최소화
             </label>
           </div>
         </div>
-        <pre className={styles["html"]}>
+        <pre className={styles['html']}>
           <code ref={codeRef}>{code}</code>
         </pre>
       </section>
-      <section className={styles["preview"]}>
+      <section className={styles['preview']}>
         <h2>미리보기</h2>
         <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }} />
       </section>

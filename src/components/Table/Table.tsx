@@ -1,29 +1,22 @@
-import type { FocusEvent } from "react";
-import type { CellType } from "@store/useTableStore";
+import type { FocusEvent } from 'react';
+import type { CellType } from '@store/useTableStore';
 
-import Cell from "@components/Cell/Cell";
-import TableSizer from "@components/TableSizer/TableSizer";
-import ContextMenu from "@components/ContextMenu/ContextMenu";
-import { useEffect } from "react";
-import { useShallow } from "zustand/react/shallow";
-import { useOptionStore } from "@store/useOptionStore";
-import { useTableStore } from "@store/useTableStore";
-import useArrowNavigate from "@hooks/useArrowNavigate";
-import useContextMenu from "@hooks/useContextMenu";
-import useSelectCells from "@hooks/useSelectCells";
-import htmlEscape from "@utils/htmlEscape";
-import styles from "./Table.module.css";
+import Cell from '@components/Cell/Cell';
+import TableSizer from '@components/TableSizer/TableSizer';
+import ContextMenu from '@components/ContextMenu/ContextMenu';
+import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+import { useOptionStore } from '@store/useOptionStore';
+import { useTableStore } from '@store/useTableStore';
+import useArrowNavigate from '@hooks/useArrowNavigate';
+import useContextMenu from '@hooks/useContextMenu';
+import useSelectCells from '@hooks/useSelectCells';
+import htmlEscape from '@utils/htmlEscape';
+import styles from './Table.module.css';
 
 function Table({ table }: { table: CellType[][] }) {
-  const {
-    tableRef,
-    isSelecting,
-    handleMouseDown,
-    handleMouseOver,
-    handleMouseUp,
-    isSelectedCell,
-    setSelectRange,
-  } = useSelectCells(table);
+  const { tableRef, isSelecting, handleMouseDown, handleMouseOver, handleMouseUp, isSelectedCell, setSelectRange } =
+    useSelectCells(table);
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
   const { contextMenu, contextMenuRef, handleContextMenu, hideContextMenu } = useContextMenu();
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
@@ -35,17 +28,13 @@ function Table({ table }: { table: CellType[][] }) {
 
   useEffect(() => {
     setSelectRange(null, null);
-  }, [thead, tfoot]);
+  }, [thead, tfoot, setSelectRange]);
 
   useEffect(() => {
     hideContextMenu();
-  }, [isSelecting]);
+  }, [isSelecting, hideContextMenu]);
 
-  const handleFocusOut = (
-    e: FocusEvent<HTMLTableCellElement, Element>,
-    rowIdx: number,
-    colIdx: number
-  ) => {
+  const handleFocusOut = (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => {
     const text = htmlEscape(e.currentTarget.innerText);
     setTableText(rowIdx, colIdx, text);
   };
@@ -61,7 +50,7 @@ function Table({ table }: { table: CellType[][] }) {
   };
 
   return (
-    <section className={styles["table"]}>
+    <section className={styles['table']}>
       <table ref={tableRef}>
         {thead ? (
           <thead>

@@ -1,6 +1,6 @@
-import type { MousePosition } from "@/components/ContextMenu/ContextMenu";
+import type { MousePosition } from '@/components/ContextMenu/ContextMenu';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 const useContextMenu = () => {
   const contextMenuRef = useRef<HTMLUListElement>(null);
@@ -26,8 +26,8 @@ const useContextMenu = () => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return { contextMenu, contextMenuRef, handleContextMenu, hideContextMenu };

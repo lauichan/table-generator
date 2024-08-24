@@ -1,19 +1,15 @@
-import type { FocusEvent, KeyboardEvent, MouseEvent, MutableRefObject } from "react";
-import type { CellType } from "@store/useTableStore";
+import type { FocusEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react';
+import type { CellType } from '@store/useTableStore';
 
-import sanitizeHtml from "@utils/sanitizeHtml";
-import styles from "./Cell.module.css";
+import sanitizeHtml from '@utils/sanitizeHtml';
+import styles from './Cell.module.css';
 
 type CellProps = CellType & {
   selected: boolean;
   cellRefs: MutableRefObject<HTMLTableCellElement[][]>;
   rowIdx: number;
   colIdx: number;
-  handleFocusOut: (
-    e: FocusEvent<HTMLTableCellElement, Element>,
-    rowIdx: number,
-    colIdx: number
-  ) => void;
+  handleFocusOut: (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => void;
   handleKeyDown: (e: KeyboardEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
   handleContextMenu: (e: MouseEvent<HTMLTableCellElement>) => void;
   handleMouseDown: (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
@@ -37,7 +33,7 @@ function Cell({
   handleMouseUp,
 }: CellProps) {
   const commonProps = {
-    ...(selected ? { className: styles["selected"] } : {}),
+    ...(selected ? { className: styles['selected'] } : {}),
     ref: (el: HTMLTableCellElement) => {
       if (!cellRefs.current[rowIdx]) {
         cellRefs.current[rowIdx] = [];
@@ -59,7 +55,7 @@ function Cell({
 
   if (merged && merged.origin === false) return null;
 
-  if (type === "head") return <th {...commonProps} />;
+  if (type === 'head') return <th {...commonProps} />;
 
   return <td {...commonProps} />;
 }

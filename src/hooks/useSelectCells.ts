@@ -1,9 +1,9 @@
-import type { CellType } from "@store/useTableStore";
-import type { SelectedRange } from "@/store/useSelectCellsStore";
+import type { CellType } from '@store/useTableStore';
+import type { SelectedRange } from '@/store/useSelectCellsStore';
 
-import { useEffect, useRef, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
-import { useSelectCellsStore } from "@/store/useSelectCellsStore";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
+import { useSelectCellsStore } from '@/store/useSelectCellsStore';
 
 const useSelectCells = (table: CellType[][]) => {
   const tableRef = useRef<HTMLTableElement>(null);
@@ -11,18 +11,21 @@ const useSelectCells = (table: CellType[][]) => {
   const [dragStart, setDragStart] = useState<SelectedRange>(null);
   const [dragEnd, setDragEnd] = useState<SelectedRange>(null);
   const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
-    useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx])
+    useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx]),
   );
 
-  const setSelectRange = (startIdx: SelectedRange, endIdx: SelectedRange) => {
-    if (!startIdx || !endIdx) {
-      setStartIdx(null);
-      setEndIdx(null);
-    } else {
-      setStartIdx({ row: startIdx.row, col: startIdx.col });
-      setEndIdx({ row: endIdx.row, col: endIdx.col });
-    }
-  };
+  const setSelectRange = useCallback(
+    (startIdx: SelectedRange, endIdx: SelectedRange) => {
+      if (!startIdx || !endIdx) {
+        setStartIdx(null);
+        setEndIdx(null);
+      } else {
+        setStartIdx({ row: startIdx.row, col: startIdx.col });
+        setEndIdx({ row: endIdx.row, col: endIdx.col });
+      }
+    },
+    [setStartIdx, setEndIdx],
+  );
 
   const handleMouseDown = (e: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
     if (e.button === 2) return;
@@ -63,29 +66,23 @@ const useSelectCells = (table: CellType[][]) => {
 
     setStartIdx({ row: startRow, col: startCol });
     setEndIdx({ row: endRow, col: endCol });
-  }, [dragStart, dragEnd, setStartIdx, setEndIdx]);
+  }, [table, dragStart, dragEnd, setStartIdx, setEndIdx]);
 
   const isSelectedCell = (rowIdx: number, colIdx: number) => {
     if (!startIdx || !endIdx) return false;
-    return (
-      rowIdx >= startIdx.row &&
-      rowIdx <= endIdx.row &&
-      colIdx >= startIdx.col &&
-      colIdx <= endIdx.col
-    );
+    return rowIdx >= startIdx.row && rowIdx <= endIdx.row && colIdx >= startIdx.col && colIdx <= endIdx.col;
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (tableRef.current && !tableRef.current.contains(event.target as Node)) {
-        console.log("테이블 밖 클릭")
         setSelectRange(null, null);
       }
-    }
+    };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [setSelectRange]);
 
   return {
     tableRef,

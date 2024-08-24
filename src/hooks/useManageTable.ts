@@ -1,15 +1,15 @@
-import { useShallow } from "zustand/react/shallow";
-import { useOptionStore } from "@store/useOptionStore";
-import { useSelectCellsStore } from "@store/useSelectCellsStore";
-import { useTableStore } from "@store/useTableStore";
+import { useShallow } from 'zustand/react/shallow';
+import { useOptionStore } from '@store/useOptionStore';
+import { useSelectCellsStore } from '@store/useSelectCellsStore';
+import { useTableStore } from '@store/useTableStore';
 
 const useManageTable = () => {
   const [table, mergeCells, divideCell, toggleCellsType] = useTableStore(
-    useShallow((state) => [state.table, state.mergeCells, state.divideCell, state.toggleCellsType])
+    useShallow((state) => [state.table, state.mergeCells, state.divideCell, state.toggleCellsType]),
   );
 
   const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
-    useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx])
+    useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx]),
   );
 
   const thead = useOptionStore((state) => state.thead);
@@ -23,7 +23,7 @@ const useManageTable = () => {
     if (!startIdx || !endIdx) return;
 
     if (thead && endIdx.row >= thead) {
-      alert("머리글 옵션이 활성화 되어있습니다.\n머리글은 머리글끼리만 합칠 수 있습니다.");
+      alert('머리글 옵션이 활성화 되어있습니다.\n머리글은 머리글끼리만 합칠 수 있습니다.');
       resetSelection();
       return;
     }
@@ -48,11 +48,11 @@ const useManageTable = () => {
 
     const startIdxWithThead = {
       row: Math.max(startIdx.row, thead),
-      col: startIdx.col
+      col: startIdx.col,
     };
-  
+
     if (endIdx.row < thead) return;
-  
+
     toggleCellsType(startIdxWithThead, endIdx);
     resetSelection();
   };
@@ -63,7 +63,7 @@ const useManageTable = () => {
 
     const cell = table[startIdx.row][startIdx.col];
     if (cell.merged) {
-      const { rowSpan, colSpan } = cell.merged
+      const { rowSpan, colSpan } = cell.merged;
       return !(startIdx.row + rowSpan - 1 === endIdx.row && startIdx.col + colSpan - 1 === endIdx.col);
     }
 
@@ -75,10 +75,10 @@ const useManageTable = () => {
 
     const cell = table[startIdx.row][startIdx.col];
     if (cell.merged) {
-      const { origin, rowIdx, colIdx, rowSpan, colSpan } = cell.merged
-      return origin && (rowIdx + rowSpan - 1 === endIdx.row) && (colIdx + colSpan - 1 === endIdx.col);
-    } 
-    
+      const { origin, rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
+      return origin && rowIdx + rowSpan - 1 === endIdx.row && colIdx + colSpan - 1 === endIdx.col;
+    }
+
     return false;
   };
 

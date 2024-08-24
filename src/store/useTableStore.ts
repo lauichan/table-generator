@@ -1,10 +1,10 @@
-import type { SelectedRange } from "./useSelectCellsStore";
+import type { SelectedRange } from './useSelectCellsStore';
 
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 export type CellType = {
-  type: "define" | "head";
+  type: 'define' | 'head';
   content: string;
   merged: {
     origin: boolean;
@@ -31,12 +31,12 @@ type Actions = {
 
 const initTable: CellType[][] = [
   [
-    { type: "define", content: "", merged: null },
-    { type: "define", content: "", merged: null },
+    { type: 'define', content: '', merged: null },
+    { type: 'define', content: '', merged: null },
   ],
   [
-    { type: "define", content: "", merged: null },
-    { type: "define", content: "", merged: null },
+    { type: 'define', content: '', merged: null },
+    { type: 'define', content: '', merged: null },
   ],
 ];
 
@@ -53,16 +53,14 @@ export const useTableStore = create<State & Actions>()(
           const newTable: CellType[][] = structuredClone(table);
           if (rowCount >= 0 && columnCount >= 0) {
             for (let i = 0; i < rowCount; i++) {
-              newTable.push(
-                Array(newTable[0].length).fill({ type: "define", content: "", merged: null })
-              );
+              newTable.push(Array(newTable[0].length).fill({ type: 'define', content: '', merged: null }));
             }
             newTable.forEach((row, rowIdx) => {
               for (let j = 0; j < columnCount; j++) {
                 if (thead > 0 && thead - 1 === rowIdx) {
-                  row.push({ type: "head", content: "", merged: null });
+                  row.push({ type: 'head', content: '', merged: null });
                 } else {
-                  row.push({ type: "define", content: "", merged: null });
+                  row.push({ type: 'define', content: '', merged: null });
                 }
               }
             });
@@ -80,9 +78,7 @@ export const useTableStore = create<State & Actions>()(
       setTableText: (rowIdx, colIdx, text) => {
         set(({ table }) => {
           const newTable = table.map((row, rIdx) =>
-            row.map((cell, cIdx) =>
-              rIdx === rowIdx && cIdx === colIdx ? { ...cell, content: text } : cell
-            )
+            row.map((cell, cIdx) => (rIdx === rowIdx && cIdx === colIdx ? { ...cell, content: text } : cell)),
           );
           return { table: newTable };
         });
@@ -92,8 +88,8 @@ export const useTableStore = create<State & Actions>()(
           const newTable: CellType[][] = table.map((row, rowIdx) =>
             row.map((cell) => ({
               ...cell,
-              type: thead > 0 && rowIdx < thead ? "head" : "define",
-            }))
+              type: thead > 0 && rowIdx < thead ? 'head' : 'define',
+            })),
           );
           return { table: newTable };
         });
@@ -105,10 +101,10 @@ export const useTableStore = create<State & Actions>()(
           const newTable: CellType[][] = table.map((row, rIdx) =>
             row.map((cell, cIdx) => {
               if (rIdx >= sRow && rIdx <= eRow && cIdx >= sCol && cIdx <= eCol) {
-                return { ...cell, type: cell.type === "define" ? "head" : "define" };
+                return { ...cell, type: cell.type === 'define' ? 'head' : 'define' };
               }
               return cell;
-            })
+            }),
           );
           return { table: newTable };
         });
@@ -117,7 +113,7 @@ export const useTableStore = create<State & Actions>()(
         set(({ table }) => {
           const newTable: CellType[][] = structuredClone(table);
 
-          let content = "";
+          let content = '';
 
           for (let i = 0; i <= rowSpan; i++) {
             for (let j = 0; j <= colSpan; j++) {
@@ -125,7 +121,7 @@ export const useTableStore = create<State & Actions>()(
               content += newTable[rowIdx + i][colIdx + j].content;
               newTable[rowIdx + i][colIdx + j] = {
                 ...newTable[rowIdx + i][colIdx + j],
-                content: "",
+                content: '',
                 merged: {
                   origin: false,
                   rowIdx,
@@ -171,8 +167,8 @@ export const useTableStore = create<State & Actions>()(
       },
     }),
     {
-      name: "table",
+      name: 'table',
       storage: createJSONStorage(() => sessionStorage),
-    }
-  )
+    },
+  ),
 );
