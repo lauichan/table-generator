@@ -1,4 +1,4 @@
-import type { SelectedRange } from './useSelectCellsStore';
+import type { SelectRange } from './useSelectCellsStore';
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
@@ -24,9 +24,10 @@ type Actions = {
   setRowColumn: (rowCount: number, columnCount: number, thead?: number) => void;
   setTableText: (rowIdx: number, colIdx: number, text: string) => void;
   toggleHeadType: (thead: number) => void;
-  toggleCellsType: (startIdx: SelectedRange, colIdx: SelectedRange) => void;
   mergeCells: (rowIdx: number, colIdx: number, rowSpan: number, colSpan: number) => void;
   divideCell: (rowIdx: number, colIdx: number) => void;
+  setHeaderCells: (range: SelectRange) => void;
+  setDataCells: (range: SelectRange) => void;
 };
 
 const initTable: CellType[][] = [
@@ -94,21 +95,6 @@ export const useTableStore = create<State & Actions>()(
           return { table: newTable };
         });
       },
-      toggleCellsType: (startIdx, endIdx) => {
-        set(({ table }) => {
-          const { row: sRow, col: sCol } = startIdx!;
-          const { row: eRow, col: eCol } = endIdx!;
-          const newTable: CellType[][] = table.map((row, rIdx) =>
-            row.map((cell, cIdx) => {
-              if (rIdx >= sRow && rIdx <= eRow && cIdx >= sCol && cIdx <= eCol) {
-                return { ...cell, type: cell.type === 'define' ? 'head' : 'define' };
-              }
-              return cell;
-            }),
-          );
-          return { table: newTable };
-        });
-      },
       mergeCells: (rowIdx, colIdx, rowSpan, colSpan) => {
         set(({ table }) => {
           const newTable: CellType[][] = structuredClone(table);
@@ -165,6 +151,18 @@ export const useTableStore = create<State & Actions>()(
           return { table: newTable };
         });
       },
+      setHeaderCells: (range) => {
+        set(({ table }) => {
+          const newTable = updateCellType(table, range, 'head');
+          return { table: newTable };
+        });
+      },
+      setDataCells: (range) => {
+        set(({ table }) => {
+          const newTable = updateCellType(table, range, 'define');
+          return { table: newTable };
+        });
+      },
     }),
     {
       name: 'table',
@@ -172,3 +170,17 @@ export const useTableStore = create<State & Actions>()(
     },
   ),
 );
+
+const updateCellType = (table: CellType[][], range: SelectRange, type: CellType['type']) => {
+  if (!range) return table;
+  const { startRow, startCol, endRow, endCol } = range;
+  const newTable: CellType[][] = table.map((row, rIdx) =>
+    row.map((cell, cIdx) => {
+      if (rIdx >= startRow && rIdx <= endRow && cIdx >= startCol && cIdx <= endCol) {
+        return { ...cell, type };
+      }
+      return cell;
+    }),
+  );
+  return newTable;
+};

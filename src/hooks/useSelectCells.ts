@@ -1,7 +1,7 @@
 import type { CellType } from '@store/useTableStore';
 import type { SelectedRange } from '@/store/useSelectCellsStore';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSelectCellsStore } from '@/store/useSelectCellsStore';
 import useOutsideClick from './useOutsideClick';
@@ -11,21 +11,8 @@ const useSelectCells = (table: CellType[][]) => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [dragStart, setDragStart] = useState<SelectedRange>(null);
   const [dragEnd, setDragEnd] = useState<SelectedRange>(null);
-  const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
-    useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx]),
-  );
-
-  const setSelectRange = useCallback(
-    (startIdx: SelectedRange, endIdx: SelectedRange) => {
-      if (!startIdx || !endIdx) {
-        setStartIdx(null);
-        setEndIdx(null);
-      } else {
-        setStartIdx({ row: startIdx.row, col: startIdx.col });
-        setEndIdx({ row: endIdx.row, col: endIdx.col });
-      }
-    },
-    [setStartIdx, setEndIdx],
+  const [selectRange, setSelectRange] = useSelectCellsStore(
+    useShallow((state) => [state.selectRange, state.setSelectRange]),
   );
 
   const handleMouseDown = (e: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
@@ -67,17 +54,17 @@ const useSelectCells = (table: CellType[][]) => {
       // 1. 병합된 셀을 따로 저장해서 그 셀들에서 찾기
       // 2. 테이블이 바뀔때만 미리 정보를 저장, 선택할때는 계산 x
 
-      setStartIdx({ row: startRow, col: startCol });
-      setEndIdx({ row: endRow, col: endCol });
+      setSelectRange({ startRow, startCol, endRow, endCol });
     }
-  }, [table, dragStart, dragEnd, setStartIdx, setEndIdx]);
+  }, [table, dragStart, dragEnd, setSelectRange]);
 
   const isSelectedCell = (rowIdx: number, colIdx: number) => {
-    if (!startIdx || !endIdx) return false;
-    return rowIdx >= startIdx.row && rowIdx <= endIdx.row && colIdx >= startIdx.col && colIdx <= endIdx.col;
+    if (!selectRange) return false;
+    const { startRow, startCol, endRow, endCol } = selectRange;
+    return rowIdx >= startRow && rowIdx <= endRow && colIdx >= startCol && colIdx <= endCol;
   };
 
-  useOutsideClick(tableRef, () => setSelectRange(null, null));
+  useOutsideClick(tableRef, () => setSelectRange(null));
 
   return {
     tableRef,

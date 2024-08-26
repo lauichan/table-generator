@@ -4,79 +4,78 @@ import { useSelectCellsStore } from '@store/useSelectCellsStore';
 import { useTableStore } from '@store/useTableStore';
 
 const useManageTable = () => {
-  const [table, mergeCells, divideCell, toggleCellsType] = useTableStore(
-    useShallow((state) => [state.table, state.mergeCells, state.divideCell, state.toggleCellsType]),
+  const [table, mergeCells, divideCell, setHeaderCells, setDataCells] = useTableStore(
+    useShallow((state) => [state.table, state.mergeCells, state.divideCell, state.setHeaderCells, state.setDataCells]),
   );
 
-  const [startIdx, endIdx, setStartIdx, setEndIdx] = useSelectCellsStore(
-    useShallow((state) => [state.startIdx, state.endIdx, state.setStartIdx, state.setEndIdx]),
+  const [selectRange, setSelectRange] = useSelectCellsStore(
+    useShallow((state) => [state.selectRange, state.setSelectRange]),
   );
 
   const thead = useOptionStore((state) => state.thead);
 
   const resetSelection = () => {
-    setStartIdx(null);
-    setEndIdx(null);
+    setSelectRange(null);
   };
 
   const handleMergeCell = () => {
-    if (!startIdx || !endIdx) return;
+    if (!selectRange) return;
 
-    if (thead && endIdx.row >= thead) {
+    const { startRow, startCol, endRow, endCol } = selectRange;
+
+    if (thead && endRow >= thead) {
       alert('머리글 옵션이 활성화 되어있습니다.\n머리글은 머리글끼리만 합칠 수 있습니다.');
       resetSelection();
       return;
     }
-
-    const { row: startRow, col: startCol } = startIdx;
-    const { row: endRow, col: endCol } = endIdx;
 
     mergeCells(startRow, startCol, endRow - startRow, endCol - startCol);
     resetSelection();
   };
 
   const handleDivideCell = () => {
-    if (!startIdx || !endIdx) return;
-    const { row: startRow, col: startCol } = startIdx;
+    if (!selectRange) return;
+    const { startRow, startCol } = selectRange;
 
     divideCell(startRow, startCol);
     resetSelection();
   };
 
-  const handleToggleCellType = () => {
-    if (!startIdx || !endIdx) return;
+  const handleSetHeaderCell = () => {
+    if (!selectRange) return;
+    setHeaderCells(selectRange);
+  };
 
-    const startIdxWithThead = {
-      row: Math.max(startIdx.row, thead),
-      col: startIdx.col,
-    };
-
-    if (endIdx.row < thead) return;
-
-    toggleCellsType(startIdxWithThead, endIdx);
-    resetSelection();
+  const handleSetDataCell = () => {
+    if (!selectRange) return;
+    const { startRow, endRow } = selectRange;
+    if (endRow < thead) return;
+    setDataCells({ ...selectRange, startRow: Math.max(startRow, thead) });
   };
 
   const isSelectionMergeable = (): boolean => {
-    if (!startIdx || !endIdx) return false;
-    if (startIdx.row === endIdx.row && startIdx.col === endIdx.col) return false;
+    if (!selectRange) return false;
+    const { startRow, startCol, endRow, endCol } = selectRange;
 
-    const cell = table[startIdx.row][startIdx.col];
+    if (startRow === endRow && startCol === endCol) return false;
+
+    const cell = table[startRow][startCol];
     if (cell.merged) {
       const { rowSpan, colSpan } = cell.merged;
-      return !(startIdx.row + rowSpan - 1 === endIdx.row && startIdx.col + colSpan - 1 === endIdx.col);
+      return !(startRow + rowSpan - 1 === endRow && startCol + colSpan - 1 === endCol);
     }
 
     return true;
   };
 
   const isSelectionDivisible = (): boolean => {
-    if (!startIdx || !endIdx) return false;
+    if (!selectRange) return false;
+    const { startRow, startCol, endRow, endCol } = selectRange;
 
-    const cell = table[startIdx.row][startIdx.col];
+    const cell = table[startRow][startCol];
     if (cell.merged) {
       const { origin, rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
-      return origin && rowIdx + rowSpan - 1 === endIdx.row && colIdx + colSpan - 1 === endIdx.col;
+      return origin && rowIdx + rowSpan - 1 === endRow && colIdx + colSpan - 1 === endCol;
     }
 
     return false;
@@ -87,7 +86,8 @@ const useManageTable = () => {
     handleDivideCell,
     isSelectionMergeable,
     isSelectionDivisible,
-    handleToggleCellType,
+    handleSetHeaderCell,
+    handleSetDataCell,
   };
 };
 

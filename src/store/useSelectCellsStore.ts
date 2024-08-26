@@ -1,20 +1,17 @@
 import { create } from 'zustand';
 
 export type SelectedRange = { row: number; col: number } | null;
+export type SelectRange = { startRow: number; startCol: number; endRow: number; endCol: number } | null;
 
 type State = {
-  startIdx: SelectedRange;
-  endIdx: SelectedRange;
+  selectRange: SelectRange;
 };
 
 type Actions = {
-  setStartIdx: (idx: State['startIdx']) => void;
-  setEndIdx: (idx: State['endIdx']) => void;
+  setSelectRange: (range: SelectRange) => void;
 };
 
 export const useSelectCellsStore = create<State & Actions>()((set) => ({
-  startIdx: null,
-  endIdx: null,
-  setStartIdx: (idx) => set({ startIdx: idx }),
-  setEndIdx: (idx) => set({ endIdx: idx }),
+  selectRange: null,
+  setSelectRange: (range) => set({ selectRange: range }),
 }));

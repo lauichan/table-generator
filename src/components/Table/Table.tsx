@@ -19,6 +19,7 @@ function Table({ table }: { table: CellType[][] }) {
     useSelectCells(table);
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
   const { contextMenu, contextMenuRef, handleContextMenu } = useContextMenu();
+
   const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
   const setTableText = useTableStore((state) => state.setTableText);
 
@@ -30,7 +31,7 @@ function Table({ table }: { table: CellType[][] }) {
   );
 
   useEffect(() => {
-    setSelectRange(null, null);
+    setSelectRange(null);
   }, [thead, tfoot, setSelectRange]);
 
   const handleFocusOut = (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => {
