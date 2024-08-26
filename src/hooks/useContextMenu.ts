@@ -1,6 +1,7 @@
 import type { MousePosition } from '@/components/ContextMenu/ContextMenu';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import useOutsideClick from './useOutsideClick';
 
 const useContextMenu = () => {
   const contextMenuRef = useRef<HTMLUListElement>(null);
@@ -15,16 +16,7 @@ const useContextMenu = () => {
     });
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (contextMenuRef.current && !contextMenuRef.current.contains(event.target as Node)) {
-        setContextMenu(null);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  useOutsideClick(contextMenuRef, () => setContextMenu(null));
 
   return { contextMenu, contextMenuRef, handleContextMenu };
 };

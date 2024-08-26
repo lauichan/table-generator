@@ -4,6 +4,7 @@ import type { SelectedRange } from '@/store/useSelectCellsStore';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSelectCellsStore } from '@/store/useSelectCellsStore';
+import useOutsideClick from './useOutsideClick';
 
 const useSelectCells = (table: CellType[][]) => {
   const tableRef = useRef<HTMLTableElement>(null);
@@ -44,28 +45,31 @@ const useSelectCells = (table: CellType[][]) => {
   };
 
   useEffect(() => {
-    if (!dragStart || !dragEnd) return;
+    if (dragStart && dragEnd) {
+      let startRow = Math.min(dragStart.row, dragEnd.row);
+      let startCol = Math.min(dragStart.col, dragEnd.col);
+      let endRow = Math.max(dragStart.row, dragEnd.row);
+      let endCol = Math.max(dragStart.col, dragEnd.col);
 
-    let startRow = Math.min(dragStart.row, dragEnd.row);
-    let startCol = Math.min(dragStart.col, dragEnd.col);
-    let endRow = Math.max(dragStart.row, dragEnd.row);
-    let endCol = Math.max(dragStart.col, dragEnd.col);
-
-    for (let row = startRow; row <= endRow; row++) {
-      for (let col = startCol; col <= endCol; col++) {
-        const cell = table[row][col];
-        if (cell.merged) {
-          const { rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
-          startRow = Math.min(startRow, rowIdx);
-          startCol = Math.min(startCol, colIdx);
-          endRow = Math.max(endRow, rowIdx + rowSpan - 1);
-          endCol = Math.max(endCol, colIdx + colSpan - 1);
+      // 병합된 셀을 최소 선택범위에 넣으려고 하는 로직
+      for (let row = startRow; row <= endRow; row++) {
+        for (let col = startCol; col <= endCol; col++) {
+          const cell = table[row][col];
+          if (cell.merged) {
+            const { rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
+            startRow = Math.min(startRow, rowIdx);
+            startCol = Math.min(startCol, colIdx);
+            endRow = Math.max(endRow, rowIdx + rowSpan - 1);
+            endCol = Math.max(endCol, colIdx + colSpan - 1);
+          }
         }
       }
-    }
+      // 1. 병합된 셀을 따로 저장해서 그 셀들에서 찾기
+      // 2. 테이블이 바뀔때만 미리 정보를 저장, 선택할때는 계산 x
 
-    setStartIdx({ row: startRow, col: startCol });
-    setEndIdx({ row: endRow, col: endCol });
+      setStartIdx({ row: startRow, col: startCol });
+      setEndIdx({ row: endRow, col: endCol });
+    }
   }, [table, dragStart, dragEnd, setStartIdx, setEndIdx]);
 
   const isSelectedCell = (rowIdx: number, colIdx: number) => {
@@ -73,16 +77,7 @@ const useSelectCells = (table: CellType[][]) => {
     return rowIdx >= startIdx.row && rowIdx <= endIdx.row && colIdx >= startIdx.col && colIdx <= endIdx.col;
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (tableRef.current && !tableRef.current.contains(event.target as Node)) {
-        setSelectRange(null, null);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [setSelectRange]);
+  useOutsideClick(tableRef, () => setSelectRange(null, null));
 
   return {
     tableRef,
