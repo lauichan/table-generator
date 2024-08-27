@@ -19,6 +19,7 @@ const createTableHtml = (table: CellInfo[][], thead: number, tfoot: number): str
 
 const createRowHtml = (row: CellInfo[], rowIdx: number): string => {
   const html = row.map((cell, colIdx) => createCellHtml(cell, rowIdx, colIdx)).join('');
+  if (html === '') return '';
   return `<tr>${html}</tr>`;
 };
 
