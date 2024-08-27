@@ -5,37 +5,30 @@ const createTableHtml = (table: CellType[][], thead: number, tfoot: number): str
   const footerRows = table.slice(-tfoot);
   const bodyRows = table.slice(thead > 0 ? thead : 0, tfoot > 0 ? -tfoot : table.length);
 
-  const theadHtml = thead > 0 ? `<thead>${headerRows.map((row) => createRowHtml(row)).join('')}</thead>` : '';
-  const tfootHtml = tfoot > 0 ? `<tfoot>${footerRows.map((row) => createRowHtml(row)).join('')}</tfoot>` : '';
-  const tbodyHtml =
-    thead || tfoot
-      ? `<tbody>${bodyRows.map((row) => createRowHtml(row)).join('')}</tbody>`
-      : bodyRows.map((row) => createRowHtml(row)).join('');
+  const theadHtml =
+    thead > 0 ? `<thead>${headerRows.map((row, rowIdx) => createRowHtml(row, rowIdx)).join('')}</thead>` : '';
+  const tfootHtml =
+    tfoot > 0
+      ? `<tfoot>${footerRows.map((row, rowIdx) => createRowHtml(row, table.length - tfoot + rowIdx)).join('')}</tfoot>`
+      : '';
+  const tbodyHtml = bodyRows.map((row, rowIdx) => createRowHtml(row, rowIdx + thead)).join('');
 
-  return `<table>${theadHtml}${tbodyHtml}${tfootHtml}</table>`;
+  const bodyTag = thead || tfoot ? '<tbody>' : '';
+  return `<table>${theadHtml}${bodyTag}${tbodyHtml}${bodyTag}${tfootHtml}</table>`;
 };
 
-const createRowHtml = (row: CellType[]): string => {
-  const html = row
-    .map((cell) => (cell.type === 'head' ? createHeaderCellHtml(cell) : createDataCellHtml(cell)))
-    .join('');
+const createRowHtml = (row: CellType[], rowIdx: number): string => {
+  const html = row.map((cell, colIdx) => createCellHtml(cell, rowIdx, colIdx)).join('');
   return `<tr>${html}</tr>`;
 };
 
-const createDataCellHtml = (cell: CellType): string => {
-  const { content, merged } = cell;
-  if (merged && !merged.origin) return '';
+const createCellHtml = (cell: CellType, rowIdx: number, colIdx: number): string => {
+  const { type, content, merged } = cell;
+  if (merged && (merged.rowIdx !== rowIdx || merged.colIdx !== colIdx)) return '';
   const rowSpan = merged ? ` rowSpan="${merged.rowSpan}"` : '';
   const colSpan = merged ? ` colSpan="${merged.colSpan}"` : '';
-  return `<td${rowSpan}${colSpan}>${content}</td>`;
-};
-
-const createHeaderCellHtml = (cell: CellType): string => {
-  const { content, merged } = cell;
-  if (merged && !merged.origin) return '';
-  const rowSpan = merged ? ` rowSpan="${merged.rowSpan}"` : '';
-  const colSpan = merged ? ` colSpan="${merged.colSpan}"` : '';
-  return `<th${rowSpan}${colSpan}>${content}</th>`;
+  const tagName = type === 'head' ? 'th' : 'td';
+  return `<${tagName}${rowSpan}${colSpan}>${content}</${tagName}>`;
 };
 
 export default createTableHtml;

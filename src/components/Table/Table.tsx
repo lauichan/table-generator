@@ -59,7 +59,7 @@ function Table({ table }: { table: CellType[][] }) {
                 {row.map((cell, colIdx) => (
                   <Cell
                     key={`thead-${rowIdx}-${colIdx}`}
-                    {...cell}
+                    cell={cell}
                     selected={isSelectedCell(rowIdx, colIdx)}
                     rowIdx={rowIdx}
                     colIdx={colIdx}
@@ -78,7 +78,7 @@ function Table({ table }: { table: CellType[][] }) {
               {row.map((cell, colIdx) => (
                 <Cell
                   key={`tbody-${rowIdx}-${colIdx}`}
-                  {...cell}
+                  cell={cell}
                   selected={isSelectedCell(rowIdx + thead, colIdx)}
                   rowIdx={rowIdx + thead}
                   colIdx={colIdx}
@@ -95,7 +95,7 @@ function Table({ table }: { table: CellType[][] }) {
                 {row.map((cell, colIdx) => (
                   <Cell
                     key={`tfoot-${rowIdx}-${colIdx}`}
-                    {...cell}
+                    cell={cell}
                     selected={isSelectedCell(table.length - tfoot + rowIdx, colIdx)}
                     rowIdx={table.length - tfoot + rowIdx}
                     colIdx={colIdx}

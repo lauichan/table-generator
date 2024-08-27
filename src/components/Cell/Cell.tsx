@@ -4,9 +4,10 @@ import type { CellType } from '@store/useTableStore';
 import sanitizeHtml from '@utils/sanitizeHtml';
 import styles from './Cell.module.css';
 
-type CellProps = CellType & {
-  selected: boolean;
+type CellProps = {
   cellRefs: MutableRefObject<HTMLTableCellElement[][]>;
+  cell: CellType;
+  selected: boolean;
   rowIdx: number;
   colIdx: number;
   handleFocusOut: (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => void;
@@ -18,11 +19,9 @@ type CellProps = CellType & {
 };
 
 function Cell({
-  type,
-  content,
-  merged,
-  selected,
   cellRefs,
+  cell,
+  selected,
   colIdx,
   rowIdx,
   handleFocusOut,
@@ -32,31 +31,29 @@ function Cell({
   handleMouseOver,
   handleMouseUp,
 }: CellProps) {
+  const { type, content, merged } = cell;
+
   const commonProps = {
-    ...(selected ? { className: styles['selected'] } : {}),
     ref: (el: HTMLTableCellElement) => {
-      if (!cellRefs.current[rowIdx]) {
-        cellRefs.current[rowIdx] = [];
-      }
+      if (!cellRefs.current[rowIdx]) cellRefs.current[rowIdx] = [];
       cellRefs.current[rowIdx][colIdx] = el;
     },
-    rowSpan: merged?.rowSpan,
-    colSpan: merged?.colSpan,
+    ...(merged ? { rowSpan: merged.rowSpan, colSpan: merged.colSpan } : {}),
     contentEditable: true,
     suppressContentEditableWarning: true,
+    dangerouslySetInnerHTML: { __html: sanitizeHtml(content) },
+    ...(selected ? { className: styles['selected'], onContextMenu: handleContextMenu } : {}),
     onBlur: (e: FocusEvent<HTMLTableCellElement>) => handleFocusOut(e, rowIdx, colIdx),
     onKeyDown: (e: KeyboardEvent<HTMLTableCellElement>) => handleKeyDown(e, rowIdx, colIdx),
-    dangerouslySetInnerHTML: { __html: sanitizeHtml(content) },
     onMouseDown: (e: MouseEvent<HTMLTableCellElement>) => handleMouseDown(e, rowIdx, colIdx),
     onMouseOver: (e: MouseEvent<HTMLTableCellElement>) => handleMouseOver(e, rowIdx, colIdx),
     onMouseUp: handleMouseUp,
-    ...(selected ? { onContextMenu: handleContextMenu } : {}),
   };
 
-  if (merged && merged.origin === false) return null;
+  const isMergedCell = merged && (merged.rowIdx !== rowIdx || merged.colIdx !== colIdx);
+  if (isMergedCell) return null;
 
   if (type === 'head') return <th {...commonProps} />;
-
   return <td {...commonProps} />;
 }
 

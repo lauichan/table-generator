@@ -74,8 +74,8 @@ const useManageTable = () => {
 
     const cell = table[startRow][startCol];
     if (cell.merged) {
-      const { origin, rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
-      return origin && rowIdx + rowSpan - 1 === endRow && colIdx + colSpan - 1 === endCol;
+      const { rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
+      return rowIdx + rowSpan - 1 === endRow && colIdx + colSpan - 1 === endCol;
     }
 
     return false;
