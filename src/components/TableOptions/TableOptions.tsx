@@ -13,7 +13,7 @@ function TableOptions({ tableRowCol }: TableOptionProps) {
   const {
     handleMergeCell,
     handleDivideCell,
-    isSelecting,
+    isConvertible,
     isSelectionMergeable,
     isSelectionDivisible,
     handleSetHeaderCell,
@@ -49,10 +49,10 @@ function TableOptions({ tableRowCol }: TableOptionProps) {
       >
         나누기
       </button>
-      <button type="button" onClick={handleSetHeaderCell} disabled={!isSelecting()}>
+      <button type="button" onClick={handleSetHeaderCell} disabled={!isConvertible()}>
         헤더셀로 바꾸기
       </button>
-      <button type="button" onClick={handleSetDataCell} disabled={!isSelecting()}>
+      <button type="button" onClick={handleSetDataCell} disabled={!isConvertible()}>
         데이터셀로 바꾸기
       </button>
       <div className={styles['thead']}>

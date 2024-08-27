@@ -52,8 +52,9 @@ const useManageTable = () => {
     setDataCells({ ...selectRange, startRow: Math.max(startRow, thead) });
   };
 
-  const isSelecting = (): boolean => {
-    return selectRange ? true : false;
+  const isConvertible = (): boolean => {
+    if (!selectRange || selectRange.endRow < thead) return false;
+    return true;
   };
 
   const isSelectionMergeable = (): boolean => {
@@ -84,7 +85,7 @@ const useManageTable = () => {
   return {
     handleMergeCell,
     handleDivideCell,
-    isSelecting,
+    isConvertible,
     isSelectionMergeable,
     isSelectionDivisible,
     handleSetHeaderCell,
