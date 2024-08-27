@@ -51,7 +51,7 @@ function Table({ table }: { table: CellInfo[][] }) {
 
   return (
     <section className={styles['table']}>
-      <table ref={tableRef}>
+      <table ref={tableRef} onMouseLeave={handleMouseUp}>
         {thead ? (
           <thead>
             {headerRows.map((row, rowIdx) => (
