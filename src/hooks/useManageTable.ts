@@ -20,7 +20,6 @@ const useManageTable = () => {
 
   const handleMergeCell = () => {
     if (!selectRange) return;
-
     const { startRow, startCol, endRow, endCol } = selectRange;
 
     if (thead && endRow >= thead) {
@@ -53,10 +52,13 @@ const useManageTable = () => {
     setDataCells({ ...selectRange, startRow: Math.max(startRow, thead) });
   };
 
+  const isSelecting = (): boolean => {
+    return selectRange ? true : false;
+  };
+
   const isSelectionMergeable = (): boolean => {
     if (!selectRange) return false;
     const { startRow, startCol, endRow, endCol } = selectRange;
-
     if (startRow === endRow && startCol === endCol) return false;
 
     const cell = table[startRow][startCol];
@@ -64,7 +66,6 @@ const useManageTable = () => {
       const { rowSpan, colSpan } = cell.merged;
       return !(startRow + rowSpan - 1 === endRow && startCol + colSpan - 1 === endCol);
     }
-
     return true;
   };
 
@@ -77,13 +78,13 @@ const useManageTable = () => {
       const { rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
       return rowIdx + rowSpan - 1 === endRow && colIdx + colSpan - 1 === endCol;
     }
-
     return false;
   };
 
   return {
     handleMergeCell,
     handleDivideCell,
+    isSelecting,
     isSelectionMergeable,
     isSelectionDivisible,
     handleSetHeaderCell,
