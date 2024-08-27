@@ -3,20 +3,22 @@ import type { SelectRange } from './useSelectCellsStore';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+type MergedCell = {
+  rowIdx: number;
+  colIdx: number;
+  rowSpan: number;
+  colSpan: number;
+};
+
 export type CellType = {
   type: 'define' | 'head';
   content: string;
-  merged: {
-    origin: boolean;
-    rowIdx: number;
-    colIdx: number;
-    rowSpan: number;
-    colSpan: number;
-  } | null;
+  merged: MergedCell | null;
 };
 
 type State = {
   table: CellType[][];
+  mergedCell: MergedCell[];
 };
 
 type Actions = {
@@ -45,7 +47,7 @@ export const useTableStore = create<State & Actions>()(
   persist(
     (set) => ({
       table: initTable,
-      selectedCells: null,
+      mergedCell: [],
       initTable: () => {
         set({ table: initTable });
       },
@@ -109,7 +111,6 @@ export const useTableStore = create<State & Actions>()(
                 ...newTable[rowIdx + i][colIdx + j],
                 content: '',
                 merged: {
-                  origin: false,
                   rowIdx,
                   colIdx,
                   rowSpan: rowSpan + 1,
@@ -123,7 +124,6 @@ export const useTableStore = create<State & Actions>()(
             ...newTable[rowIdx][colIdx],
             content: newTable[rowIdx][colIdx].content + content,
             merged: {
-              origin: true,
               rowIdx,
               colIdx,
               rowSpan: rowSpan + 1,
