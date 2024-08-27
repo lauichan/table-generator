@@ -1,6 +1,6 @@
-import type { CellType } from '@/store/useTableStore';
+import type { CellInfo } from '@/store/useTableStore';
 
-const createTableHtml = (table: CellType[][], thead: number, tfoot: number): string => {
+const createTableHtml = (table: CellInfo[][], thead: number, tfoot: number): string => {
   const headerRows = table.slice(0, thead);
   const footerRows = table.slice(-tfoot);
   const bodyRows = table.slice(thead > 0 ? thead : 0, tfoot > 0 ? -tfoot : table.length);
@@ -17,12 +17,12 @@ const createTableHtml = (table: CellType[][], thead: number, tfoot: number): str
   return `<table>${theadHtml}${bodyTag}${tbodyHtml}${bodyTag}${tfootHtml}</table>`;
 };
 
-const createRowHtml = (row: CellType[], rowIdx: number): string => {
+const createRowHtml = (row: CellInfo[], rowIdx: number): string => {
   const html = row.map((cell, colIdx) => createCellHtml(cell, rowIdx, colIdx)).join('');
   return `<tr>${html}</tr>`;
 };
 
-const createCellHtml = (cell: CellType, rowIdx: number, colIdx: number): string => {
+const createCellHtml = (cell: CellInfo, rowIdx: number, colIdx: number): string => {
   const { type, content, merged } = cell;
   if (merged && (merged.rowIdx !== rowIdx || merged.colIdx !== colIdx)) return '';
   const rowSpan = merged ? ` rowSpan="${merged.rowSpan}"` : '';

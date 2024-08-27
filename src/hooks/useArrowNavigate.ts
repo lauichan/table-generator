@@ -1,9 +1,9 @@
-import type { CellType } from '@/store/useTableStore';
+import type { CellInfo } from '@/store/useTableStore';
 import type { KeyboardEvent } from 'react';
 
 import { useRef } from 'react';
 
-const useArrowNavigate = (table: CellType[][]) => {
+const useArrowNavigate = (table: CellInfo[][]) => {
   const cellRefs = useRef<HTMLTableCellElement[][]>([]);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {

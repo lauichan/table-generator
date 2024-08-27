@@ -1,12 +1,12 @@
 import type { FocusEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react';
-import type { CellType } from '@store/useTableStore';
+import type { CellInfo } from '@store/useTableStore';
 
 import sanitizeHtml from '@utils/sanitizeHtml';
 import styles from './Cell.module.css';
 
 type CellProps = {
   cellRefs: MutableRefObject<HTMLTableCellElement[][]>;
-  cell: CellType;
+  cell: CellInfo;
   selected: boolean;
   rowIdx: number;
   colIdx: number;

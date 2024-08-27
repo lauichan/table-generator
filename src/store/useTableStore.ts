@@ -10,14 +10,14 @@ type MergedCell = {
   colSpan: number;
 };
 
-export type CellType = {
+export type CellInfo = {
   type: 'define' | 'head';
   content: string;
   merged: MergedCell | null;
 };
 
 type State = {
-  table: CellType[][];
+  table: CellInfo[][];
   mergedCell: MergedCell[];
 };
 
@@ -32,7 +32,7 @@ type Actions = {
   setDataCells: (range: SelectRange) => void;
 };
 
-const initTable: CellType[][] = [
+const initTable: CellInfo[][] = [
   [
     { type: 'define', content: '', merged: null },
     { type: 'define', content: '', merged: null },
@@ -53,7 +53,7 @@ export const useTableStore = create<State & Actions>()(
       },
       setRowColumn: (rowCount, columnCount, thead = 0) => {
         set(({ table }) => {
-          const newTable: CellType[][] = structuredClone(table);
+          const newTable: CellInfo[][] = structuredClone(table);
           if (rowCount >= 0 && columnCount >= 0) {
             for (let i = 0; i < rowCount; i++) {
               newTable.push(Array(newTable[0].length).fill({ type: 'define', content: '', merged: null }));
@@ -88,7 +88,7 @@ export const useTableStore = create<State & Actions>()(
       },
       toggleHeadType: (thead) => {
         set(({ table }) => {
-          const newTable: CellType[][] = table.map((row, rowIdx) =>
+          const newTable: CellInfo[][] = table.map((row, rowIdx) =>
             row.map((cell) => ({
               ...cell,
               type: thead > 0 && rowIdx < thead ? 'head' : 'define',
@@ -99,7 +99,7 @@ export const useTableStore = create<State & Actions>()(
       },
       mergeCells: (rowIdx, colIdx, rowSpan, colSpan) => {
         set(({ table }) => {
-          const newTable: CellType[][] = structuredClone(table);
+          const newTable: CellInfo[][] = structuredClone(table);
 
           let content = '';
 
@@ -171,10 +171,10 @@ export const useTableStore = create<State & Actions>()(
   ),
 );
 
-const updateCellType = (table: CellType[][], range: SelectRange, type: CellType['type']) => {
+const updateCellType = (table: CellInfo[][], range: SelectRange, type: CellInfo['type']): CellInfo[][] => {
   if (!range) return table;
   const { startRow, startCol, endRow, endCol } = range;
-  const newTable: CellType[][] = table.map((row, rIdx) =>
+  const newTable: CellInfo[][] = table.map((row, rIdx) =>
     row.map((cell, cIdx) => {
       if (rIdx >= startRow && rIdx <= endRow && cIdx >= startCol && cIdx <= endCol) {
         return { ...cell, type };

@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import type { CellType } from '@store/useTableStore';
+import type { CellInfo } from '@store/useTableStore';
 
 import Cell from '@components/Cell/Cell';
 import TableSizer from '@components/TableSizer/TableSizer';
@@ -14,7 +14,7 @@ import useSelectCells from '@hooks/useSelectCells';
 import htmlEscape from '@utils/htmlEscape';
 import styles from './Table.module.css';
 
-function Table({ table }: { table: CellType[][] }) {
+function Table({ table }: { table: CellInfo[][] }) {
   const { tableRef, handleMouseDown, handleMouseOver, handleMouseUp, isSelectedCell, setSelectRange } =
     useSelectCells(table);
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);

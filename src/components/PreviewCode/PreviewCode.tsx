@@ -1,5 +1,5 @@
 import type { ChangeEvent } from 'react';
-import type { CellType } from '@store/useTableStore';
+import type { CellInfo } from '@store/useTableStore';
 
 import { useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
@@ -10,7 +10,7 @@ import sizeLimit from '@utils/sizeLimit';
 import sanitizeHtml from '@utils/sanitizeHtml';
 import styles from './PreviewCode.module.css';
 
-function PreviewCode({ table }: { table: CellType[][] }) {
+function PreviewCode({ table }: { table: CellInfo[][] }) {
   const codeRef = useRef<HTMLElement>(null);
   const [tabSize, setTabSize] = useState(4);
 

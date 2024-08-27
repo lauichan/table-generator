@@ -1,4 +1,4 @@
-import type { CellType } from '@store/useTableStore';
+import type { CellInfo } from '@store/useTableStore';
 import type { SelectedRange } from '@/store/useSelectCellsStore';
 
 import { useEffect, useRef, useState } from 'react';
@@ -6,7 +6,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useSelectCellsStore } from '@/store/useSelectCellsStore';
 import useOutsideClick from './useOutsideClick';
 
-const useSelectCells = (table: CellType[][]) => {
+const useSelectCells = (table: CellInfo[][]) => {
   const tableRef = useRef<HTMLTableElement>(null);
   const [isSelecting, setIsSelecting] = useState(false);
   const [dragStart, setDragStart] = useState<SelectedRange>(null);
