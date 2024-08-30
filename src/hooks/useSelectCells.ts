@@ -42,7 +42,7 @@ const useSelectCells = (table: CellInfo[][]) => {
       for (let row = startRow; row <= endRow; row++) {
         for (let col = startCol; col <= endCol; col++) {
           const cell = table[row][col];
-          if (cell.merged) {
+          if (cell && cell.merged) {
             const { rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
             startRow = Math.min(startRow, rowIdx);
             startCol = Math.min(startCol, colIdx);
@@ -56,7 +56,7 @@ const useSelectCells = (table: CellInfo[][]) => {
 
       setSelectRange({ startRow, startCol, endRow, endCol });
     }
-  }, [table, dragStart, dragEnd, setSelectRange]);
+  }, [table,dragStart, dragEnd, setSelectRange]);
 
   const isSelectedCell = (rowIdx: number, colIdx: number) => {
     if (!selectRange) return false;
