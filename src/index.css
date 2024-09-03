@@ -30,17 +30,9 @@ main {
 }
 
 table {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   position: relative;
-}
-
-th,
-td {
-  position: relative;
-  width: 100px;
-  height: 21px;
-  border: 1px solid #ddd;
-  padding: 7px 9px;
 }
 
 button {

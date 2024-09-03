@@ -56,7 +56,7 @@ const useSelectCells = (table: CellInfo[][]) => {
 
       setSelectRange({ startRow, startCol, endRow, endCol });
     }
-  }, [table,dragStart, dragEnd, setSelectRange]);
+  }, [table, dragStart, dragEnd, setSelectRange]);
 
   const isSelectedCell = (rowIdx: number, colIdx: number) => {
     if (!selectRange) return false;

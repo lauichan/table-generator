@@ -1,40 +1,43 @@
-.controller {
+.controller button {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.controller .table-format {
   display: flex;
   flex-wrap: wrap;
-  margin: 1rem;
-  align-items: center;
+  margin: 0.5rem 1rem;
+  gap: 0.5rem;
+}
+
+.controller .table-format > div {
   border: 1px solid #ddd;
-  border-collapse: collapse;
+  border-radius: 6px;
+  padding: 0.5rem;
 }
 
-.controller > button:hover {
-  background-color: #f6f8fa;
-}
-
-.controller > * {
-  height: 45px;
-  border-right: 1px solid #ddd;
-  padding: 0.5rem 0.8rem;
-}
-
-.controller > div {
+.controller .table-manager {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  margin: 0.5rem 1rem;
+  gap: 0.5rem;
 }
 
 .controller input {
-  max-width: 40px;
-  text-align: right;
-  background: #f6f8fa;
-  border: 1px solid #ddd;
+  border: none;
+  width: 30px;
+  text-align: center;
 }
 
-.row label,
-.col label {
+.size input:first-child {
   margin-left: 0.5rem;
+}
+.size > span {
+  margin-right: 0.8rem;
 }
 
 .thead label,
 .tfoot label {
-  margin-right: 0.5rem;
+  margin: 0 0.5rem;
 }

@@ -10,6 +10,32 @@
 }
 
 .table button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: 1px solid #ddd;
+  border-radius: 6px;
   background-color: #f6f8fa;
+}
+
+.table table {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.table :is(th, td) {
+  position: relative;
+  width: 100px;
+  height: 21px;
+  padding: 7px 9px;
+}
+
+.table tr:not(:last-child) :is(th, td) {
+  border-bottom: 1px solid #ddd;
+  border-left: 0;
+  border-top: 0;
+}
+
+.table :is(th, td):not(:last-child) {
+  border-right: 1px solid #ddd;
 }
