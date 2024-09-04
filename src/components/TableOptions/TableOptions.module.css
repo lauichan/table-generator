@@ -26,13 +26,14 @@
 
 .controller input {
   border: none;
-  width: 30px;
+  width: 40px;
   text-align: center;
 }
 
 .size input:first-child {
   margin-left: 0.5rem;
 }
+
 .size > span {
   margin-right: 0.8rem;
 }
