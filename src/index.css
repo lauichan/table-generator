@@ -31,8 +31,36 @@ main {
 
 table {
   border-collapse: separate;
+  border: 1px solid #ddd;
   border-spacing: 0;
+  border-radius: 6px;
+}
+
+table :is(th, td) {
   position: relative;
+  width: 100px;
+  height: 21px;
+  padding: 7px 9px;
+}
+
+table thead tr :is(th, td) {
+  border-bottom: 1px solid #ddd;
+}
+
+table tbody tr :is(th, td) {
+  border-bottom: 1px solid #ddd;
+}
+
+table tfoot tr:not(:last-child) :is(th, td) {
+  border-bottom: 1px solid #ddd;
+}
+
+table:not(:has(tfoot)) tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+table :is(th, td):not(:last-child) {
+  border-right: 1px solid #ddd;
 }
 
 button {
