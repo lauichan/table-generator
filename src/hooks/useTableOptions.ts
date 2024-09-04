@@ -5,6 +5,9 @@ import { useOptionStore } from '@store/useOptionStore';
 import { useTableStore } from '@store/useTableStore';
 import sizeLimit from '@utils/sizeLimit';
 
+const MIN_TABLE_SIZE = 2;
+const MAX_TABLE_SIZE = 20;
+
 const useTableOptions = (tableRowCol: { row: number; col: number }) => {
   const [table, toggleHeadType, initTable, setRowColumn] = useTableStore(
     useShallow((state) => [state.table, state.toggleHeadType, state.initTable, state.setRowColumn]),
@@ -51,13 +54,13 @@ const useTableOptions = (tableRowCol: { row: number; col: number }) => {
   const handleRow = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    setRowColumn(sizeLimit(value, 2, 50) - tableRowCol.row, 0);
+    setRowColumn(sizeLimit(value, MIN_TABLE_SIZE, MAX_TABLE_SIZE) - tableRowCol.row, 0);
   };
 
   const handleCol = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    setRowColumn(0, sizeLimit(value, 2, 50) - tableRowCol.col);
+    setRowColumn(0, sizeLimit(value, MIN_TABLE_SIZE, MAX_TABLE_SIZE) - tableRowCol.col);
   };
 
   const handleInitTable = () => {

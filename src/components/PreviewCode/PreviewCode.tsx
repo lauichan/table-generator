@@ -10,9 +10,12 @@ import sizeLimit from '@utils/sizeLimit';
 import sanitizeHtml from '@utils/sanitizeHtml';
 import styles from './PreviewCode.module.css';
 
+const MIN_TAB_SIZE = 2;
+const MAX_TAB_SIZE = 4;
+
 function PreviewCode({ table }: { table: CellInfo[][] }) {
   const codeRef = useRef<HTMLElement>(null);
-  const [tabSize, setTabSize] = useState(4);
+  const [tabSize, setTabSize] = useState(MAX_TAB_SIZE);
 
   const [minified, thead, tfoot, toggleMinified] = useOptionStore(
     useShallow((state) => [state.minified, state.thead, state.tfoot, state.toggleMinified]),
@@ -23,7 +26,7 @@ function PreviewCode({ table }: { table: CellInfo[][] }) {
 
   const handleTabSize = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
-    setTabSize(sizeLimit(value, 2, 4));
+    setTabSize(sizeLimit(value, MIN_TAB_SIZE, MAX_TAB_SIZE));
   };
 
   const handleCopyCode = () => {
