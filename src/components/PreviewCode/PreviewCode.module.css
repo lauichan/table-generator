@@ -44,6 +44,10 @@
   max-height: 400px;
 }
 
+.html > code {
+  white-space: pre-wrap;
+}
+
 .controller > input:disabled {
   color: #777;
   cursor: pointer;
