@@ -68,6 +68,7 @@ const useSelectCells = (table: CellInfo[][]) => {
 
   return {
     tableRef,
+    isSelecting,
     handleMouseDown,
     handleMouseOver,
     handleMouseUp,

@@ -15,7 +15,7 @@ import htmlEscape from '@utils/htmlEscape';
 import styles from './Table.module.css';
 
 function Table({ table }: { table: CellInfo[][] }) {
-  const { tableRef, handleMouseDown, handleMouseOver, handleMouseUp, isSelectedCell, setSelectRange } =
+  const { tableRef, isSelecting, handleMouseDown, handleMouseOver, handleMouseUp, isSelectedCell, setSelectRange } =
     useSelectCells(table);
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
   const { contextMenu, contextMenuRef, handleContextMenu } = useContextMenu();
@@ -110,7 +110,7 @@ function Table({ table }: { table: CellInfo[][] }) {
         )}
       </table>
       <TableSizer />
-      {contextMenu && <ContextMenu contextMenuRef={contextMenuRef} position={contextMenu} />}
+      {contextMenu && !isSelecting && <ContextMenu contextMenuRef={contextMenuRef} position={contextMenu} />}
     </section>
   );
 }

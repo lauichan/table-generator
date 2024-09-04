@@ -1,5 +1,6 @@
 import useManageTable from '@hooks/useManageTable';
 import styles from './ContextMenu.module.css';
+import { useSelectCellsStore } from '@store/useSelectCellsStore';
 
 export type MousePosition = {
   x: number;
@@ -21,8 +22,9 @@ function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
     handleSetHeaderCell,
     handleSetDataCell,
   } = useManageTable();
+  const selectRange = useSelectCellsStore((state) => state.selectRange);
 
-  if (position === null) return null;
+  if (!position || !selectRange) return null;
 
   return (
     <ul ref={contextMenuRef} className={styles.context_menu} style={{ top: position.y, left: position.x }}>
