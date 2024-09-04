@@ -8,8 +8,8 @@ const useOutsideClick = (ref: RefObject<HTMLElement>, handler: (event: MouseEven
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
   }, [ref, handler]);
 };
 
