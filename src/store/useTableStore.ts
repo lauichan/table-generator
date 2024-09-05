@@ -149,7 +149,7 @@ export const useTableStore = create<State & Actions>()(
             }
           }
 
-          const newMergedList = mergedList.filter(({ rowIdx: r, colIdx: c }) => rowIdx !== r && colIdx !== c);
+          const newMergedList = mergedList.filter(({ rowIdx: r, colIdx: c }) => !(rowIdx === r && colIdx === c));
           return { table: newTable, mergedList: newMergedList };
         });
       },
