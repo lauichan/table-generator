@@ -63,7 +63,7 @@ const useManageTable = () => {
     if (startRow === endRow && startCol === endCol) return false;
 
     const cell = table[startRow][startCol];
-    if (cell.merged) {
+    if (cell && cell.merged) {
       const { rowSpan, colSpan } = cell.merged;
       return !(startRow + rowSpan - 1 === endRow && startCol + colSpan - 1 === endCol);
     }
@@ -75,7 +75,7 @@ const useManageTable = () => {
     const { startRow, startCol, endRow, endCol } = selectRange;
 
     const cell = table[startRow][startCol];
-    if (cell.merged) {
+    if (cell && cell.merged) {
       const { rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
       return rowIdx + rowSpan - 1 === endRow && colIdx + colSpan - 1 === endCol;
     }

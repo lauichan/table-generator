@@ -4,6 +4,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useOptionStore } from '@store/useOptionStore';
 import { useTableStore } from '@store/useTableStore';
 import sizeLimit from '@utils/sizeLimit';
+import { useSelectCellsStore } from '@store/useSelectCellsStore';
 
 const MIN_TABLE_SIZE = 2;
 const MAX_TABLE_SIZE = 20;
@@ -16,6 +17,8 @@ const useTableOptions = (tableRowCol: { row: number; col: number }) => {
   const [thead, tfoot, setThead, setTfoot] = useOptionStore(
     useShallow((state) => [state.thead, state.tfoot, state.setThead, state.setTfoot]),
   );
+
+  const setSelectRange = useSelectCellsStore((state) => state.setSelectRange);
 
   const hasMergedCell = (type: 'head' | 'foot', rowIndex: number): boolean => {
     const rowIdx = type === 'head' ? 0 : rowIndex;
@@ -64,9 +67,10 @@ const useTableOptions = (tableRowCol: { row: number; col: number }) => {
   };
 
   const handleInitTable = () => {
-    initTable();
+    setSelectRange(null);
     setThead(0);
     setTfoot(0);
+    initTable();
   };
 
   return {

@@ -3,7 +3,7 @@ import type { SelectRange } from './useSelectCellsStore';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-type MergedCell = {
+export type MergedCell = {
   rowIdx: number;
   colIdx: number;
   rowSpan: number;
@@ -18,7 +18,7 @@ export type CellInfo = {
 
 type State = {
   table: CellInfo[][];
-  mergedCell: MergedCell[];
+  mergedList: MergedCell[];
 };
 
 type Actions = {
@@ -47,9 +47,9 @@ export const useTableStore = create<State & Actions>()(
   persist(
     (set) => ({
       table: initTable,
-      mergedCell: [],
+      mergedList: [],
       initTable: () => {
-        set({ table: initTable });
+        set({ table: initTable, mergedList: [] });
       },
       setRowColumn: (rowCount, columnCount, thead = 0) => {
         set(({ table }) => {
@@ -98,7 +98,7 @@ export const useTableStore = create<State & Actions>()(
         });
       },
       mergeCells: (rowIdx, colIdx, rowSpan, colSpan) => {
-        set(({ table }) => {
+        set(({ table, mergedList }) => {
           const newTable: CellInfo[][] = structuredClone(table);
 
           let content = '';
@@ -131,11 +131,12 @@ export const useTableStore = create<State & Actions>()(
             },
           };
 
-          return { table: newTable };
+          const newMergedList = [...mergedList, { rowIdx, colIdx, rowSpan, colSpan }];
+          return { table: newTable, mergedList: newMergedList };
         });
       },
       divideCell: (rowIdx, colIdx) => {
-        set(({ table }) => {
+        set(({ table, mergedList }) => {
           const newTable = structuredClone(table);
 
           const { rowSpan, colSpan } = newTable[rowIdx][colIdx].merged!;
@@ -148,7 +149,8 @@ export const useTableStore = create<State & Actions>()(
             }
           }
 
-          return { table: newTable };
+          const newMergedList = mergedList.filter(({ rowIdx: r, colIdx: c }) => rowIdx !== r && colIdx !== c);
+          return { table: newTable, mergedList: newMergedList };
         });
       },
       setHeaderCells: (range) => {
