@@ -12,7 +12,7 @@ const useManageTable = () => {
     useShallow((state) => [state.selectRange, state.setSelectRange]),
   );
 
-  const thead = useOptionStore((state) => state.thead);
+  const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
 
   const resetSelection = () => {
     setSelectRange(null);
@@ -22,8 +22,14 @@ const useManageTable = () => {
     if (!selectRange) return;
     const { startRow, startCol, endRow, endCol } = selectRange;
 
-    if (thead && endRow >= thead) {
+    if (thead > 0 && thead > startRow && thead <= endRow) {
       alert('머리글 옵션이 활성화 되어있습니다.\n머리글은 머리글끼리만 합칠 수 있습니다.');
+      resetSelection();
+      return;
+    }
+
+    if (tfoot > 0 && table.length - tfoot > startRow && table.length - tfoot <= endRow) {
+      alert('바닥글 옵션이 활성화 되어있습니다.\n바닥글은 바닥글끼리만 합칠 수 있습니다.');
       resetSelection();
       return;
     }

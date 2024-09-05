@@ -10,8 +10,8 @@ const MIN_TABLE_SIZE = 2;
 const MAX_TABLE_SIZE = 20;
 
 const useTableOptions = (tableRowCol: { row: number; col: number }) => {
-  const [table, toggleHeadType, initTable, setRowColumn] = useTableStore(
-    useShallow((state) => [state.table, state.toggleHeadType, state.initTable, state.setRowColumn]),
+  const [table, mergedList, toggleHeadType, initTable, setRowColumn] = useTableStore(
+    useShallow((state) => [state.table, state.mergedList, state.toggleHeadType, state.initTable, state.setRowColumn]),
   );
 
   const [thead, tfoot, setThead, setTfoot] = useOptionStore(
@@ -20,13 +20,11 @@ const useTableOptions = (tableRowCol: { row: number; col: number }) => {
 
   const setSelectRange = useSelectCellsStore((state) => state.setSelectRange);
 
-  const hasMergedCell = (type: 'head' | 'foot', rowIndex: number): boolean => {
-    const rowIdx = type === 'head' ? 0 : rowIndex;
-    for (let i = rowIdx; i < rowIndex; i++) {
-      for (let j = 0; j < table[0].length; j++) {
-        const mergedCell = table[i][j].merged;
-        if (mergedCell && mergedCell.rowIdx + mergedCell.rowSpan > rowIndex) return true;
-      }
+  const hasMergedCell = (type: 'head' | 'foot', rows: number): boolean => {
+    const startRow = type === 'head' ? rows : table.length - rows;
+
+    for (const { rowIdx, rowSpan } of mergedList) {
+      if (startRow > rowIdx && startRow <= rowIdx + rowSpan) return true;
     }
     return false;
   };
