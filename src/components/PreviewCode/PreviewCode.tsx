@@ -68,7 +68,7 @@ function PreviewCode({ table }: { table: CellInfo[][] }) {
       </section>
       <section className={styles['preview']}>
         <h2>미리보기</h2>
-        <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }} />
+        <div className="table-wrapper" dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }} />
       </section>
     </>
   );
