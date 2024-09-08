@@ -56,7 +56,6 @@ const useArrowNavigate = (table: CellInfo[][]) => {
     if (['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].indexOf(e.key) === -1) return;
     const [nextRowIdx, nextColIdx] = navigateCell([rowIdx, colIdx], e.key as Direction);
     cellRefs.current[nextRowIdx][nextColIdx].focus();
-    console.log(nextRowIdx, nextColIdx);
   };
   return { cellRefs, handleKeyDown };
 };
