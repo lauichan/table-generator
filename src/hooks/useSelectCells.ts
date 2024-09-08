@@ -11,8 +11,8 @@ const useSelectCells = () => {
   const [isSelecting, setIsSelecting] = useState(false);
   const [dragStart, setDragStart] = useState<SelectedRange>(null);
   const [dragEnd, setDragEnd] = useState<SelectedRange>(null);
-  const [selectRange, setSelectRange] = useSelectCellsStore(
-    useShallow((state) => [state.selectRange, state.setSelectRange]),
+  const { selectRange, setSelectRange } = useSelectCellsStore(
+    useShallow((state) => ({ selectRange: state.selectRange, setSelectRange: state.setSelectRange })),
   );
 
   const mergedList = useTableStore((state) => state.mergedList);

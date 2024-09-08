@@ -20,7 +20,7 @@ function Table({ table }: { table: CellInfo[][] }) {
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
   const { contextMenu, contextMenuRef, handleContextMenu } = useContextMenu();
 
-  const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
+  const { thead, tfoot } = useOptionStore(useShallow((state) => ({ thead: state.thead, tfoot: state.tfoot })));
   const setTableText = useTableStore((state) => state.setTableText);
 
   const headerRows = useMemo(() => table.slice(0, thead), [table, thead]);

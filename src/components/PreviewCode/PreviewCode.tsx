@@ -17,8 +17,13 @@ function PreviewCode({ table }: { table: CellInfo[][] }) {
   const codeRef = useRef<HTMLElement>(null);
   const [tabSize, setTabSize] = useState(MAX_TAB_SIZE);
 
-  const [minified, thead, tfoot, toggleMinified] = useOptionStore(
-    useShallow((state) => [state.minified, state.thead, state.tfoot, state.toggleMinified]),
+  const { minified, thead, tfoot, toggleMinified } = useOptionStore(
+    useShallow((state) => ({
+      minified: state.minified,
+      thead: state.thead,
+      tfoot: state.tfoot,
+      toggleMinified: state.toggleMinified,
+    })),
   );
 
   const tableHtml = createTableHtml(table, thead, tfoot);

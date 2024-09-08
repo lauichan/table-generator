@@ -10,19 +10,24 @@ const MIN_TABLE_SIZE = 2;
 const MAX_TABLE_SIZE = 20;
 
 const useTableOptions = (tableRowCol: { row: number; col: number }) => {
-  const [table, mergedList, toggleHeadType, initTable, setRow, setColumn] = useTableStore(
-    useShallow((state) => [
-      state.table,
-      state.mergedList,
-      state.toggleHeadType,
-      state.initTable,
-      state.setRow,
-      state.setColumn,
-    ]),
+  const { table, mergedList, toggleHeadType, initTable, setRow, setColumn } = useTableStore(
+    useShallow((state) => ({
+      table: state.table,
+      mergedList: state.mergedList,
+      toggleHeadType: state.toggleHeadType,
+      initTable: state.initTable,
+      setRow: state.setRow,
+      setColumn: state.setColumn,
+    })),
   );
 
-  const [thead, tfoot, setThead, setTfoot] = useOptionStore(
-    useShallow((state) => [state.thead, state.tfoot, state.setThead, state.setTfoot]),
+  const { thead, tfoot, setThead, setTfoot } = useOptionStore(
+    useShallow((state) => ({
+      thead: state.thead,
+      tfoot: state.tfoot,
+      setThead: state.setThead,
+      setTfoot: state.setTfoot,
+    })),
   );
 
   const setSelectRange = useSelectCellsStore((state) => state.setSelectRange);

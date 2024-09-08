@@ -4,15 +4,21 @@ import { useSelectCellsStore } from '@store/useSelectCellsStore';
 import { useTableStore } from '@store/useTableStore';
 
 const useManageTable = () => {
-  const [table, mergeCells, divideCell, setHeaderCells, setDataCells] = useTableStore(
-    useShallow((state) => [state.table, state.mergeCells, state.divideCell, state.setHeaderCells, state.setDataCells]),
+  const { table, mergeCells, divideCell, setHeaderCells, setDataCells } = useTableStore(
+    useShallow((state) => ({
+      table: state.table,
+      mergeCells: state.mergeCells,
+      divideCell: state.divideCell,
+      setHeaderCells: state.setHeaderCells,
+      setDataCells: state.setDataCells,
+    })),
   );
 
-  const [selectRange, setSelectRange] = useSelectCellsStore(
-    useShallow((state) => [state.selectRange, state.setSelectRange]),
+  const { selectRange, setSelectRange } = useSelectCellsStore(
+    useShallow((state) => ({ selectRange: state.selectRange, setSelectRange: state.setSelectRange })),
   );
 
-  const [thead, tfoot] = useOptionStore(useShallow((state) => [state.thead, state.tfoot]));
+  const { thead, tfoot } = useOptionStore(useShallow((state) => ({ thead: state.thead, tfoot: state.tfoot })));
 
   const resetSelection = () => {
     setSelectRange(null);
