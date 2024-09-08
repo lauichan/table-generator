@@ -131,7 +131,17 @@ export const useTableStore = create<State & Actions>()(
             },
           };
 
-          const newMergedList = [...mergedList, { rowIdx, colIdx, rowSpan, colSpan }];
+          const filteredMergedList = mergedList.filter(
+            (mergedCell) =>
+              !(
+                mergedCell.rowIdx >= rowIdx &&
+                mergedCell.rowIdx < rowIdx + rowSpan + 1 &&
+                mergedCell.colIdx >= colIdx &&
+                mergedCell.colIdx < colIdx + colSpan + 1
+              ),
+          );
+
+          const newMergedList = [...filteredMergedList, { rowIdx, colIdx, rowSpan, colSpan }];
           return { table: newTable, mergedList: newMergedList };
         });
       },
