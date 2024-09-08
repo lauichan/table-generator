@@ -23,7 +23,8 @@ type State = {
 
 type Actions = {
   initTable: () => void;
-  setRowColumn: (rowCount: number, columnCount: number, thead?: number) => void;
+  setRow: (rows: number) => void;
+  setColumn: (cols: number, thead: number) => void;
   setTableText: (rowIdx: number, colIdx: number, text: string) => void;
   toggleHeadType: (thead: number) => void;
   mergeCells: (rowIdx: number, colIdx: number, rowSpan: number, colSpan: number) => void;
@@ -51,28 +52,36 @@ export const useTableStore = create<State & Actions>()(
       initTable: () => {
         set({ table: initTable, mergedList: [] });
       },
-      setRowColumn: (rowCount, columnCount, thead = 0) => {
+      setRow: (rows) => {
         set(({ table }) => {
           const newTable: CellInfo[][] = structuredClone(table);
-          if (rowCount >= 0 && columnCount >= 0) {
-            for (let i = 0; i < rowCount; i++) {
+          if (rows >= 0) {
+            for (let i = 0; i < rows; i++) {
               newTable.push(Array(newTable[0].length).fill({ type: 'define', content: '', merged: null }));
             }
+          } else {
+            for (let i = 0; i < -1 * rows; i++) {
+              newTable.pop();
+            }
+          }
+          return { table: newTable };
+        });
+      },
+      setColumn: (cols, thead) => {
+        set(({ table }) => {
+          const newTable: CellInfo[][] = structuredClone(table);
+          if (cols >= 0) {
             newTable.forEach((row, rowIdx) => {
-              for (let j = 0; j < columnCount; j++) {
-                if (thead > 0 && thead - 1 === rowIdx) {
-                  row.push({ type: 'head', content: '', merged: null });
-                } else {
-                  row.push({ type: 'define', content: '', merged: null });
-                }
+              const type = rowIdx < thead ? 'head' : 'define';
+              for (let i = 0; i < cols; i++) {
+                row.push({ type, content: '', merged: null });
               }
             });
           } else {
-            for (let i = 0; i < -1 * rowCount; i++) {
-              newTable.pop();
-            }
             newTable.forEach((row) => {
-              for (let j = 0; j < -1 * columnCount; j++) row.pop();
+              for (let i = 0; i < -1 * cols; i++) {
+                row.pop();
+              }
             });
           }
           return { table: newTable };

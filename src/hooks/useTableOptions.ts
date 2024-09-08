@@ -10,8 +10,15 @@ const MIN_TABLE_SIZE = 2;
 const MAX_TABLE_SIZE = 20;
 
 const useTableOptions = (tableRowCol: { row: number; col: number }) => {
-  const [table, mergedList, toggleHeadType, initTable, setRowColumn] = useTableStore(
-    useShallow((state) => [state.table, state.mergedList, state.toggleHeadType, state.initTable, state.setRowColumn]),
+  const [table, mergedList, toggleHeadType, initTable, setRow, setColumn] = useTableStore(
+    useShallow((state) => [
+      state.table,
+      state.mergedList,
+      state.toggleHeadType,
+      state.initTable,
+      state.setRow,
+      state.setColumn,
+    ]),
   );
 
   const [thead, tfoot, setThead, setTfoot] = useOptionStore(
@@ -55,13 +62,13 @@ const useTableOptions = (tableRowCol: { row: number; col: number }) => {
   const handleRow = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    setRowColumn(sizeLimit(value, MIN_TABLE_SIZE, MAX_TABLE_SIZE) - tableRowCol.row, 0);
+    setRow(sizeLimit(value, MIN_TABLE_SIZE, MAX_TABLE_SIZE) - tableRowCol.row);
   };
 
   const handleCol = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    setRowColumn(0, sizeLimit(value, MIN_TABLE_SIZE, MAX_TABLE_SIZE) - tableRowCol.col);
+    setColumn(sizeLimit(value, MIN_TABLE_SIZE, MAX_TABLE_SIZE) - tableRowCol.col, thead);
   };
 
   const handleInitTable = () => {
