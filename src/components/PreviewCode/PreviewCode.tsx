@@ -72,7 +72,7 @@ function PreviewCode({ table }: { table: CellInfo[][] }) {
         </pre>
       </section>
       <section className={styles['preview']}>
-        <h2>미리보기</h2>
+        <h2 id="preview">미리보기</h2>
         <div className="table-wrapper" dangerouslySetInnerHTML={{ __html: sanitizeHtml(code) }} />
       </section>
     </>

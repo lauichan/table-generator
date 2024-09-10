@@ -8,9 +8,21 @@ body {
   font-size: 16px;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+}
+
 ul {
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 button,
@@ -24,9 +36,47 @@ label {
   cursor: pointer;
 }
 
-main {
+.container {
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+}
+
+.container > header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  height: 40px;
+  padding: 0 1rem;
+  gap: 1rem;
+}
+
+.container > footer {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #ddd;
+  height: 40px;
+  padding: 0 1rem;
+}
+
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+main > section:last-child {
+  border-left: 1px solid #ddd;
+}
+
+@media (max-width: 1000px) {
+  main {
+    grid-template-columns: none;
+  }
+
+  main > section:last-child {
+    border-left: 0;
+  }
 }
 
 .table-wrapper {

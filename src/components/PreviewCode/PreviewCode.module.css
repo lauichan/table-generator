@@ -56,3 +56,7 @@
 .preview {
   margin: 1rem;
 }
+
+.preview > h2 {
+  margin: 1rem 0;
+}
