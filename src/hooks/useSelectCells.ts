@@ -1,3 +1,4 @@
+import type { FocusEvent } from 'react';
 import type { SelectedRange } from '@/store/useSelectCellsStore';
 
 import { useTableStore } from '@store/useTableStore';
@@ -62,6 +63,15 @@ const useSelectCells = () => {
     return rowIdx >= startRow && rowIdx <= endRow && colIdx >= startCol && colIdx <= endCol;
   };
 
+  const handleOnFocus = (_: FocusEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
+    if (selectRange) {
+      const { startRow, startCol, endRow, endCol } = selectRange;
+      if (rowIdx >= startRow && rowIdx < endRow && colIdx >= startCol && colIdx < endCol) return;
+    }
+
+    setSelectRange({ startRow: rowIdx, startCol: colIdx, endRow: rowIdx, endCol: colIdx });
+  };
+
   useOutsideClick(tableRef, () => setSelectRange(null));
 
   return {
@@ -70,6 +80,7 @@ const useSelectCells = () => {
     handleMouseDown,
     handleMouseOver,
     handleMouseUp,
+    handleOnFocus,
     isSelectedCell,
     setSelectRange,
   };

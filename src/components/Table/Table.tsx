@@ -15,8 +15,16 @@ import htmlEscape from '@utils/htmlEscape';
 import styles from './Table.module.css';
 
 function Table({ table }: { table: CellInfo[][] }) {
-  const { tableRef, isSelecting, handleMouseDown, handleMouseOver, handleMouseUp, isSelectedCell, setSelectRange } =
-    useSelectCells();
+  const {
+    tableRef,
+    isSelecting,
+    handleMouseDown,
+    handleMouseOver,
+    handleMouseUp,
+    handleOnFocus,
+    isSelectedCell,
+    setSelectRange,
+  } = useSelectCells();
   const { cellRefs, handleKeyDown } = useArrowNavigate(table);
   const { contextMenu, contextMenuRef, handleContextMenu } = useContextMenu();
 
@@ -47,6 +55,7 @@ function Table({ table }: { table: CellInfo[][] }) {
     handleMouseDown: handleMouseDown,
     handleMouseOver: handleMouseOver,
     handleMouseUp: handleMouseUp,
+    handleOnFocus: handleOnFocus,
   };
 
   return (

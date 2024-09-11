@@ -16,6 +16,7 @@ type CellProps = {
   handleMouseDown: (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
   handleMouseOver: (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
   handleMouseUp: () => void;
+  handleOnFocus: (e: FocusEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
 };
 
 function Cell({
@@ -30,6 +31,7 @@ function Cell({
   handleMouseDown,
   handleMouseOver,
   handleMouseUp,
+  handleOnFocus,
 }: CellProps) {
   const { type, content, merged } = cell;
 
@@ -48,6 +50,7 @@ function Cell({
     onMouseDown: (e: MouseEvent<HTMLTableCellElement>) => handleMouseDown(e, rowIdx, colIdx),
     onMouseOver: (e: MouseEvent<HTMLTableCellElement>) => handleMouseOver(e, rowIdx, colIdx),
     onMouseUp: handleMouseUp,
+    onFocus: (e: FocusEvent<HTMLTableCellElement>) => handleOnFocus(e, rowIdx, colIdx),
   };
 
   const isMergedCell = merged && (merged.rowIdx !== rowIdx || merged.colIdx !== colIdx);
