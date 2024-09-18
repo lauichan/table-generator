@@ -13,8 +13,7 @@ const createTableHtml = (table: CellInfo[][], thead: number, tfoot: number): str
       : '';
   const tbodyHtml = bodyRows.map((row, rowIdx) => createRowHtml(row, rowIdx + thead)).join('');
 
-  const bodyTag = thead || tfoot ? '<tbody>' : '';
-  return `<table>${theadHtml}${bodyTag}${tbodyHtml}${bodyTag}${tfootHtml}</table>`;
+  return `<table>${theadHtml}${thead || tfoot ? '<tbody>' : ''}${tbodyHtml}${thead || tfoot  ? '</tbody>' : ''}${tfootHtml}</table>`;
 };
 
 const createRowHtml = (row: CellInfo[], rowIdx: number): string => {
