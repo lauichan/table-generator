@@ -10,13 +10,13 @@ type CellProps = {
   selected: boolean;
   rowIdx: number;
   colIdx: number;
-  handleFocusOut: (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => void;
   handleKeyDown: (e: KeyboardEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
   handleContextMenu: (e: MouseEvent<HTMLTableCellElement>) => void;
   handleMouseDown: (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
   handleMouseOver: (e: MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
   handleMouseUp: () => void;
   handleOnFocus: (e: FocusEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => void;
+  handleOnBlur: (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => void;
 };
 
 function Cell({
@@ -25,13 +25,13 @@ function Cell({
   selected,
   colIdx,
   rowIdx,
-  handleFocusOut,
   handleKeyDown,
   handleContextMenu,
   handleMouseDown,
   handleMouseOver,
   handleMouseUp,
   handleOnFocus,
+  handleOnBlur,
 }: CellProps) {
   const { type, content, merged } = cell;
 
@@ -45,7 +45,7 @@ function Cell({
     suppressContentEditableWarning: true,
     dangerouslySetInnerHTML: { __html: sanitizeHtml(content) },
     ...(selected ? { className: styles['selected'], onContextMenu: handleContextMenu } : {}),
-    onBlur: (e: FocusEvent<HTMLTableCellElement>) => handleFocusOut(e, rowIdx, colIdx),
+    onBlur: (e: FocusEvent<HTMLTableCellElement>) => handleOnBlur(e, rowIdx, colIdx),
     onKeyDown: (e: KeyboardEvent<HTMLTableCellElement>) => handleKeyDown(e, rowIdx, colIdx),
     onMouseDown: (e: MouseEvent<HTMLTableCellElement>) => handleMouseDown(e, rowIdx, colIdx),
     onMouseOver: (e: MouseEvent<HTMLTableCellElement>) => handleMouseOver(e, rowIdx, colIdx),

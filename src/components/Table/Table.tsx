@@ -18,14 +18,14 @@ function Table({ table }: { table: CellInfo[][] }) {
   const {
     tableRef,
     isSelecting,
-    handleMouseDown,
-    handleMouseOver,
-    handleMouseUp,
-    handleOnFocus,
+    handleCellSelectStart,
+    handleCellSelecting,
+    handleCellSelectEnd,
+    handleFocusCell,
     isSelectedCell,
     setSelectRange,
   } = useSelectCells();
-  const { cellRefs, handleKeyDown } = useArrowNavigate(table);
+  const { cellRefs, handleCellNavigate } = useArrowNavigate(table);
   const { contextMenu, contextMenuRef, handleContextMenu } = useContextMenu();
 
   const { thead, tfoot } = useOptionStore(useShallow((state) => ({ thead: state.thead, tfoot: state.tfoot })));
@@ -42,26 +42,26 @@ function Table({ table }: { table: CellInfo[][] }) {
     setSelectRange(null);
   }, [thead, tfoot, setSelectRange]);
 
-  const handleFocusOut = (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => {
+  const handleOnBlur = (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => {
     const text = htmlEscape(e.currentTarget.innerText);
     setTableText(rowIdx, colIdx, text);
   };
 
   const commonProps = {
     cellRefs: cellRefs,
-    handleFocusOut: handleFocusOut,
-    handleKeyDown: handleKeyDown,
+    handleKeyDown: handleCellNavigate,
     handleContextMenu: handleContextMenu,
-    handleMouseDown: handleMouseDown,
-    handleMouseOver: handleMouseOver,
-    handleMouseUp: handleMouseUp,
-    handleOnFocus: handleOnFocus,
+    handleMouseDown: handleCellSelectStart,
+    handleMouseOver: handleCellSelecting,
+    handleMouseUp: handleCellSelectEnd,
+    handleOnFocus: handleFocusCell,
+    handleOnBlur: handleOnBlur,
   };
 
   return (
     <section className={styles['table']}>
       <div className="table-wrapper">
-        <table ref={tableRef} onMouseLeave={handleMouseUp}>
+        <table ref={tableRef} onMouseLeave={handleCellSelectEnd}>
           {thead ? (
             <thead>
               {headerRows.map((row, rowIdx) => (

@@ -18,20 +18,33 @@ const useSelectCells = () => {
 
   const mergedList = useTableStore((state) => state.mergedList);
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
+  const handleCellSelectStart = (e: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
     if (e.button === 2) return;;
     setIsSelecting(true);
     setDragStart({ row: rowIdx, col: colIdx });
     setDragEnd({ row: rowIdx, col: colIdx });
   };
 
-  const handleMouseOver = (_: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
+  const handleCellSelecting = (_: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
     if (!isSelecting) return;
     setDragEnd({ row: rowIdx, col: colIdx });
   };
 
-  const handleMouseUp = () => {
+  const handleCellSelectEnd = () => {
     setIsSelecting(false);
+  };
+
+  const handleFocusCell = (_: FocusEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
+    if (!selectRange) return;
+    const { startRow, startCol, endRow, endCol } = selectRange;
+    if (rowIdx >= startRow && rowIdx <= endRow && colIdx >= startCol && colIdx <= endCol) return;
+    setSelectRange({ startRow: rowIdx, startCol: colIdx, endRow: rowIdx, endCol: colIdx });
+  };
+
+  const isSelectedCell = (rowIdx: number, colIdx: number) => {
+    if (!selectRange) return false;
+    const { startRow, startCol, endRow, endCol } = selectRange;
+    return rowIdx >= startRow && rowIdx <= endRow && colIdx >= startCol && colIdx <= endCol;
   };
 
   useEffect(() => {
@@ -57,28 +70,15 @@ const useSelectCells = () => {
     }
   }, [mergedList, dragStart, dragEnd, setSelectRange]);
 
-  const isSelectedCell = (rowIdx: number, colIdx: number) => {
-    if (!selectRange) return false;
-    const { startRow, startCol, endRow, endCol } = selectRange;
-    return rowIdx >= startRow && rowIdx <= endRow && colIdx >= startCol && colIdx <= endCol;
-  };
-
-  const handleOnFocus = (_: FocusEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
-    if (!selectRange) return;
-    const { startRow, startCol, endRow, endCol } = selectRange;
-    if (rowIdx >= startRow && rowIdx <= endRow && colIdx >= startCol && colIdx <= endCol) return;
-    setSelectRange({ startRow: rowIdx, startCol: colIdx, endRow: rowIdx, endCol: colIdx });
-  };
-
   useOutsideClick(tableRef, () => setSelectRange(null));
 
   return {
     tableRef,
     isSelecting,
-    handleMouseDown,
-    handleMouseOver,
-    handleMouseUp,
-    handleOnFocus,
+    handleCellSelectStart,
+    handleCellSelecting,
+    handleCellSelectEnd,
+    handleFocusCell,
     isSelectedCell,
     setSelectRange,
   };

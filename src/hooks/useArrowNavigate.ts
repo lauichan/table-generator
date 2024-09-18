@@ -52,12 +52,12 @@ const useArrowNavigate = (table: CellInfo[][]) => {
     return [nextRowIdx, nextColIdx];
   };
 
-  const handleKeyDown = (e: KeyboardEvent, rowIdx: number, colIdx: number) => {
+  const handleCellNavigate = (e: KeyboardEvent, rowIdx: number, colIdx: number) => {
     if (['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].indexOf(e.key) === -1) return;
     const [nextRowIdx, nextColIdx] = navigateCell([rowIdx, colIdx], e.key as Direction);
     cellRefs.current[nextRowIdx][nextColIdx].focus();
   };
-  return { cellRefs, handleKeyDown };
+  return { cellRefs, handleCellNavigate };
 };
 
 export default useArrowNavigate;
