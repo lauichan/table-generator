@@ -5,9 +5,7 @@ import { useOptionStore } from '@store/useOptionStore';
 import { useTableStore } from '@store/useTableStore';
 import sizeLimit from '@utils/sizeLimit';
 import { useSelectCellsStore } from '@store/useSelectCellsStore';
-
-const MIN_TABLE_SIZE = 2;
-const MAX_TABLE_SIZE = 20;
+import { TABLE_SIZE } from '@/constants/constants';
 
 const useTableOptions = (tableRowCol: { row: number; col: number }) => {
   const { table, mergedList, toggleHeadType, initTable, setRow, setColumn } = useTableStore(
@@ -67,13 +65,13 @@ const useTableOptions = (tableRowCol: { row: number; col: number }) => {
   const handleRow = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    setRow(sizeLimit(value, MIN_TABLE_SIZE, MAX_TABLE_SIZE) - tableRowCol.row);
+    setRow(sizeLimit(value, TABLE_SIZE.MIN, TABLE_SIZE.MAX) - tableRowCol.row);
   };
 
   const handleCol = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const value = Number(e.target.value);
-    setColumn(sizeLimit(value, MIN_TABLE_SIZE, MAX_TABLE_SIZE) - tableRowCol.col, thead);
+    setColumn(sizeLimit(value, TABLE_SIZE.MIN, TABLE_SIZE.MAX) - tableRowCol.col, thead);
   };
 
   const handleInitTable = () => {
