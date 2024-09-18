@@ -61,7 +61,7 @@ function Table({ table }: { table: CellInfo[][] }) {
   return (
     <section className={styles['table']}>
       <div className="table-wrapper">
-        <table ref={tableRef} onMouseLeave={handleCellSelectEnd}>
+        <table ref={tableRef} onMouseLeave={handleCellSelectEnd} onContextMenu={(e) => e.preventDefault()}>
           {thead ? (
             <thead>
               {headerRows.map((row, rowIdx) => (
