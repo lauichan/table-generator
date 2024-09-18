@@ -19,7 +19,7 @@ const useSelectCells = () => {
   const mergedList = useTableStore((state) => state.mergedList);
 
   const handleMouseDown = (e: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
-    if (e.button === 2) return;
+    if (e.button === 2) return;;
     setIsSelecting(true);
     setDragStart({ row: rowIdx, col: colIdx });
     setDragEnd({ row: rowIdx, col: colIdx });
@@ -64,11 +64,9 @@ const useSelectCells = () => {
   };
 
   const handleOnFocus = (_: FocusEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
-    if (selectRange) {
-      const { startRow, startCol, endRow, endCol } = selectRange;
-      if (rowIdx >= startRow && rowIdx < endRow && colIdx >= startCol && colIdx < endCol) return;
-    }
-
+    if (!selectRange) return;
+    const { startRow, startCol, endRow, endCol } = selectRange;
+    if (rowIdx >= startRow && rowIdx <= endRow && colIdx >= startCol && colIdx <= endCol) return;
     setSelectRange({ startRow: rowIdx, startCol: colIdx, endRow: rowIdx, endCol: colIdx });
   };
 
