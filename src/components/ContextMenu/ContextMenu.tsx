@@ -21,6 +21,7 @@ function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
     isSelectionDivisible,
     handleSetHeaderCell,
     handleSetDataCell,
+    handleClearCells,
   } = useManageTable();
   const selectRange = useSelectCellsStore((state) => state.selectRange);
 
@@ -36,6 +37,7 @@ function ContextMenu({ contextMenuRef, position }: ContextMenuProps) {
       <li {...(isConvertible() ? { onClick: handleSetDataCell } : { className: styles['disabled'] })}>
         데이터셀로 바꾸기
       </li>
+      <li onClick={handleClearCells}>내용 비우기</li>
     </ul>
   );
 }

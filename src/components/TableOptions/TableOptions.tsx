@@ -18,6 +18,7 @@ function TableOptions({ tableRowCol }: TableOptionProps) {
     isSelectionDivisible,
     handleSetHeaderCell,
     handleSetDataCell,
+    handleClearCells,
   } = useManageTable();
 
   return (
@@ -66,6 +67,9 @@ function TableOptions({ tableRowCol }: TableOptionProps) {
         </button>
         <button type="button" onClick={handleSetDataCell} disabled={!isConvertible()}>
           데이터셀로 바꾸기
+        </button>
+        <button type="button" onClick={handleClearCells}>
+          내용 비우기
         </button>
       </div>
     </section>

@@ -25,7 +25,8 @@ type Actions = {
   initTable: () => void;
   setRow: (rows: number) => void;
   setColumn: (cols: number, thead: number) => void;
-  setTableText: (rowIdx: number, colIdx: number, text: string) => void;
+  setCellText: (rowIdx: number, colIdx: number, text: string) => void;
+  clearCellsText: (range: SelectRange) => void;
   toggleHeadType: (thead: number) => void;
   mergeCells: (rowIdx: number, colIdx: number, rowSpan: number, colSpan: number) => void;
   divideCell: (rowIdx: number, colIdx: number) => void;
@@ -87,10 +88,25 @@ export const useTableStore = create<State & Actions>()(
           return { table: newTable };
         });
       },
-      setTableText: (rowIdx, colIdx, text) => {
+      setCellText: (rowIdx, colIdx, text) => {
         set(({ table }) => {
           const newTable = table.map((row, rIdx) =>
             row.map((cell, cIdx) => (rIdx === rowIdx && cIdx === colIdx ? { ...cell, content: text } : cell)),
+          );
+          return { table: newTable };
+        });
+      },
+      clearCellsText: (range) => {
+        set(({ table }) => {
+          if (!range) return { table };
+          const { startRow, startCol, endRow, endCol } = range;
+          const newTable: CellInfo[][] = table.map((row, rIdx) =>
+            row.map((cell, cIdx) => {
+              if (rIdx >= startRow && rIdx <= endRow && cIdx >= startCol && cIdx <= endCol) {
+                return { ...cell, content: '' };
+              }
+              return cell;
+            }),
           );
           return { table: newTable };
         });

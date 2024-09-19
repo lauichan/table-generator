@@ -29,7 +29,7 @@ function Table({ table }: { table: CellInfo[][] }) {
   const { contextMenu, contextMenuRef, handleContextMenu } = useContextMenu();
 
   const { thead, tfoot } = useOptionStore(useShallow((state) => ({ thead: state.thead, tfoot: state.tfoot })));
-  const setTableText = useTableStore((state) => state.setTableText);
+  const setCellText = useTableStore((state) => state.setCellText);
 
   const headerRows = useMemo(() => table.slice(0, thead), [table, thead]);
   const footerRows = useMemo(() => table.slice(-tfoot), [table, tfoot]);
@@ -44,7 +44,7 @@ function Table({ table }: { table: CellInfo[][] }) {
 
   const handleOnBlur = (e: FocusEvent<HTMLTableCellElement, Element>, rowIdx: number, colIdx: number) => {
     const text = htmlEscape(e.currentTarget.innerText);
-    setTableText(rowIdx, colIdx, text);
+    setCellText(rowIdx, colIdx, text);
   };
 
   const commonProps = {

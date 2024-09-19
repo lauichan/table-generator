@@ -4,13 +4,14 @@ import { useSelectCellsStore } from '@store/useSelectCellsStore';
 import { useTableStore } from '@store/useTableStore';
 
 const useManageTable = () => {
-  const { table, mergeCells, divideCell, setHeaderCells, setDataCells } = useTableStore(
+  const { table, mergeCells, divideCell, setHeaderCells, setDataCells, clearCellsText } = useTableStore(
     useShallow((state) => ({
       table: state.table,
       mergeCells: state.mergeCells,
       divideCell: state.divideCell,
       setHeaderCells: state.setHeaderCells,
       setDataCells: state.setDataCells,
+      clearCellsText: state.clearCellsText,
     })),
   );
 
@@ -64,6 +65,11 @@ const useManageTable = () => {
     setDataCells({ ...selectRange, startRow: Math.max(startRow, thead) });
   };
 
+  const handleClearCells = () => {
+    if (!selectRange) return;
+    clearCellsText(selectRange);
+  };
+
   const isConvertible = (): boolean => {
     if (!selectRange || selectRange.endRow < thead) return false;
     return true;
@@ -102,6 +108,7 @@ const useManageTable = () => {
     isSelectionDivisible,
     handleSetHeaderCell,
     handleSetDataCell,
+    handleClearCells,
   };
 };
 
