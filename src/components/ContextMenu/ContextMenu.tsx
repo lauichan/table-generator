@@ -1,6 +1,6 @@
 import useManageTable from '@hooks/useManageTable';
-import styles from './ContextMenu.module.css';
 import { useSelectCellsStore } from '@store/useSelectCellsStore';
+import styles from './ContextMenu.module.css';
 
 export type MousePosition = {
   x: number;

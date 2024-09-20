@@ -1,11 +1,10 @@
-import type { FocusEvent } from 'react';
-import type { SelectedRange } from '@/store/useSelectCellsStore';
-
 import { useTableStore } from '@store/useTableStore';
-import { useEffect, useRef, useState } from 'react';
+import { type FocusEvent, useEffect, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSelectCellsStore } from '@/store/useSelectCellsStore';
 import useOutsideClick from './useOutsideClick';
+
+type SelectedRange = { row: number; col: number } | null;
 
 const useSelectCells = () => {
   const tableRef = useRef<HTMLTableElement>(null);
@@ -19,7 +18,7 @@ const useSelectCells = () => {
   const mergedList = useTableStore((state) => state.mergedList);
 
   const handleCellSelectStart = (e: React.MouseEvent<HTMLTableCellElement>, rowIdx: number, colIdx: number) => {
-    if (e.button === 2) return;;
+    if (e.button === 2) return;
     setIsSelecting(true);
     setDragStart({ row: rowIdx, col: colIdx });
     setDragEnd({ row: rowIdx, col: colIdx });

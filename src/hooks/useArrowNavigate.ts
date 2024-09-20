@@ -1,7 +1,5 @@
+import { type KeyboardEvent, useRef } from 'react';
 import type { CellInfo } from '@/store/useTableStore';
-import type { KeyboardEvent } from 'react';
-
-import { useRef } from 'react';
 
 type Direction = 'ArrowRight' | 'ArrowLeft' | 'ArrowDown' | 'ArrowUp';
 

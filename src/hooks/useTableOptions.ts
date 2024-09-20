@@ -1,5 +1,4 @@
 import type { ChangeEvent } from 'react';
-
 import { useShallow } from 'zustand/react/shallow';
 import { useOptionStore } from '@store/useOptionStore';
 import { useTableStore } from '@store/useTableStore';

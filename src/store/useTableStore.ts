@@ -1,7 +1,6 @@
-import type { SelectRange } from './useSelectCellsStore';
-
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import type { SelectRange } from './useSelectCellsStore';
 
 export type MergedCell = {
   rowIdx: number;

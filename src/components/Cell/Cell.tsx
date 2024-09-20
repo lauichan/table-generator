@@ -1,6 +1,5 @@
 import type { FocusEvent, KeyboardEvent, MouseEvent, MutableRefObject } from 'react';
 import type { CellInfo } from '@store/useTableStore';
-
 import sanitizeHtml from '@utils/sanitizeHtml';
 import styles from './Cell.module.css';
 

@@ -32,11 +32,11 @@ yarn dev
 ```javascript
 export const TABLE_SIZE = {
   MIN: 2,
-  MAX: 20, 
-} // 테이블 행열 최소 최대 크기
+  MAX: 20,
+}; // 테이블 행열 최소 최대 크기
 
 export const TAB_SIZE = {
   MIN: 2,
   MAX: 8,
-} // HTML 출력 탭사이즈 최소 최대 크기
+}; // HTML 출력 탭사이즈 최소 최대 크기
 ```

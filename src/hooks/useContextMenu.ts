@@ -1,7 +1,6 @@
-import type { MousePosition } from '@/components/ContextMenu/ContextMenu';
-
 import { useRef, useState } from 'react';
 import useOutsideClick from './useOutsideClick';
+import type { MousePosition } from '@/components/ContextMenu/ContextMenu';
 
 const useContextMenu = () => {
   const contextMenuRef = useRef<HTMLUListElement>(null);

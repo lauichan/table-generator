@@ -1,13 +1,10 @@
-import type { FocusEvent } from 'react';
-import type { CellInfo } from '@store/useTableStore';
-
 import Cell from '@components/Cell/Cell';
 import TableSizer from '@components/TableSizer/TableSizer';
 import ContextMenu from '@components/ContextMenu/ContextMenu';
-import { useEffect, useMemo } from 'react';
+import { type FocusEvent, useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useOptionStore } from '@store/useOptionStore';
-import { useTableStore } from '@store/useTableStore';
+import { type CellInfo, useTableStore } from '@store/useTableStore';
 import useArrowNavigate from '@hooks/useArrowNavigate';
 import useContextMenu from '@hooks/useContextMenu';
 import useSelectCells from '@hooks/useSelectCells';

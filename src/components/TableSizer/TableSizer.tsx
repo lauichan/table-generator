@@ -1,6 +1,6 @@
 import { useTableStore } from '@store/useTableStore';
-import styles from './TableSizer.module.css';
 import { useOptionStore } from '@store/useOptionStore';
+import styles from './TableSizer.module.css';
 
 function TableSizer() {
   const [setRow, setColumn] = useTableStore((state) => [state.setRow, state.setColumn]);

@@ -1,9 +1,7 @@
-import type { ChangeEvent } from 'react';
-import type { CellInfo } from '@store/useTableStore';
-
-import { useRef, useState } from 'react';
+import { type ChangeEvent, useRef, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useOptionStore } from '@store/useOptionStore';
+import type { CellInfo } from '@store/useTableStore';
 import createTableHtml from '@utils/createHtml';
 import formatHtml from '@utils/formatHtml';
 import sizeLimit from '@utils/sizeLimit';
