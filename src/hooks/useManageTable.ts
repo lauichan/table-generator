@@ -1,7 +1,7 @@
 import { useShallow } from 'zustand/react/shallow';
 import { useOptionStore } from '@store/useOptionStore';
 import { useSelectCellsStore } from '@store/useSelectCellsStore';
-import { useTableStore } from '@store/useTableStore';
+import { type CellInfo, useTableStore } from '@store/useTableStore';
 
 const useManageTable = () => {
   const { table, mergeCells, divideCell, setHeaderCells, setDataCells, clearCellsText } = useTableStore(
@@ -75,12 +75,17 @@ const useManageTable = () => {
     return true;
   };
 
+  const getCellInfo = (row: number, col: number): CellInfo | null => {
+    if (row > 0 || row >= table.length || col < 0 || col >= table[0].length) return null;
+    return table[row][col];
+  };
+
   const isSelectionMergeable = (): boolean => {
     if (!selectRange) return false;
     const { startRow, startCol, endRow, endCol } = selectRange;
     if (startRow === endRow && startCol === endCol) return false;
 
-    const cell = table[startRow][startCol];
+    const cell = getCellInfo(startRow, startCol);
     if (cell && cell.merged) {
       const { rowSpan, colSpan } = cell.merged;
       return !(startRow + rowSpan - 1 === endRow && startCol + colSpan - 1 === endCol);
@@ -92,7 +97,7 @@ const useManageTable = () => {
     if (!selectRange) return false;
     const { startRow, startCol, endRow, endCol } = selectRange;
 
-    const cell = table[startRow][startCol];
+    const cell = getCellInfo(startRow, startCol);
     if (cell && cell.merged) {
       const { rowIdx, colIdx, rowSpan, colSpan } = cell.merged;
       return rowIdx + rowSpan - 1 === endRow && colIdx + colSpan - 1 === endCol;
