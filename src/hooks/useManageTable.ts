@@ -71,12 +71,11 @@ const useManageTable = () => {
   };
 
   const isConvertible = (): boolean => {
-    if (!selectRange || selectRange.endRow < thead) return false;
-    return true;
+    return selectRange !== null && selectRange.endRow >= thead;
   };
 
   const getCellInfo = (row: number, col: number): CellInfo | null => {
-    if (row > 0 || row >= table.length || col < 0 || col >= table[0].length) return null;
+    if (row < 0 || row >= table.length || col < 0 || col >= table[0].length) return null;
     return table[row][col];
   };
 
